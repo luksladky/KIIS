@@ -1,0 +1,42 @@
+{block content}
+
+    <h1 class="page-header">Úprava údajů - {$profile->nickname}</h1>
+    <a class="btn btn-default" n:href="Profile:show $profile->id"><i class="glyphicon glyphicon-chevron-left mr10"></i>Zpět na profil bez uložení</a>
+    <hr>
+
+            {snippet profilePhoto}
+
+                <a n:ifset="$profile->photo" n:href="deleteProfilePicture! $profile->id"
+                        onclick="return deletePhoto();"><span
+                            class="btn btn-danger">smazat profilovku</span></a>
+
+                <img class="img-rounded profile-photo mr10" n:img="$profile->photo, 'x100','fill','noimage/profile-badge.jpg'"
+                     alt="Profile photo"/>
+
+
+                <div class="clearfix"></div>
+
+
+
+            {/snippet}
+
+    <hr>
+    <div class="row">
+
+        <div class="col-md-6">
+            <div id="editForm">
+                {control editForm}
+
+            </div>
+        </div>
+    </div>
+
+
+{/block}
+{block templateScripts}
+    <script type="text/javascript">
+        function deletePhoto() {
+            return confirm("Are you sure you want to delete your profile photo?");
+        }
+    </script>
+{/block}

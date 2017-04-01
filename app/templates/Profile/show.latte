@@ -1,0 +1,31 @@
+{block content}
+    <h1 class="page-header" n:block="title">{$profile->nickname} ({$profile->name})</h1>
+
+    <img class="img-thumbnail mr10 main-profile pull-left" n:img="$profile->photo, '300x400','exact','noimage/profile-badge.jpg'"
+         alt="Profile photo">
+
+    <p n:if="$profile->email"><strong>Email: </strong>{$profile->email}</p>
+    <p n:if="$profile->phone"><strong>Telefon: </strong>{$profile->phone}</p>
+    <p n:if="$profile->city"><strong>Bydlím tady: </strong>{$profile->city}</p>
+
+
+    {if count($eventSigns)> 0}
+        <h3>Pojedu na akce:</h3>
+
+        <ul class="list-unstyled">
+            {foreach $eventSigns as $sign}
+                {if $sign->type != 'no'}
+                    <li><a n:href="Event:show $sign->event_id">{$sign->event->title}</a></li>
+                {/if}
+            {/foreach}
+
+        </ul>
+    {/if}
+
+
+
+    <a n:if="$userCanEdit" n:href="Profile:edit $profile->id" class="btn btn-primary">Upravit údaje</a>
+    <a n:if="$userCanEdit" n:href="Profile:changePassword" class="btn btn-primary">Změnit heslo</a>
+    <a n:if="$user->isInRole('modify-user')" n:href="Profile:editPermissions $profile->id" class="btn btn-default">Spravovat
+        oprávnění</a>
+{/block}

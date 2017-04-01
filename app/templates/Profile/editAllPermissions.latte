@@ -1,0 +1,99 @@
+{block content}
+
+    <h1 class="page-header" n:block="title">Správa oprávnění</h1>
+    <a n:href="Profile:default" class="btn btn-default"><i class="glyphicon glyphicon-user mr10"></i>Seznam kontaktů</a>
+    <hr>
+
+    {if $awaitingApproval->count() > 0}
+        <h2>Noví uživatelé čekající na milost</h2>
+
+        <table class="table table-hover table-condensed center-vertical">
+            <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+        {foreach $awaitingApproval as $profile}
+            <tr>
+                <td>{$profile->name} ({$profile->nickname})</td>
+                <td>{$profile->email}</td>
+                <td>
+                    <a n:href="approveUser! $profile->id" class="btn btn-success">Schválit</a>
+                    <a n:href="deleteUser! $profile->id" class="btn btn-default" onclick="return confirmDelete();">Smazat nadobro</a>
+                </td>
+            </tr>
+
+        {/foreach}
+
+            </tbody>
+        </table>
+
+        <h2>Práva všech uživatelů</h2>
+    {/if}
+
+    {snippetArea permissions}
+        <table class="table table-hover table-responsive text-center center-vertical">
+
+            <thead>
+            <tr>
+                <th>Jméno</th>
+                {foreach $allRoles as $role}
+                    <th class="text-center"><span data-toggle="tooltip" data-placement="top"
+                                                  title="{$role->description}">{$role->slug}</span></th>
+                {/foreach}
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {foreach $profiles as $profile}
+                <tr n:snippet="permissions-$profile->id">
+                    <td><span data-toggle="tooltip" data-placement="top"
+                              title="{$profile->name}">{$profile->nickname}</span></td>
+                    <td n:foreach="$allRoles as $role">
+                        <div class="btn-group" role="group">
+                            {if in_array($role->slug,$assignedRoles[$profile->id])}
+                                <span class="btn btn-primary btn-sm active disabled">
+                            <i class="glyphicon glyphicon-ok"></i>
+                        </span>
+                                <a n:href="removePermission! $profile->id, $role->slug, multiview=>true"
+                                        class="ajax btn btn-default btn-sm btn-square">
+                                    &nbsp;
+                                </a>
+                            {else}
+                                <a n:href="addPermission! $profile->id, $role->slug, multiview=>true"
+                                        class="ajax btn btn-default btn-sm btn-square">
+                                    &nbsp;
+                                </a>
+                                <span class="btn btn-danger btn-sm active disabled">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </span>
+                            {/if}
+                        </div>
+
+                    </td>
+                    <td>
+                        <a n:href="deleteAllPermissions! $profile->id, multiview=>true" class="btn btn-default"
+                                                                                        data-toggle="tooltip"
+                                                                                        data-placement="top"
+                                                                                        title="Zablokovat uživatele. Nedostane se sem, ale jeho příspěvky zůstanou."><i
+                                    class="glyphicon glyphicon-ban-circle"></i></a></td>
+                </tr>
+            {/foreach}
+
+
+            </tbody>
+        </table>
+    {/snippetArea}
+{/block}
+
+{block templateScripts}
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+{/block}

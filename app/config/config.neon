@@ -1,0 +1,50 @@
+# WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+# https://nette.org/security-warning
+
+parameters:
+
+extensions:
+    images: WebChemistry\Images\DI\Extension
+    facebook: Kdyby\Facebook\DI\FacebookExtension
+
+php:
+	date.timezone: Europe/Prague
+
+
+application:
+	errorPresenter: Error
+	mapping:
+		*: App\*Module\Presenters\*Presenter
+
+
+session:
+	expiration: 14 days
+	save_path: %tempDir%/session
+
+
+services:
+	- App\Model\EventFacade
+	- App\Model\ThreadFacade
+	- App\Model\ProfileRepository
+	- App\Model\PermissionRepository
+	- App\Model\CronManager
+	router: App\RouterFactory::createRouter
+	authenticator: App\Model\UserManager
+	authorizator: App\Model\Authorizator
+	texy: Texy\Texy
+
+facebook:
+    appId: "1567829150181860"
+    appSecret: "39afdc620204f9f05396be3a3e314545"
+    permissions: [public_profile, email] # theese are the default read permissions, you might need to
+    graphVersion: v2.3
+
+images:
+    wwwDir: %wwwDir%
+    defaultImage: 'default/default.png'
+    registration:
+        upload: yes
+        multiUpload: no
+        presenter: yes
+    assetsDir: 'assets'
+

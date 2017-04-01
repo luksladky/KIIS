@@ -1,0 +1,23 @@
+{block title}
+    Registace
+{/block}
+{block content}
+
+<h1 class="page-header">Registrace</h1>
+
+<p><a class="btn btn-default" n:href="Sign:default">Uz máš účet? Přihlásit se.</a></p>
+<hr>
+<div class="div col-sm-6">
+
+    {control registerForm}
+
+
+</div>
+
+{* or use {include '../components/form.latte', form => signInForm} *}
+
+{block scripts}
+    {include #parent}
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+{/block}
+

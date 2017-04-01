@@ -1,0 +1,17 @@
+{block content}
+    <h1 class="page-header" n:block="title">Upravit akci - {$event->title}</h1>
+    {control addEventForm}
+{/block}
+
+
+{block templateScripts}
+
+    <script>
+        $(document).ready(function () {
+            $('input[data-dateinput-type]').each(function () {
+                initDatePicker($(this));
+            })
+        });
+    </script>
+
+{/block}

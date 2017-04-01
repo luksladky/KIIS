@@ -1,0 +1,73 @@
+.sign-for-event-dropdown {
+  min-width: 300px !important;
+  padding: 10px 20px;
+}
+
+.profile-badge.sign-type-maybe, .profile-badge.sign-type-no {
+  background: #f6f3f3;
+  border-color: #ececec;
+  img, .name {
+    opacity: 0.5;
+  }
+}
+
+a.event-link {
+  color: inherit;
+}
+
+a.event-link:hover {
+  text-decoration: none;
+
+  .event {
+    border-color: $brand-primary;
+  }
+}
+
+.panel.event {
+  position: relative;
+
+  .panel-body {
+    &:after {
+      content: ' ';
+      width: 20px;
+      display: block;
+      height: 100%;
+      position: absolute;
+      right: 0;
+      top: 0;
+      background: transparent;
+    }
+  }
+
+  h3 {
+    margin-top: 8px;
+  }
+
+  &.sign-type-no {
+    color: #d5d5d5;
+    h3 {
+      //font-size: 16px;
+      margin: 0;
+    }
+    p {
+      margin: 0;
+    }
+  }
+
+  &.sign-type-yes {
+    .panel-body:after {
+      background: #4CAF50;
+    }
+  }
+
+  &.sign-type-maybe {
+    .panel-body:after {
+      background: #ff9800;
+    }
+  }
+}
+
+.btn.add-event-thread {
+  position: relative;
+  top: -2px;
+}

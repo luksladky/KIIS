@@ -1,0 +1,12 @@
+
+## Directory-based project format:
+.idea/
+
+# CakePHP 3
+
+/vendor/*
+/temp/*
+/log/*
+/bin/*
+/0_configs/*
+/0_vyjimky/*

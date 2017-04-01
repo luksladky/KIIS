@@ -1,0 +1,85 @@
+{block content}
+
+    <h1 class="page-header" n:block="title">Diskuse k akcím <span class="small" n:if="$all">včetně odmítnutých</span></h1>
+
+    {if $user->isInRole('add-event')}
+        <a class="btn btn-default" n:href="Event:create"><i class="glyphicon glyphicon-plus mr10"></i>Přidat akci</a>
+    {/if}
+    {if $all}
+        <a n:href="this all=>false" class="btn btn-default">Skrýt odmítnuté akce</a>
+    {else}
+        <a n:href="this all=>true" class="btn btn-default" title="Včetně těch, kde jsem zamítl účast.">Zobrazit i odmítnuté</a>
+    {/if}
+    {if $unreadFirst}
+        <a n:href="this unreadFirst=>false" class="btn btn-default">Zobrazit chronologicky</a>
+    {else}
+        <a n:href="this unreadFirst=>true" class="btn btn-default">Nepřečtené první</a>
+    {/if}
+    <hr>
+
+    {foreach $futureEvents as $event}
+        <div class="event-thread" id="event-{$event->id}">
+            <h3 class="mb20">
+                <a n:href="Event:show $event->id">{$event->title}</a>
+                <span class="small">{$event->date_from|timeagoinwords}</span>
+                <button n:if="$user->isInRole('add-thread')" class="btn btn-default btn-sm add-event-thread"
+                                                             data-event-id="{$event->id}"><i
+                            class="glyphicon glyphicon-plus"></i>
+                </button>
+            </h3>
+            <div class="row" id="event-{$event->id}-threads">
+                {foreach $threads[$event->id] as $thread}
+                    <div class="col-md-4">
+                        <a n:href="Thread:show $thread->id" class="thread-link">
+                            <div class="thread thread-compact panel panel-default">
+                                <div class="panel-heading">
+                                    {$thread->user->nickname}
+                                    {$thread->created_at|timeagoinwords}
+                                </div>
+                                <div class="panel-body">
+                                    <span n:if="$unreadCounts[$thread->id] > 0"
+                                            class="badge red pull-left">{$unreadCounts[$thread->id]}</span>
+                                    {$thread->title|noescape}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {/foreach}
+                <div class="col-md-4 form-container hidden"></div>
+            </div>
+        </div>
+        <hr>
+    {/foreach}
+
+
+
+
+
+    <div class="add-event-thread-form template form-template">
+        <form n:name=addThreadForm class=form-horizontal>
+            <div class="form-group">
+                <div class="col-sm-12"><textarea n:name=title size=20></textarea></div>
+            </div>
+            <div class="form-group">
+
+                <div class="col-sm-4 control-label"><label n:name=restrict_users>Skrýt pro
+                        uživatele:</label></div>
+                <div class="col-sm-8"><input n:name=restrict_users></div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12"><input n:name=send class="btn btn-primary"></div>
+            </div>
+            {input event_id}
+        </form>
+    </div>
+
+{/block}
+
+{block templateScripts}
+    <script type="text/javascript">
+        $('#addThreadShowButton').click(function () {
+            $('#addThreadFormContainer').toggleClass('hidden');
+        })
+
+    </script>
+{/block}

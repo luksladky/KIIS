@@ -1,0 +1,67 @@
+{block content}
+
+    <h1 class="page-header" n:block="title">Členové klubu</h1>
+
+    {if $user->isInRole('modify-user')}
+        <a n:href="Profile:editAllPermissions" class="btn btn-default"><i
+                    class="glyphicon glyphicon-certificate mr10"></i>Spravovat oprávnění</a>
+    {/if}
+    {*<div class="btn-group">*}
+        {*<button class="ajax btn btn-default dropdown-toggle" data-toggle="dropdown">*}
+            {*Řadit dle {if $order=='last_activity'}poslední aktivity{elseif $order=='nickname'}přezdívky{else}jména{/if}*}
+            {*<span class="caret"></span>*}
+        {*</button>*}
+
+        {*<ul class="dropdown-menu">*}
+            {*<li><a n:href="Profile:default order=>'last_activity'">Poslední aktivity</a></li>*}
+            {*<li><a n:href="Profile:default order=>'nickname'">Přezdívky</a></li>*}
+            {*<li><a n:href="Profile:default order=>'name'">Jména</a></li>*}
+        {*</ul>*}
+    {*</div>*}
+    <hr>
+
+    <div class="large-table-container">
+
+        <table class="table table-hover">
+
+            <thead>
+            <tr>
+                <th><a n:tag-if="!($order=='nickname')" n:href="Profile:default order=>'nickname'" >
+                        <span n:if="$order=='nickname'" class="caret caret-reversed"></span> Přezdívka</a></th>
+                <th><a n:tag-if="!($order=='name')" n:href="Profile:default order=>'name'" >
+                        <span n:if="$order=='name'" class="caret caret-reversed"></span> Celé jméno</a></th>
+                <th>Email</th>
+                <th>Telefon</th>
+                <th>Město</th>
+                {*<th>Facebook</th>*}
+                <th><a n:tag-if="!($order=='last_activity')" n:href="Profile:default order=>'last_activity'" >
+                        <span n:if="$order=='last_activity'" class="caret caret-reversed"></span> Poslední aktivita</a></th>
+                <th n:if="$user->isInRole('modify-user')">Oprávnění</th>
+            </tr>
+            </thead>
+            <tbody>
+
+
+            {foreach $profiles as $profile}
+                {var $phones = explode(',',$profile->phone)}
+                <tr>
+                    <td><a n:href="Profile:show $profile->id">
+                            <img class="img-circle profile in-table" n:img="$profile->photo, '30x30','exact','noimage/profile-badge.jpg'"
+                                 alt="Profile photo">{$profile->nickname}
+                        </a></td>
+                    <td>{$profile->name}</td>
+                    <td>{$profile->email}</td>
+                    <td>{foreach $phones as $phone}{$phone}<br n:if="!$iterator->last">{/foreach}</td>
+                    <td>{$profile->city}</td>
+                    {*<td>TODO</td>*}
+                    <td>{$profile->last_activity|timeagoinwords}</td>
+                    <td n:if="$user->isInRole('modify-user')"><a n:href="Profile:editPermissions $profile->id">Spravovat
+                            oprávnění</a></td>
+                </tr>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+
+    </div>
+{/block}

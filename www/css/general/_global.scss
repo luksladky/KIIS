@@ -1,0 +1,98 @@
+body {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.js .no-js {
+  display: none;
+}
+
+.no-js .js {
+  display: none;
+}
+
+
+p:empty {
+  margin: 0;
+}
+
+a[href^="#error:"] {
+  background: red;
+  color: white;
+}
+
+a.disabled {
+  color: #5A5A5A !important;
+}
+
+.template {
+  display: none;
+
+  &.visible {
+    display: block;
+  }
+}
+
+.relative {
+  position: relative;
+}
+
+.large {
+  font-size: 24px;
+}
+
+.mb0 {
+  margin-bottom: 0;
+}
+
+.mb5 {
+  margin-bottom: 5px;
+}
+
+.mb10 {
+  margin-bottom: 10px;
+}
+
+.mb20 {
+  margin-bottom: 20px;
+}
+
+.mb30 {
+  margin-bottom: 30px;
+}
+
+.mt5 {
+  margin-top: 5px;
+}
+
+.mt10 {
+  margin-top: 10px;
+}
+
+
+.mr5 {
+  margin-right: 5px;
+}
+
+.mr10 {
+  margin-right: 10px;
+}
+
+.ml5 {
+  margin-left: 5px;
+}
+
+.ml10 {
+  margin-left: 10px;
+}
+
+.block {
+  display: block;
+}
+
+
+table.center-vertical {
+  > tbody > tr > td {
+    vertical-align: middle;
+  }
+}

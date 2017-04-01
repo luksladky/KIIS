@@ -1,0 +1,128 @@
+
+
+.popover-icon {
+
+
+
+  .popover {
+    width: 250px;
+    &:hover {
+      display: none;
+    }
+
+    &.left {
+      right: 40px;
+      top: -5px;
+      left: auto;
+    }
+
+    .arrow {
+      top: 17px;
+      &:after {
+        border-left-color: $popover-title-bg;
+      }
+    }
+  }
+}
+
+.profile-badge {
+  background: #ece7e7;
+  border: 1px solid #d4d4d4;
+  border-radius: 16px;
+  display: inline-block;
+  position: relative;
+  padding-right: 5px;
+
+  .name {
+    padding: 0 5px;
+    text-decoration: none;
+  }
+
+  .icon {
+    padding-right: 5px;
+    color: #808080;
+    cursor: pointer;
+    &:hover {
+      color: #000;
+    }
+  }
+
+  .popover-toggle {
+    .popover.bottom {
+      top: 20px;
+      left: -97px;
+      width: 210px;
+    }
+  }
+}
+
+a:hover .profile-badge {
+  .name {
+    text-decoration: underline;
+  }
+}
+
+.profile-badge-remove {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  background: #ece7e7;
+  border-radius: 50% 0 0 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  line-height: 30px;
+  padding: 2px 6px;
+  opacity: 0;
+  //transition: opacity 0.1s;
+}
+
+.profile-badge-remove:hover {
+  opacity: 1;
+  color: #F44336;
+}
+
+.popover-toggle {
+  position: relative;
+
+  &:hover {
+    .popover {
+      display: block !important;
+    }
+  }
+}
+
+img.profile {
+  &.in-table {
+    height: 30px;
+    margin-top: -5px;
+    margin-bottom: -5px;
+    margin-right: 10px;
+  }
+}
+
+
+
+.badge {
+  &.red {
+    background: #f44336 !important;
+  }
+}
+
+
+.btn-square {
+  width: 35px;
+}
+
+.large-table-container {
+  overflow-x: scroll;
+  width: 100%;
+}
+
+.profile-list-table > tbody > tr > td {
+  min-width: 200px;
+}
+
+.table {
+  white-space: nowrap;
+}

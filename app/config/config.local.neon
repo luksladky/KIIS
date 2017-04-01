@@ -1,0 +1,13 @@
+parameters:
+
+
+database:
+	dsn: 'mysql:host=127.0.0.1;dbname=kiis'
+	user: root
+	password:
+	options:
+		lazy: yes
+
+#security:
+#    users:
+#        admin: secret  # user 'admin', password 'secret'

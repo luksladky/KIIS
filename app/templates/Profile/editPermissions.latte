@@ -1,0 +1,62 @@
+{block content}
+
+    <h1 class="page-header">Editace práv pro {$profile->nickname}</h1>
+
+    <a n:href="Profile:default" class="btn btn-default">Zpět na výpis profilů</a>
+    <a n:href="Profile:default" class="btn btn-default">Zpět na profil uživatele</a>
+
+    <hr>
+    <table class="table table-hover table-responsive">
+
+        <thead>
+        <tr>
+            <th></th>
+            <th>Oprávnění</th>
+            <th>Popis</th>
+        </tr>
+        </thead>
+        <tbody>
+
+
+        {foreach $allRoles as $role}
+            <tr>
+                <td>
+                    <div class="btn-group" role="group">
+                        {if in_array($role->slug,$assignedRoles)}
+                            <span class="btn btn-primary btn-sm active disabled">
+                            <i class="glyphicon glyphicon-ok"></i>
+                        </span>
+                            <a n:href="removePermission! $profile->id, $role->slug" class="btn btn-default btn-sm">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </a>
+                        {else}
+                            <a n:href="addPermission! $profile->id, $role->slug" class="btn btn-default btn-sm">
+                                <i class="glyphicon glyphicon-ok"></i>
+                            </a>
+                            <span class="btn btn-danger btn-sm active disabled">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </span>
+                        {/if}
+                    </div>
+
+
+                </td>
+                <td>{$role->slug}</td>
+                <td>{$role->description }</td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+
+    <hr>
+    <p>
+        <a n:href="addPermissionsUpToLevel! $profile->id, 5" class="btn btn-primary">Schválit uživatele</a>
+
+        Přidat právo číst, přidávat příspěvky a hlásit se na akce.
+    </p>
+    <p>
+        <a n:href="addPermissionsUpToLevel! $profile->id, 1000" class="btn btn-default">Udělat adminem</a>
+
+        Přidat všechno oprávnění.
+    </p>
+{/block}

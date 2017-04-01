@@ -1,0 +1,61 @@
+{block content}
+
+    <h1 class="page-header">Archiv
+        <small>
+            {if !$withEvents}příspěvků z nástěnky{elseif $onlyEvents}příspěvků z akcí{else}všech příspěvků{/if}
+        </small>
+    </h1>
+    <a n:href="Thread:default" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left mr10"></i>Zpět na nástěnku</a>
+
+    <div class="btn-group">
+        <button class="ajax btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <i class="glyphicon glyphicon-filter mr10"></i>{if !$withEvents}Jen z nástěnky{elseif $onlyEvents}Jen z akcí{else}Nástěnka i akce{/if}
+            <span class="caret"></span>
+        </button>
+
+        <ul class="dropdown-menu">
+            <li><a n:href="Thread:archive dashboard=>true, events=>false">Jen z nástěnky</a></li>
+            <li><a n:href="Thread:archive dashboard=>false, events=>true">Jen z akcí</a></li>
+            <li><a n:href="Thread:archive dashboard=>true, events=>true">Nástěnka i akce</a></li>
+        </ul>
+    </div>
+    <hr>
+
+    {foreach $threads as $thread}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="thread-container">
+                    <a n:href="Thread:show $thread->id" class="thread-link">
+                        <div class="thread thread-compact panel panel-default">
+                            <div class="panel-heading">
+                                {$thread->user->nickname}
+                                {$thread->created_at|timeagoinwords}
+                            </div>
+                            <div class="panel-body">
+                                    <span n:if="$unreadCounts[$thread->id] > 0"
+                                            class="badge red pull-left">{$unreadCounts[$thread->id]}</span>
+                                {$thread->title|noescape}
+                            </div>
+                        </div>
+                    </a>
+                    <div class="actions">
+                        <span class="hiding">
+                            {if $user->id == $thread->user_id || $user->isInRole('manage-threads')}
+                                <a n:href="Thread:edit $thread->id" class="btn btn-default" title="Upravit">
+                                    <i class="glyphicon glyphicon-pencil"></i></a>
+
+                                <a n:href="removeThreadFromArchive! $thread->id" class="btn btn-default" title="Vrátit zpět mezi čerstvé a voňavé diskuse"
+                                    <i class="glyphicon glyphicon-leaf"></i></a>
+                            {/if}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {/foreach}
+
+
+{/block}
+
+{block templateScripts}
+{/block}

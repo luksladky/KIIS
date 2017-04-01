@@ -1,0 +1,23 @@
+{block title}
+    Přihlásit se
+{/block}
+{block content}
+
+<h1 class="page-header">Přihlásit se</h1>
+<a class="btn btn-default" n:href="Sign:up">Jsi tu poprvé?</a>
+<a class="btn btn-default" n:href="Sign:passwordRecovery">Zapomněl jsi heslo?</a>
+<hr>
+<div class="row">
+    <div class="div col-sm-6">
+
+        {control signInForm}
+
+    </div>
+</div>
+{* or use {include '../components/form.latte', form => signInForm} *}
+
+{block scripts}
+    {include #parent}
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+{/block}
+

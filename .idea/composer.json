@@ -1,0 +1,6 @@
+{
+    "require": {
+        "webchemistry/images": "^2.1",
+        "kdyby/facebook": "^2.0"
+    }
+}

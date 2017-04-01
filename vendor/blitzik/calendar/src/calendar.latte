@@ -1,0 +1,42 @@
+
+{snippet calendar}
+
+{ifset $calendarBlocksTemplate}
+    {includeblock $calendarBlocksTemplate}
+{/ifset}
+
+<div class="calendar-control">
+    {block|strip}
+        {ifset #cal-top}{include #cal-top}{/ifset}
+
+        <table class="calendar">
+        {ifset #cal-table-top}{include #cal-table-top}{/ifset}
+
+        {if $areSelectionsActive and isset($control->monthSelection)}
+            {include #cal-month-selection}
+        {elseif $areSelectionsActive and isset($control->yearSelection)}
+            {include #cal-year-selection}
+        {else}
+
+            {for $row = 0; $row < $rows; $row++}
+                <tr>
+                {for $col = 0; $col < $cols; $col++}
+                {var $cell = $getCell($row, $col)}
+                    {if $cell->isForLabel()}
+                        {include #cal-th cell => $cell}
+                    {else}
+                        {include #cal-week-day cell => $cell}
+                    {/if}
+                {/for}
+                </tr>
+            {/for}
+        {/if}
+
+        {ifset #cal-table-bottom}{include #cal-table-bottom}{/ifset}
+        </table>
+
+        {ifset #cal-bottom}{include #cal-table-bottom}{/ifset}
+    {/block}
+</div>
+
+{/snippet}

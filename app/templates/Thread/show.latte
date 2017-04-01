@@ -1,0 +1,260 @@
+{block title}
+    {strip_tags($thread->title)}
+{/block}
+{block content}
+    {*<h1 class="page-header">Detail diskuse</h1>*}
+
+    {if !$thread->event_id}<a n:href="Thread:default" class="btn btn-default">
+            <i class="glyphicon glyphicon-chevron-left mr10"></i> Nástěnka</a>
+    {else}<a n:href="Thread:eventThreads#event-$thread->event_id" class="btn btn-default">
+            <i class="glyphicon glyphicon-chevron-left mr10"></i> Diskuse k akcím</a>
+        <a n:href="Event:show $thread->event_id" class="btn btn-default">Přejít na akci</a>
+    {/if}
+    <a href="#addPostForm" class="btn btn-default" title="Přidat komentář">
+        <i class="glyphicon glyphicon-comment"></i></a>
+
+    <a n:if="$userCanEdit" n:href="deleteThread! $thread->id" class="btn btn-danger"
+                                                              onclick="return confirmDelete();">
+        <i class="glyphicon glyphicon-trash"></i> Smazat diskusi
+    </a>
+    <a n:if="$userCanEdit" n:href="Thread:edit $thread->id  " class="btn btn-primary">
+        Upravit téma a viditelnost
+    </a>
+
+    <div class="pull-right mr10">
+
+        {var $activityIcon = ['seen' => 'eye-open', 'created' => 'bullhorn', 'commented' => 'comment']}
+
+        <i class="glyphicon glyphicon-flash large popover-toggle popover-icon">
+            <div class="popover left">
+                <div class="arrow"></div>
+                <h3 class="popover-title">Aktivita</h3>
+                <div class="popover-content">
+                    <ul class="list-unstyled">
+                        {foreach $allActivity as $activity}
+                            <li>
+                                <i class="glyphicon glyphicon-{$activityIcon[$activity->activity_type]}"></i>
+                                {$activity->user->nickname} - {$activity->last_activity|timeagoinwords}
+                            </li>
+                        {/foreach}
+                    </ul>
+                </div>
+            </div>
+
+        </i>
+
+
+        <i n:if="$restrictions->count() >0"
+                class="glyphicon glyphicon-eye-close large popover-toggle popover-icon ml10">
+            <div class="popover left">
+                <div class="arrow"></div>
+                <h3 class="popover-title">Skryté pro</h3>
+                <div class="popover-content">
+                    <ul class="list-unstyled mb0">
+                        {foreach $restrictions as $person}
+                            <li>
+                                <div class="profile-badge mt10">
+                                    <img class="img-circle profile" n:img="$person->user->photo, '30x30','exact','noimage/profile-badge.jpg'"
+                                         alt="Profile photo">
+                                    <span class="name">{$person->user->nickname}</span>
+                                </div>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </div>
+            </div>
+        </i>
+
+
+    </div>
+    <div class="clearfix"></div>
+    <hr>
+
+    <div class="row">
+    <div class="col-lg-8 col-lg-push-2 col-md-8">
+
+    <div class="thread panel panel-default">
+        <div class="panel-heading">
+            Přidal
+            <img n:img="$thread->user->photo, '20x20', 'exact', 'noimage/profile-badge.jpg'"
+                    class="img-circle">
+            <a class="thread-author-link" n:href="Profile:show $thread->user->id">{$thread->user->nickname}</a>
+            <div class="pull-right">
+                {$thread->created_at|timeagoinwords}
+            </div>
+        </div>
+        <div class="panel-body">
+            {$thread->title|noescape}
+        </div>
+    </div>
+
+
+    {snippetArea postWrapper}
+
+        {if $lastReadPostId != -1}
+            <div class="collapse" id="collapseRead">
+        {/if}
+
+    {var $endingsDebt = 0}
+    {var $lastLevel = 0}
+        {foreach $posts as $post}
+            {if !$iterator->first}
+                {if $lastLevel >= $post->depth}
+                    {for $i = 0; $i <= $lastLevel - $post->depth; $i++}
+                        </div>
+                        </div>
+                    {/for}
+                {/if}
+            {/if}
+
+            {if $post->id == $lastReadPostId}
+                </div>
+
+                <div class="text-center">
+                    <button class="btn btn-primary show-all-posts" type="button" data-toggle="collapse"
+                            data-target="#collapseRead"
+                            aria-expanded="false" aria-controls="collapseRead">
+                        Zobrait starší příspěvky <span class="badge">{$readPostsCount}</span>
+                    </button>
+
+                    <hr>
+                </div>
+
+            {/if}
+
+            {var $isNew = $lastActivity < $post->created_at}
+            {var $isReadLater = in_array($post->id,$readLaterIds)}
+        <div n:class="post, media, $isNew ? 'new', $isReadLater ? 'read-later'" id="post-{$post->id}">
+        {var $author = $post->ref('user','user_id')}
+        {var $userCanEdit = ($user->id == $post->user_id || $user->isInRole('manage-threads'))}
+            <div class="media-left">
+
+                <a n:href="Profile:show $author->id">
+                    <img n:img="$author->photo, '50x50', 'exact', 'noimage/profile-badge.jpg'"
+                            class="img-circle">
+                </a>
+            </div>
+
+            <div class="media-body">
+
+            <div class="post-inner">
+
+                <div class="media-heading">
+                    <a n:href="Profile:show $author->id">{$author->nickname}</a>
+
+                    <div n:if="$lastActivity < $post->created_at" class="label label-danger">Nový</div>
+
+                            <span class="ids  controls  small gray">#{$post->id} <a n:if="$post->reply_to_id"
+                                        href="#post-{$post->reply_to_id}" class="reply-to">
+                                    &#8594;{$post->reply_to_id}</a>
+                        </span>
+
+
+                    <div class="pull-right small gray">
+
+
+                        <span class="date lightgray">
+                            {$post->created_at|timeagoinwords}
+                        </span>
+                    </div>
+
+
+                    {*<div class="pull-right">{$post->created_at |timeagoinwords}</div>*}
+
+
+                </div>
+
+                <div class="content">
+                    {if $post->deleted}
+                        <em>Příspěvek byl smazán.</em>
+                    {else}
+                        {$post->content|noescape}
+                    {/if}
+                </div>
+                <div class="reply-form"></div>
+
+                {var $postId = $post->id}
+                <span n:snippet="post-likes-$postId" class="like-count" title="Počkej si..." data-post-id="{$post->id}">
+                    {if $post->like_count > 0}<i class="glyphicon glyphicon-thumbs-up"></i> {$post->like_count}{/if}
+                </span>
+
+                <div class="controls">
+                    <span n:snippet="post-control-$postId">
+                        <a n:href="toggleLike! $post->id" class="toggle-like-btn ml10">
+                            {array_key_exists($post->id,$userLikes) ? 'Už zas nevím' : 'Tak určitě'}
+
+                        </a>
+
+                        <button class="ml10 btn-link reply" data-reply-id="{$post->id}">Odpovědět</button>
+
+                        <a class="ajax read-later-toggle ml10" n:if="$userCanEdit" n:href="toggleReadLater! $post->id">
+                            {$isReadLater ? 'Vyřízeno' : 'Nechat na později'}
+                        </a>
+                    </span>
+                    <div class="btn-group">
+                        <i class="glyphicon glyphicon-option-horizontal btn dropdown-toggle" data-toggle="dropdown"></i>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a n:if="$userCanEdit" n:href="Thread:editPost $post->id">
+                                    Upravit
+                                </a>
+                            </li>
+                            <li>
+                                <a n:if="$userCanEdit" n:href="deletePost! $post->id"
+                                   onclick="return confirmDelete();">
+                                    Smazat příspěvek
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+
+            {if $iterator->last}
+                {for $i = 0; $i < $post->depth; $i++}
+                    </div>
+                    </div>
+                {/for}
+            {/if}
+            {var $lastLevel = $post->depth}
+        {/foreach}
+
+    {/snippetArea}
+
+    <div class="row" id="addPostForm">
+        <div class="col-xs-12">
+
+            <div class="add-comment-form template form-template">
+                <form n:name="addPostForm" class="form-hoizontal">
+                    <div class="form-group">
+                        {input content}
+                    </div>
+                    <div class="form-group">
+                        {input send}
+
+                    </div>
+
+
+                    {input thread_id}
+                    {input parent}
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    </div>
+    </div>
+
+
+{/block}
+
+{block templateScripts}
+    <script>
+        setTimeout(function () {
+            resetEditorContent('mceEditor');
+        }, 0);
+    </script>
+{/block}

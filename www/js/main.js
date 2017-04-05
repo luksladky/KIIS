@@ -87,7 +87,7 @@ function initTinymce() {
             'nonbreaking save  directionality',
             'paste textcolor colorpicker  '
         ],
-        toolbar1: 'undo redo | restoredraft | bold italic | forecolor | alignleft aligncenter alignright | bullist numlist  | link image',
+        toolbar1: 'undo redo | restoredraft | bold italic underline strikethrough | forecolor | alignleft aligncenter alignright | bullist numlist  | link image',
         setup: function (editor) {
             editor.on('init', function (ed) {
                 ed.target.editorCommands.execCommand("fontName", false, "Arial");

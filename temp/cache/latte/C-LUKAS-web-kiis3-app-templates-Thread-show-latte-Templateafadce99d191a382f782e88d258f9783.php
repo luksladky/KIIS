@@ -257,32 +257,32 @@ if (!function_exists($_b->blocks['_postWrapper'][] = '_lbd0844d8d29__postWrapper
 
                         <button class="ml10 btn-link reply" data-reply-id="<?php echo Latte\Runtime\Filters::escapeHtml($post->id, ENT_COMPAT) ?>">Odpovědět</button>
 
-<?php if ($userCanEdit) { ?>                        <a class="ajax read-later-toggle ml10" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("toggleReadLater!", array($post->id)), ENT_COMPAT) ?>
+                        <a class="ajax read-later-toggle ml10" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("toggleReadLater!", array($post->id)), ENT_COMPAT) ?>
 ">
                             <?php echo Latte\Runtime\Filters::escapeHtml($isReadLater ? 'Vyřízeno' : 'Nechat na později', ENT_NOQUOTES) ?>
 
                         </a>
-<?php } $_l->dynSnippets[$_l->dynSnippetId] = ob_get_flush() ?>                    </span>
-                    <div class="btn-group">
+<?php $_l->dynSnippets[$_l->dynSnippetId] = ob_get_flush() ?>                    </span>
+<?php if ($userCanEdit) { ?>                    <div class="btn-group">
                         <i class="glyphicon glyphicon-option-horizontal btn dropdown-toggle" data-toggle="dropdown"></i>
                         <ul class="dropdown-menu">
-                            <li>
-<?php if ($userCanEdit) { ?>                                <a href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Thread:editPost", array($post->id)), ENT_COMPAT) ?>
+<?php if ($user->id == $post->user_id) { ?>                            <li>
+                                <a href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Thread:editPost", array($post->id)), ENT_COMPAT) ?>
 ">
                                     Upravit
                                 </a>
-<?php } ?>
                             </li>
+<?php } ?>
                             <li>
-<?php if ($userCanEdit) { ?>                                <a
+                                <a
                                    onclick="return confirmDelete();" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("deletePost!", array($post->id)), ENT_COMPAT) ?>
 ">
                                     Smazat příspěvek
                                 </a>
-<?php } ?>
                             </li>
                         </ul>
                     </div>
+<?php } ?>
 
                 </div>
 

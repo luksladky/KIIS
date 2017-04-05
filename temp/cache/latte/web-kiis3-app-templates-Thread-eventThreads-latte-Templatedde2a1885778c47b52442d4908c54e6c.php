@@ -34,7 +34,7 @@ if (!function_exists($_b->blocks['content'][] = '_lb8ceaf7378d_content')) { func
 
 <?php $iterations = 0; foreach ($futureEvents as $event) { ?>
         <div class="event-thread" id="event-<?php echo Latte\Runtime\Filters::escapeHtml($event->id, ENT_COMPAT) ?>">
-            <h3 class="mb20">
+            <h3 class="mb10">
                 <a href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Event:show", array($event->id)), ENT_COMPAT) ?>
 "><?php echo Latte\Runtime\Filters::escapeHtml($event->title, ENT_NOQUOTES) ?></a>
                 <span class="small"><?php echo Latte\Runtime\Filters::escapeHtml($template->timeagoinwords($event->date_from), ENT_NOQUOTES) ?></span>
@@ -50,12 +50,6 @@ if (!function_exists($_b->blocks['content'][] = '_lb8ceaf7378d_content')) { func
                         <a class="thread-link" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Thread:show", array($thread->id)), ENT_COMPAT) ?>
 ">
                             <div class="thread thread-compact panel panel-default">
-                                <div class="panel-heading">
-                                    <?php echo Latte\Runtime\Filters::escapeHtml($thread->user->nickname, ENT_NOQUOTES) ?>
-
-                                    <?php echo Latte\Runtime\Filters::escapeHtml($template->timeagoinwords($thread->created_at), ENT_NOQUOTES) ?>
-
-                                </div>
                                 <div class="panel-body">
 <?php if ($unreadCounts[$thread->id] > 0) { ?>                                    <span
                                             class="badge red pull-left"><?php echo Latte\Runtime\Filters::escapeHtml($unreadCounts[$thread->id], ENT_NOQUOTES) ?></span>

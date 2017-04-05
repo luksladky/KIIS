@@ -44,13 +44,15 @@
                     <div class="thread-container">
                         <a n:href="Thread:show $thread->id" class="thread-link">
                             <div class="thread thread-compact panel panel-default">
-                                <div class="panel-heading">
-                                    {$thread->user->nickname}
-                                    {$thread->created_at|timeagoinwords}
-                                </div>
+                                {*<div class="panel-heading">*}
+                                    {*{$thread->user->nickname}*}
+                                    {*{$thread->created_at|timeagoinwords}*}
+                                {*</div>*}
                                 <div class="panel-body">
                                     <span n:if="$unreadCounts[$thread->id] > 0"
                                             class="badge red pull-left">{$unreadCounts[$thread->id]}</span>
+                                    <span n:ifset="$readLaterCounts[$thread->id]"
+                                            class="badge orange pull-left">{$readLaterCounts[$thread->id]}</span>
                                     {$thread->title|noescape}
                                 </div>
                             </div>
@@ -83,14 +85,16 @@
                 <div class="thread-container">
                     <a n:href="Thread:show $thread->id" class="thread-link">
                         <div class="thread thread-compact panel panel-default">
-                            <div class="panel-heading">
-                                přidal
-                                {$thread->user->nickname}
-                                {$thread->created_at|timeagoinwords}
-                            </div>
+                            {*<div class="panel-heading">*}
+                                {*přidal*}
+                                {*{$thread->user->nickname}*}
+                                {*{$thread->created_at|timeagoinwords}*}
+                            {*</div>*}
                             <div class="panel-body">
-                                <span class="badge red pull-left"
+                                <span class="badge red pull-left" n:if="$unreadCounts[$thread->id] > 0"
                                       title="{$thread->last_post|timeagoinwords}">{$unreadCounts[$thread->id]}</span>
+                                <span n:ifset="$readLaterCounts[$thread->id]"
+                                        class="badge orange pull-left">{$readLaterCounts[$thread->id]}</span>
                                 {$thread->title|noescape}
                             </div>
                         </div>
@@ -120,11 +124,13 @@
                 <div class="thread-container">
                     <a n:href="Thread:show $thread->id" class="thread-link">
                         <div class="thread thread-compact panel panel-default">
-                            <div class="panel-heading">
-                                {$thread->user->nickname}
-                                {$thread->created_at|timeagoinwords}
-                            </div>
+                            {*<div class="panel-heading">*}
+                                {*{$thread->user->nickname}*}
+                                {*{$thread->created_at|timeagoinwords}*}
+                            {*</div>*}
                             <div class="panel-body">
+                                <span n:ifset="$readLaterCounts[$thread->id]"
+                                        class="badge orange pull-left">{$readLaterCounts[$thread->id]}</span>
                                 {$thread->title|noescape}
                             </div>
                         </div>

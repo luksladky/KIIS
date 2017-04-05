@@ -51,6 +51,8 @@ abstract class BaseSecurePresenter extends BasePresenter
 
         $this->template->unreadThreadsCount = $this->threadFacade->getUnreadThreadsCount($this->user->id);
         $this->template->unreadEventThreadsCount = $this->threadFacade->getUnreadThreadsCount($this->user->id, true);
+        $this->template->readLaterThreadsCount = $this->threadFacade->getReadLaterThreadsCount($this->user->id);
+        $this->template->readLaterEventThreadsCount = $this->threadFacade->getReadLaterThreadsCount($this->user->id, true);
         $this->template->newEventsCount = $this->eventFacade->getNewEventsCount($this->user->id);
         if ($this->user->isInRole(Model\PermissionRepository::MODIFY_USER))
             $this->template->awaitingApprovalCount = $this->profileRepository->findAwaitingApproval()->count();

@@ -63,15 +63,11 @@ if (!function_exists($_b->blocks['content'][] = '_lb9534b87408_content')) { func
                         <a class="thread-link" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Thread:show", array($thread->id)), ENT_COMPAT) ?>
 ">
                             <div class="thread thread-compact panel panel-default">
-                                <div class="panel-heading">
-                                    <?php echo Latte\Runtime\Filters::escapeHtml($thread->user->nickname, ENT_NOQUOTES) ?>
-
-                                    <?php echo Latte\Runtime\Filters::escapeHtml($template->timeagoinwords($thread->created_at), ENT_NOQUOTES) ?>
-
-                                </div>
                                 <div class="panel-body">
 <?php if ($unreadCounts[$thread->id] > 0) { ?>                                    <span
                                             class="badge red pull-left"><?php echo Latte\Runtime\Filters::escapeHtml($unreadCounts[$thread->id], ENT_NOQUOTES) ?></span>
+<?php } if (isset($readLaterCounts[$thread->id])) { ?>                                    <span
+                                            class="badge orange pull-left"><?php echo Latte\Runtime\Filters::escapeHtml($readLaterCounts[$thread->id], ENT_NOQUOTES) ?></span>
 <?php } ?>
                                     <?php echo $thread->title ?>
 
@@ -109,17 +105,13 @@ if (!function_exists($_b->blocks['content'][] = '_lb9534b87408_content')) { func
                     <a class="thread-link" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Thread:show", array($thread->id)), ENT_COMPAT) ?>
 ">
                         <div class="thread thread-compact panel panel-default">
-                            <div class="panel-heading">
-                                přidal
-                                <?php echo Latte\Runtime\Filters::escapeHtml($thread->user->nickname, ENT_NOQUOTES) ?>
-
-                                <?php echo Latte\Runtime\Filters::escapeHtml($template->timeagoinwords($thread->created_at), ENT_NOQUOTES) ?>
-
-                            </div>
                             <div class="panel-body">
-                                <span class="badge red pull-left"
+<?php if ($unreadCounts[$thread->id] > 0) { ?>                                <span class="badge red pull-left"
                                       title="<?php echo Latte\Runtime\Filters::escapeHtml($template->timeagoinwords($thread->last_post), ENT_COMPAT) ?>
 "><?php echo Latte\Runtime\Filters::escapeHtml($unreadCounts[$thread->id], ENT_NOQUOTES) ?></span>
+<?php } if (isset($readLaterCounts[$thread->id])) { ?>                                <span
+                                        class="badge orange pull-left"><?php echo Latte\Runtime\Filters::escapeHtml($readLaterCounts[$thread->id], ENT_NOQUOTES) ?></span>
+<?php } ?>
                                 <?php echo $thread->title ?>
 
                             </div>
@@ -153,13 +145,10 @@ if (!function_exists($_b->blocks['content'][] = '_lb9534b87408_content')) { func
                     <a class="thread-link" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Thread:show", array($thread->id)), ENT_COMPAT) ?>
 ">
                         <div class="thread thread-compact panel panel-default">
-                            <div class="panel-heading">
-                                <?php echo Latte\Runtime\Filters::escapeHtml($thread->user->nickname, ENT_NOQUOTES) ?>
-
-                                <?php echo Latte\Runtime\Filters::escapeHtml($template->timeagoinwords($thread->created_at), ENT_NOQUOTES) ?>
-
-                            </div>
                             <div class="panel-body">
+<?php if (isset($readLaterCounts[$thread->id])) { ?>                                <span
+                                        class="badge orange pull-left"><?php echo Latte\Runtime\Filters::escapeHtml($readLaterCounts[$thread->id], ENT_NOQUOTES) ?></span>
+<?php } ?>
                                 <?php echo $thread->title ?>
 
                             </div>

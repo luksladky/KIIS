@@ -37,6 +37,8 @@ class ThreadPresenter extends BaseSecurePresenter
             $this->threadFacade->getUnreadPostsCountsBySelection($this->user->id, $threadsNotSeen) +
             $this->threadFacade->getUnreadPostsCountsBySelection($this->user->id, $threadsPinned);
 
+        $this->template->readLaterCounts = $this->threadFacade->getReadLaterCounts($this->user->id);
+
     }
 
     public function renderArchive($dashboard = true, $events = false)
@@ -73,6 +75,7 @@ class ThreadPresenter extends BaseSecurePresenter
             }
         }
         $unreadCounts = $this->threadFacade->getUnreadPostsCounts($this->user->id, $threadIds);
+
 
         if ($unreadFirst) {
             $eventsWithUnread = [];
@@ -171,14 +174,17 @@ class ThreadPresenter extends BaseSecurePresenter
 
     public function actionEditPost($id)
     {
+
+
         $post = $this->threadFacade->getPost($id);
+
 
         if (!$post) {
             throw new Nette\Application\BadRequestException();
         }
 
 
-        if (!$this->userCanEditPost($post->user_id)) {
+        if (!($this->user->id == $post->user_id)) {
             throw new Nette\Application\ForbiddenRequestException();
         }
 
@@ -393,8 +399,16 @@ class ThreadPresenter extends BaseSecurePresenter
         $this->threadFacade->toggleReadLater($postId, $this->user->id);
 
         $this->payload->redirect = $this->presenter->link('this');
+        $this->threadFacade->getNotSeenIds($this->user->id, true);
+
         $this->template->posts = [$this->threadFacade->getPost($postId)];
+        $this->template->unreadThreadsCount = $this->threadFacade->getUnreadThreadsCount($this->user->id);
+        $this->template->unreadEventThreadsCount = $this->threadFacade->getUnreadThreadsCount($this->user->id, true);
+        $this->template->readLaterThreadsCount = $this->threadFacade->getReadLaterThreadsCount($this->user->id);
+        $this->template->readLaterEventThreadsCount = $this->threadFacade->getReadLaterThreadsCount($this->user->id, true);
+
         $this->redrawControl('postWrapper');
+        $this->redrawControl('menu');
 //        $this->redirect('this#post-' . $postId);
     }
 

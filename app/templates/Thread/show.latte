@@ -187,20 +187,20 @@
 
                         <button class="ml10 btn-link reply" data-reply-id="{$post->id}">Odpovědět</button>
 
-                        <a class="ajax read-later-toggle ml10" n:if="$userCanEdit" n:href="toggleReadLater! $post->id">
+                        <a class="ajax read-later-toggle ml10" n:href="toggleReadLater! $post->id">
                             {$isReadLater ? 'Vyřízeno' : 'Nechat na později'}
                         </a>
                     </span>
-                    <div class="btn-group">
+                    <div class="btn-group" n:if="$userCanEdit">
                         <i class="glyphicon glyphicon-option-horizontal btn dropdown-toggle" data-toggle="dropdown"></i>
                         <ul class="dropdown-menu">
-                            <li>
-                                <a n:if="$userCanEdit" n:href="Thread:editPost $post->id">
+                            <li n:if="$user->id == $post->user_id">
+                                <a n:href="Thread:editPost $post->id">
                                     Upravit
                                 </a>
                             </li>
                             <li>
-                                <a n:if="$userCanEdit" n:href="deletePost! $post->id"
+                                <a n:href="deletePost! $post->id"
                                    onclick="return confirmDelete();">
                                     Smazat příspěvek
                                 </a>

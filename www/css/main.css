@@ -7053,6 +7053,8 @@ img.profile.in-table {
 
 .badge.red {
   background: #f44336 !important; }
+.badge.orange {
+  background: #FF9800 !important; }
 
 .btn-square {
   width: 35px; }
@@ -7083,7 +7085,9 @@ a.thread-link {
   font-size: 12px;
   padding: 2px 16px; }
 .thread-compact .panel-body {
-  padding: 5px 15px 5px; }
+  padding: 10px 15px 10px; }
+  .thread-compact .panel-body p:last-child {
+    margin-bottom: 0; }
 .thread-compact .badge {
   position: relative;
   margin: 3px 5px 0 0; }
@@ -7109,6 +7113,13 @@ a.thread-link {
     opacity: 1; }
   .thread-container:hover .actions .green {
     color: #333; }
+
+.event-thread h3 {
+  font-size: 18px; }
+.event-thread .add-event-thread {
+  opacity: 0; }
+.event-thread:hover .add-event-thread {
+  opacity: 1; }
 
 .post {
   padding: 15px 15px 4px;
@@ -7172,6 +7183,9 @@ a.thread-link {
 
 a.loading {
   opacity: 0.3; }
+
+.like-count {
+  cursor: help; }
 
 @media (max-width: 968px) {
   .post .media-left img {
@@ -7270,5 +7284,7 @@ a.event-link:hover {
   color: white;
   overflow: hidden;
   margin-bottom: 3px; }
+.calendar .current-day {
+  background: #ebebeb; }
 
 /*# sourceMappingURL=main.css.map */

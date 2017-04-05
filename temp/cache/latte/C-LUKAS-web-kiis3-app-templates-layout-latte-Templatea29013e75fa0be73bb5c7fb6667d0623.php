@@ -42,6 +42,7 @@ if (!function_exists($_b->blocks['_menu'][] = '_lb090218ef52__menu')) { function
 ">
                         <i class="glyphicon glyphicon-comment mr10"></i>Diskuse k akcím
 <?php if ($unreadEventThreadsCount > 0) { ?>                        <span class="badge"><?php echo Latte\Runtime\Filters::escapeHtml($unreadEventThreadsCount, ENT_NOQUOTES) ?></span>
+<?php } if ($readLaterEventThreadsCount > 0) { ?>                        <span class="badge orange"><?php echo Latte\Runtime\Filters::escapeHtml($readLaterThreadsCount, ENT_NOQUOTES) ?></span>
 <?php } ?>
                     </a></li>
                 <li<?php if ($_l->tmp = array_filter(array($presenter->isLinkCurrent('Thread:default') ? 'active' : NULL))) echo ' class="', Latte\Runtime\Filters::escapeHtml(implode(" ", array_unique($_l->tmp)), ENT_COMPAT), '"' ?>
@@ -49,6 +50,7 @@ if (!function_exists($_b->blocks['_menu'][] = '_lb090218ef52__menu')) { function
 ">
                         <i class="glyphicon glyphicon-bullhorn mr10"></i>Nástěnka
 <?php if ($unreadThreadsCount > 0) { ?>                        <span class="badge"><?php echo Latte\Runtime\Filters::escapeHtml($unreadThreadsCount, ENT_NOQUOTES) ?></span>
+<?php } if ($readLaterThreadsCount > 0) { ?>                        <span class="badge orange"><?php echo Latte\Runtime\Filters::escapeHtml($readLaterThreadsCount, ENT_NOQUOTES) ?></span>
 <?php } ?>
                     </a></li>
                 <li class="separator"></li>
@@ -157,7 +159,7 @@ if (empty($_l->extends) && !empty($_control->snippetMode)) {
     <!--  Bootstrap end  -->
 
     <script type="text/javascript">document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/, 'js');</script>
-    <link rel="stylesheet" href="<?php echo Latte\Runtime\Filters::escapeHtml(Latte\Runtime\Filters::safeUrl($basePath), ENT_COMPAT) ?>/css/main.css?version=7">
+    <link rel="stylesheet" href="<?php echo Latte\Runtime\Filters::escapeHtml(Latte\Runtime\Filters::safeUrl($basePath), ENT_COMPAT) ?>/css/main.css?version=8">
     <link rel="shortcut icon" href="<?php echo Latte\Runtime\Filters::escapeHtml(Latte\Runtime\Filters::safeUrl($basePath), ENT_COMPAT) ?>/icon.png">
     <meta name="viewport" content="width=device-width">
     <?php if ($_l->extends) { ob_end_clean(); return $template->renderChildTemplate($_l->extends, get_defined_vars()); }

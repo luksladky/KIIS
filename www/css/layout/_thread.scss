@@ -27,7 +27,11 @@ a.thread-link {
 
   .panel-body {
     //padding: 5px 15px 22px;
-    padding: 5px 15px 5px;
+    padding: 10px 15px 10px;
+
+    p:last-child {
+      margin-bottom: 0;
+    }
   }
 
   .badge {
@@ -66,6 +70,22 @@ a.thread-link {
 
     .actions .green {
       color: #333;
+    }
+  }
+}
+
+.event-thread {
+  h3 {
+    font-size: 18px;
+  }
+
+  .add-event-thread {
+    opacity: 0;
+  }
+
+  &:hover {
+    .add-event-thread {
+      opacity: 1;
     }
   }
 }
@@ -167,6 +187,10 @@ a.thread-link {
 
 a.loading {
   opacity: 0.3;
+}
+
+.like-count {
+  cursor: help;
 }
 
 

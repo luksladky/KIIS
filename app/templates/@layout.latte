@@ -44,10 +44,12 @@
                 <li n:class="$presenter->isLinkCurrent('Thread:eventThreads') ? active"><a n:href="Thread:eventThreads">
                         <i class="glyphicon glyphicon-comment mr10"></i>Diskuse k akcím
                         <span n:if="$unreadEventThreadsCount > 0" class="badge">{$unreadEventThreadsCount}</span>
+                        <span n:if="$readLaterEventThreadsCount > 0" class="badge orange">{$readLaterThreadsCount}</span>
                     </a></li>
                 <li n:class="$presenter->isLinkCurrent('Thread:default') ? active"><a n:href="Thread:default">
                         <i class="glyphicon glyphicon-bullhorn mr10"></i>Nástěnka
                         <span n:if="$unreadThreadsCount > 0" class="badge">{$unreadThreadsCount}</span>
+                        <span n:if="$readLaterThreadsCount > 0" class="badge orange">{$readLaterThreadsCount}</span>
                     </a></li>
                 <li class="separator"></li>
                 <li class="separator"></li>

@@ -128,9 +128,9 @@ class ThreadFacade
         return $this->readLaterRepository;
     }
 
-    public function getNotSeenIds($userId)
+    public function getNotSeenIds($userId, $refresh = false)
     {
-        if (!$this->notSeenIds) {
+        if (!$this->notSeenIds || $refresh) {
             $this->notSeenIds = $this->database->query("
             SELECT thread.id
                 FROM thread
@@ -148,13 +148,11 @@ class ThreadFacade
                        WHERE activity.user_id = ?
                      )
             UNION 
-            SELECT thread_id FROM read_later WHERE user_id = ?
-            UNION
             SELECT
                   thread.id
                 FROM thread
                   LEFT JOIN activity ON activity.thread_id = thread.id
-                WHERE activity.user_id IS NULL", $userId, $userId,$userId)->fetchPairs(null, 'id');
+                WHERE activity.user_id IS NULL", $userId, $userId)->fetchPairs(null, 'id');
         }
         $this->notSeenIds[] = -1;
         return $this->notSeenIds;
@@ -342,11 +340,11 @@ class ThreadFacade
                 [$this->getRestrictedIds($userId), new Nette\Utils\DateTime(), $rejectedEventIds])->limit($limit, $offset);
     }
 
-    public function findDashboard($userId, $limit, $offset, $orderBy = ThreadRepository::BY_DATE_LAST_POST)
+    public function findDashboard($userId, $orderBy = ThreadRepository::BY_DATE_LAST_POST)
     {
         $orderFunc = ThreadRepository::getOrderFunction(ThreadRepository::BY_DATE_LAST_POST);
         return $orderFunc($this->getThreadRepository()
-            ->findBy('event_id = ? AND id NOT IN ?', [null, $this->getRestrictedIds($userId)]));
+            ->findBy('event_id IS NULL AND archived = 0 AND id NOT IN ?', $this->getRestrictedIds($userId)));
     }
 
     /**
@@ -391,13 +389,13 @@ class ThreadFacade
     public function getUnreadThreadsCount($userId, $events = false, $countRejected = false)
     {
         if ($events) {
-            $threads = $this->findForFutureEvents($userId);
-            return $threads->where('thread.id IN (?) AND thread.id NOT IN ?', [$this->getNotSeenIds($userId), $this->getRestrictedIds($userId)])->count();
+            $threads = $this->findForFutureEvents($userId)
+                ->where('thread.id IN (?) AND thread.id NOT IN ?', [$this->getNotSeenIds($userId), $this->getRestrictedIds($userId)]);
 
         } else {
             $threads = $this->findNotSeen($userId, true);
-            return $threads->count();
         }
+        return $threads->count();
 //VERSION 2
 //        $count = 0;
 //        $threadIds = $threads->fetchPairs(null,'id'); $threadIds[] = -1;
@@ -443,6 +441,21 @@ class ThreadFacade
 //        return $count;
     }
 
+    public function getReadLaterCounts($userId) {
+        return $this->getReadLaterRepository()->findBy('user_id',$userId)->group('thread_id')->select('thread_id, count(*) AS count')->fetchPairs('thread_id','count');
+    }
+
+    public function getReadLaterThreadsCount($userId, $events = false) {
+        $threadIds = array_keys($this->getReadLaterCounts($userId));
+        if ($events) {
+            $threads = $this->findForFutureEvents($userId);
+        } else {
+            $threads = $this->findDashboard($userId);
+        }
+        $threads = $threads->where('thread.id IN (?) AND thread.id NOT IN ?', [$threadIds, $this->getRestrictedIds($userId)]);
+        return $threads->count();
+    }
+
     public function getUnreadPostsAllThreadsCount($userId)
     {
 
@@ -468,9 +481,9 @@ class ThreadFacade
         }
         $lastVisited = $lastVisited[0];
 
-        $readLaterIds = $this->findReadLaterIds($userId,$threadId);
+        //$readLaterIds = $this->findReadLaterIds($userId,$threadId);
 
-        return $count + $this->getPostRepository()->findBy('(thread_id = ? AND created_at > ?) OR id IN ?', [$threadId, $lastVisited,$readLaterIds])->count();
+        return $count + $this->getPostRepository()->findBy('(thread_id = ? AND created_at > ?)', [$threadId, $lastVisited])->count();
     }
 
     public function getUnreadPostsCounts($userId, $threadIds)

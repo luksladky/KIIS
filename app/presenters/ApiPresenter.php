@@ -130,6 +130,9 @@ class ApiPresenter extends BasePresenter
 
         $this->template->unreadThreadsCount = $c1 = $this->threadFacade->getUnreadThreadsCount($this->user->id);
         $this->template->unreadEventThreadsCount = $c2 = $this->threadFacade->getUnreadThreadsCount($this->user->id, true);
+        $this->template->readLaterThreadsCount = $this->threadFacade->getReadLaterThreadsCount($this->user->id);
+        $this->template->readLaterEventThreadsCount = $this->threadFacade->getReadLaterThreadsCount($this->user->id, true);
+
         $this->template->newEventsCount = $c3 = $this->eventFacade->getNewEventsCount($this->user->id);
         $c4 = 0;
         if ($this->user->isInRole(Model\PermissionRepository::MODIFY_USER))
@@ -138,7 +141,8 @@ class ApiPresenter extends BasePresenter
 
 //        $refreshMenu = $c1 > 0 || $c2 > 0 || $c3 > 0 || $c4 > 0;
         
-        $this->redrawControl('menu');
+        $this->redrawControl('badgeEventThreads');
+        $this->redrawControl('badgeDashboard');
     }
     
     public function actionCheckCron() {

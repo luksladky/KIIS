@@ -16,7 +16,7 @@
     <!--  Bootstrap end  -->
 
     <script type="text/javascript">document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/, 'js');</script>
-    <link rel="stylesheet" href="{$basePath}/css/main.css?version=8">
+    <link rel="stylesheet" href="{$basePath}/css/main.min.css?version=9">
     <link rel="shortcut icon" href="{$basePath}/icon.png">
     <meta name="viewport" content="width=device-width">
     {block head}{/block}
@@ -43,13 +43,17 @@
                 <li class="separator"></li>
                 <li n:class="$presenter->isLinkCurrent('Thread:eventThreads') ? active"><a n:href="Thread:eventThreads">
                         <i class="glyphicon glyphicon-comment mr10"></i>Diskuse k akcím
+                        <span n:snippet="badgeEventThreads">
                         <span n:if="$unreadEventThreadsCount > 0" class="badge">{$unreadEventThreadsCount}</span>
-                        <span n:if="$readLaterEventThreadsCount > 0" class="badge orange">{$readLaterThreadsCount}</span>
+                        <span n:if="$readLaterEventThreadsCount > 0" class="badge orange">{$readLaterEventThreadsCount}</span>
+                        </span>
                     </a></li>
                 <li n:class="$presenter->isLinkCurrent('Thread:default') ? active"><a n:href="Thread:default">
                         <i class="glyphicon glyphicon-bullhorn mr10"></i>Nástěnka
+                        <span n:snippet="badgeDashboard">
                         <span n:if="$unreadThreadsCount > 0" class="badge">{$unreadThreadsCount}</span>
                         <span n:if="$readLaterThreadsCount > 0" class="badge orange">{$readLaterThreadsCount}</span>
+                        </span>
                     </a></li>
                 <li class="separator"></li>
                 <li class="separator"></li>
@@ -88,9 +92,14 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="container main-content">
-
+                        {var newCount = $newEventsCount + $unreadThreadsCount + $unreadEventThreadsCount + $awaitingApprovalCount}
                         <button id="menu-toggle" type="button" class="btn btn-default visible-xs">
-                            <i class="glyphicon glyphicon-menu-hamburger"></i> MENU
+                            {if $newCount > 0}
+                                <span class="badge red">{$newCount}</span>
+                            {else}
+                                <i class="glyphicon glyphicon-menu-hamburger"></i>
+                            {/if}
+                            MENU
                         </button>
 
 

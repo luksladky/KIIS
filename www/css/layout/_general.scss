@@ -1,5 +1,3 @@
-
-
 .popover-icon {
 
 
@@ -121,6 +119,10 @@ img.profile {
 .large-table-container {
   overflow-x: scroll;
   width: 100%;
+}
+
+#page-content-wrapper > .container-fluid {
+  padding: 0;
 }
 
 .profile-list-table > tbody > tr > td {

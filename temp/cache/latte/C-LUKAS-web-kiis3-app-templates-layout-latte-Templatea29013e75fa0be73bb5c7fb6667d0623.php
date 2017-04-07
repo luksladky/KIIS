@@ -41,17 +41,17 @@ if (!function_exists($_b->blocks['_menu'][] = '_lb090218ef52__menu')) { function
 ><a href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Thread:eventThreads"), ENT_COMPAT) ?>
 ">
                         <i class="glyphicon glyphicon-comment mr10"></i>Diskuse k akcím
-<?php if ($unreadEventThreadsCount > 0) { ?>                        <span class="badge"><?php echo Latte\Runtime\Filters::escapeHtml($unreadEventThreadsCount, ENT_NOQUOTES) ?></span>
-<?php } if ($readLaterEventThreadsCount > 0) { ?>                        <span class="badge orange"><?php echo Latte\Runtime\Filters::escapeHtml($readLaterThreadsCount, ENT_NOQUOTES) ?></span>
-<?php } ?>
+                        <span<?php echo ' id="' . $_control->getSnippetId('badgeEventThreads') . '"' ?>>
+<?php call_user_func(reset($_b->blocks['_badgeEventThreads']), $_b, $template->getParameters()) ?>
+                        </span>
                     </a></li>
                 <li<?php if ($_l->tmp = array_filter(array($presenter->isLinkCurrent('Thread:default') ? 'active' : NULL))) echo ' class="', Latte\Runtime\Filters::escapeHtml(implode(" ", array_unique($_l->tmp)), ENT_COMPAT), '"' ?>
 ><a href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Thread:default"), ENT_COMPAT) ?>
 ">
                         <i class="glyphicon glyphicon-bullhorn mr10"></i>Nástěnka
-<?php if ($unreadThreadsCount > 0) { ?>                        <span class="badge"><?php echo Latte\Runtime\Filters::escapeHtml($unreadThreadsCount, ENT_NOQUOTES) ?></span>
-<?php } if ($readLaterThreadsCount > 0) { ?>                        <span class="badge orange"><?php echo Latte\Runtime\Filters::escapeHtml($readLaterThreadsCount, ENT_NOQUOTES) ?></span>
-<?php } ?>
+                        <span<?php echo ' id="' . $_control->getSnippetId('badgeDashboard') . '"' ?>>
+<?php call_user_func(reset($_b->blocks['_badgeDashboard']), $_b, $template->getParameters()) ?>
+                        </span>
                     </a></li>
                 <li class="separator"></li>
                 <li class="separator"></li>
@@ -88,6 +88,24 @@ if (!function_exists($_b->blocks['_menu'][] = '_lb090218ef52__menu')) { function
                 <li><a href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link(":Sign:up"), ENT_COMPAT) ?>
 ">Registrovat</a></li>
 
+<?php } 
+}}
+
+//
+// block _badgeEventThreads
+//
+if (!function_exists($_b->blocks['_badgeEventThreads'][] = '_lb9a7979bb7d__badgeEventThreads')) { function _lb9a7979bb7d__badgeEventThreads($_b, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->redrawControl('badgeEventThreads', FALSE)
+;if ($unreadEventThreadsCount > 0) { ?>                        <span class="badge"><?php echo Latte\Runtime\Filters::escapeHtml($unreadEventThreadsCount, ENT_NOQUOTES) ?></span>
+<?php } if ($readLaterEventThreadsCount > 0) { ?>                        <span class="badge orange"><?php echo Latte\Runtime\Filters::escapeHtml($readLaterEventThreadsCount, ENT_NOQUOTES) ?></span>
+<?php } 
+}}
+
+//
+// block _badgeDashboard
+//
+if (!function_exists($_b->blocks['_badgeDashboard'][] = '_lbc7d0fa8261__badgeDashboard')) { function _lbc7d0fa8261__badgeDashboard($_b, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->redrawControl('badgeDashboard', FALSE)
+;if ($unreadThreadsCount > 0) { ?>                        <span class="badge"><?php echo Latte\Runtime\Filters::escapeHtml($unreadThreadsCount, ENT_NOQUOTES) ?></span>
+<?php } if ($readLaterThreadsCount > 0) { ?>                        <span class="badge orange"><?php echo Latte\Runtime\Filters::escapeHtml($readLaterThreadsCount, ENT_NOQUOTES) ?></span>
 <?php } 
 }}
 
@@ -159,7 +177,7 @@ if (empty($_l->extends) && !empty($_control->snippetMode)) {
     <!--  Bootstrap end  -->
 
     <script type="text/javascript">document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/, 'js');</script>
-    <link rel="stylesheet" href="<?php echo Latte\Runtime\Filters::escapeHtml(Latte\Runtime\Filters::safeUrl($basePath), ENT_COMPAT) ?>/css/main.css?version=8">
+    <link rel="stylesheet" href="<?php echo Latte\Runtime\Filters::escapeHtml(Latte\Runtime\Filters::safeUrl($basePath), ENT_COMPAT) ?>/css/main.min.css?version=9">
     <link rel="shortcut icon" href="<?php echo Latte\Runtime\Filters::escapeHtml(Latte\Runtime\Filters::safeUrl($basePath), ENT_COMPAT) ?>/icon.png">
     <meta name="viewport" content="width=device-width">
     <?php if ($_l->extends) { ob_end_clean(); return $template->renderChildTemplate($_l->extends, get_defined_vars()); }
@@ -185,9 +203,14 @@ call_user_func(reset($_b->blocks['head']), $_b, get_defined_vars())  ?>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="container main-content">
-
+<?php $newCount = $newEventsCount + $unreadThreadsCount + $unreadEventThreadsCount + $awaitingApprovalCount ?>
                         <button id="menu-toggle" type="button" class="btn btn-default visible-xs">
-                            <i class="glyphicon glyphicon-menu-hamburger"></i> MENU
+<?php if ($newCount > 0) { ?>
+                                <span class="badge red"><?php echo Latte\Runtime\Filters::escapeHtml($newCount, ENT_NOQUOTES) ?></span>
+<?php } else { ?>
+                                <i class="glyphicon glyphicon-menu-hamburger"></i>
+<?php } ?>
+                            MENU
                         </button>
 
 

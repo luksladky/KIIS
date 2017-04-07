@@ -97,6 +97,7 @@ class ThreadPresenter extends BaseSecurePresenter
         $this->template->futureEvents = $events;
         $this->template->threads = $threads;
         $this->template->unreadCounts = $unreadCounts;
+        $this->template->readLaterCounts = $this->threadFacade->getReadLaterCounts($this->user->id);
         $this->template->all = $all;
         $this->template->unreadFirst = $unreadFirst;
     }
@@ -122,13 +123,16 @@ class ThreadPresenter extends BaseSecurePresenter
         $this->template->lastActivity = $lastActivity = $this->threadFacade->findActivityDateByThread($this->user->id, $id);
         $this->template->restrictions = $this->threadFacade->findRestrictionsForThread($id);
         $this->template->allActivity = $this->threadFacade->findActivityByThread($id);
-        $this->template->readLaterIds = $this->threadFacade->findReadLaterIds($this->user->id, $id);
+        $this->template->readLaterIds = $readLaterIds = $this->threadFacade->findReadLaterIds($this->user->id, $id);
 
         $lastReadPostId = -1;
         $lastReadPost = null;
         $iterator = 0;
         foreach ($posts as $post) {
             if ($post->created_at > $lastActivity) {
+                break;
+            }
+            if (in_array($post->id, $readLaterIds)) {
                 break;
             }
             $lastReadPostId = $post->id;
@@ -139,7 +143,7 @@ class ThreadPresenter extends BaseSecurePresenter
         //chci to dat na rodice
         if ($lastReadPost && $lastReadPost->parent_id) $lastReadPostId = $lastReadPost->parent_id;
 
-        //pokud jsou prectene vsechny, neskryvat
+        //pokud jsou prectene vsechny, nebo pokud je jich celkove malo, neskryvat
         if ($iterator == $posts->count() || $hiddenReadPostsCount < 5) $lastReadPostId = -1;
 
         $this->template->lastReadPostId = $lastReadPostId;
@@ -408,7 +412,8 @@ class ThreadPresenter extends BaseSecurePresenter
         $this->template->readLaterEventThreadsCount = $this->threadFacade->getReadLaterThreadsCount($this->user->id, true);
 
         $this->redrawControl('postWrapper');
-        $this->redrawControl('menu');
+        $this->redrawControl('badgeEventThreads');
+        $this->redrawControl('badgeDashboard');
 //        $this->redirect('this#post-' . $postId);
     }
 

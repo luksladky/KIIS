@@ -39,6 +39,8 @@
                                 <div class="panel-body">
                                     <span n:if="$unreadCounts[$thread->id] > 0"
                                             class="badge red pull-left">{$unreadCounts[$thread->id]}</span>
+                                    <span n:ifset="$readLaterCounts[$thread->id]"
+                                            class="badge orange pull-left">{$readLaterCounts[$thread->id]}</span>
                                     {$thread->title|noescape}
                                 </div>
                             </div>

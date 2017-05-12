@@ -203,7 +203,7 @@ call_user_func(reset($_b->blocks['head']), $_b, get_defined_vars())  ?>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="container main-content">
-<?php $newCount = $newEventsCount + $unreadThreadsCount + $unreadEventThreadsCount + $awaitingApprovalCount ?>
+<?php if ($user->isLoggedIn()) { $newCount = $newEventsCount + $unreadThreadsCount + $unreadEventThreadsCount + $awaitingApprovalCount ?>
                         <button id="menu-toggle" type="button" class="btn btn-default visible-xs">
 <?php if ($newCount > 0) { ?>
                                 <span class="badge red"><?php echo Latte\Runtime\Filters::escapeHtml($newCount, ENT_NOQUOTES) ?></span>
@@ -212,7 +212,7 @@ call_user_func(reset($_b->blocks['head']), $_b, get_defined_vars())  ?>
 <?php } ?>
                             MENU
                         </button>
-
+<?php } ?>
 
 <div id="<?php echo $_control->getSnippetId('flashes') ?>"><?php call_user_func(reset($_b->blocks['_flashes']), $_b, $template->getParameters()) ?>
 </div><?php Latte\Macros\BlockMacrosRuntime::callBlock($_b, 'content', $template->getParameters()) ?>

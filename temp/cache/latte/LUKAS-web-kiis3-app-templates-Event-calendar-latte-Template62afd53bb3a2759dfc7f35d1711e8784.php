@@ -16,14 +16,17 @@ if (!function_exists($_b->blocks['content'][] = '_lb0bcb7c9a95_content')) { func
 
     <a class="pull-right btn btn-link" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Event:exportCalendar"), ENT_COMPAT) ?>
 ">Přidat akce do Google Kalendáře</a>
-<?php $_l->tmp = $_control->getComponent("calendar"); if ($_l->tmp instanceof Nette\Application\UI\IRenderable) $_l->tmp->redrawControl(NULL, FALSE); $_l->tmp->render() ;
+    <div class="large-table-container">
+<?php $_l->tmp = $_control->getComponent("calendar"); if ($_l->tmp instanceof Nette\Application\UI\IRenderable) $_l->tmp->redrawControl(NULL, FALSE); $_l->tmp->render() ?>
+    </div>
+<?php
 }}
 
 //
 // block title
 //
 if (!function_exists($_b->blocks['title'][] = '_lb3a3b24117a_title')) { function _lb3a3b24117a_title($_b, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
-?><h1 class="page-header">Kalendář akcí</h1>
+?>    <h1 class="page-header">Kalendář akcí</h1>
 <?php
 }}
 

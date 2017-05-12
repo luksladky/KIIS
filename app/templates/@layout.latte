@@ -28,7 +28,7 @@
     <!-- Sidebar -->
     <div id="sidebar-wrapper">
 
-        <ul class="sidebar-nav"  n:snippet="menu">
+        <ul class="sidebar-nav" n:snippet="menu">
             <li class="sidebar-brand"><a n:href="Homepage:default">
                     <img src="/images/logo.jpg" alt="DDM Trebic logo">
                 </a></li>
@@ -45,7 +45,8 @@
                         <i class="glyphicon glyphicon-comment mr10"></i>Diskuse k akcím
                         <span n:snippet="badgeEventThreads">
                         <span n:if="$unreadEventThreadsCount > 0" class="badge">{$unreadEventThreadsCount}</span>
-                        <span n:if="$readLaterEventThreadsCount > 0" class="badge orange">{$readLaterEventThreadsCount}</span>
+                        <span n:if="$readLaterEventThreadsCount > 0"
+                                class="badge orange">{$readLaterEventThreadsCount}</span>
                         </span>
                     </a></li>
                 <li n:class="$presenter->isLinkCurrent('Thread:default') ? active"><a n:href="Thread:default">
@@ -92,15 +93,19 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="container main-content">
+                        <span n:snippet="badgeMobileAll">
+                        {if $user->isLoggedIn()}
+                            <button id="menu-toggle" type="button" class="btn btn-default visible-xs">
                         {var newCount = $newEventsCount + $unreadThreadsCount + $unreadEventThreadsCount + $awaitingApprovalCount}
-                        <button id="menu-toggle" type="button" class="btn btn-default visible-xs">
-                            {if $newCount > 0}
-                                <span class="badge red">{$newCount}</span>
+                                {if $newCount > 0}
+                                    <span class="badge red">{$newCount}</span>
                             {else}
                                 <i class="glyphicon glyphicon-menu-hamburger"></i>
-                            {/if}
-                            MENU
+                                {/if}
+                                MENU
                         </button>
+                        {/if}
+                        </span>
 
 
                         {snippet flashes}

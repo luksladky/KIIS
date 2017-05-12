@@ -143,6 +143,7 @@ class ApiPresenter extends BasePresenter
         
         $this->redrawControl('badgeEventThreads');
         $this->redrawControl('badgeDashboard');
+        $this->redrawControl('badgeMobileAll');
     }
     
     public function actionCheckCron() {

@@ -91,11 +91,11 @@
                                             <div class="popover-content">
                                                 {if $person->date_from}
                                                     <p>
-                                                        <strong>Příjezd:</strong> {$person->date_from|date:'j. n. Y, H:m'}
+                                                        <strong>Příjezd:</strong> {$person->date_from|date:'j. n. Y, H:i'}
                                                     </p>
                                                 {/if}
                                                 {if $person->date_to}
-                                                    <p><strong>Odjezd:</strong> {$person->date_to|date:'j. n. Y, H:m'}
+                                                    <p><strong>Odjezd:</strong> {$person->date_to|date:'j. n. Y, H:i'}
                                                     </p>
                                                 {/if}
                                             </div>

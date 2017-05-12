@@ -96,7 +96,8 @@ if (!function_exists($_b->blocks['_menu'][] = '_lb090218ef52__menu')) { function
 //
 if (!function_exists($_b->blocks['_badgeEventThreads'][] = '_lb9a7979bb7d__badgeEventThreads')) { function _lb9a7979bb7d__badgeEventThreads($_b, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->redrawControl('badgeEventThreads', FALSE)
 ;if ($unreadEventThreadsCount > 0) { ?>                        <span class="badge"><?php echo Latte\Runtime\Filters::escapeHtml($unreadEventThreadsCount, ENT_NOQUOTES) ?></span>
-<?php } if ($readLaterEventThreadsCount > 0) { ?>                        <span class="badge orange"><?php echo Latte\Runtime\Filters::escapeHtml($readLaterEventThreadsCount, ENT_NOQUOTES) ?></span>
+<?php } if ($readLaterEventThreadsCount > 0) { ?>                        <span
+                                class="badge orange"><?php echo Latte\Runtime\Filters::escapeHtml($readLaterEventThreadsCount, ENT_NOQUOTES) ?></span>
 <?php } 
 }}
 
@@ -106,6 +107,22 @@ if (!function_exists($_b->blocks['_badgeEventThreads'][] = '_lb9a7979bb7d__badge
 if (!function_exists($_b->blocks['_badgeDashboard'][] = '_lbc7d0fa8261__badgeDashboard')) { function _lbc7d0fa8261__badgeDashboard($_b, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->redrawControl('badgeDashboard', FALSE)
 ;if ($unreadThreadsCount > 0) { ?>                        <span class="badge"><?php echo Latte\Runtime\Filters::escapeHtml($unreadThreadsCount, ENT_NOQUOTES) ?></span>
 <?php } if ($readLaterThreadsCount > 0) { ?>                        <span class="badge orange"><?php echo Latte\Runtime\Filters::escapeHtml($readLaterThreadsCount, ENT_NOQUOTES) ?></span>
+<?php } 
+}}
+
+//
+// block _badgeMobileAll
+//
+if (!function_exists($_b->blocks['_badgeMobileAll'][] = '_lb8c2554f58f__badgeMobileAll')) { function _lb8c2554f58f__badgeMobileAll($_b, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->redrawControl('badgeMobileAll', FALSE)
+;if ($user->isLoggedIn()) { ?>
+                            <button id="menu-toggle" type="button" class="btn btn-default visible-xs">
+<?php $newCount = $newEventsCount + $unreadThreadsCount + $unreadEventThreadsCount + $awaitingApprovalCount ;if ($newCount > 0) { ?>
+                                    <span class="badge red"><?php echo Latte\Runtime\Filters::escapeHtml($newCount, ENT_NOQUOTES) ?></span>
+<?php } else { ?>
+                                <i class="glyphicon glyphicon-menu-hamburger"></i>
+<?php } ?>
+                                MENU
+                        </button>
 <?php } 
 }}
 
@@ -203,16 +220,10 @@ call_user_func(reset($_b->blocks['head']), $_b, get_defined_vars())  ?>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="container main-content">
-<?php if ($user->isLoggedIn()) { $newCount = $newEventsCount + $unreadThreadsCount + $unreadEventThreadsCount + $awaitingApprovalCount ?>
-                        <button id="menu-toggle" type="button" class="btn btn-default visible-xs">
-<?php if ($newCount > 0) { ?>
-                                <span class="badge red"><?php echo Latte\Runtime\Filters::escapeHtml($newCount, ENT_NOQUOTES) ?></span>
-<?php } else { ?>
-                                <i class="glyphicon glyphicon-menu-hamburger"></i>
-<?php } ?>
-                            MENU
-                        </button>
-<?php } ?>
+                        <span<?php echo ' id="' . $_control->getSnippetId('badgeMobileAll') . '"' ?>>
+<?php call_user_func(reset($_b->blocks['_badgeMobileAll']), $_b, $template->getParameters()) ?>
+                        </span>
+
 
 <div id="<?php echo $_control->getSnippetId('flashes') ?>"><?php call_user_func(reset($_b->blocks['_flashes']), $_b, $template->getParameters()) ?>
 </div><?php Latte\Macros\BlockMacrosRuntime::callBlock($_b, 'content', $template->getParameters()) ?>

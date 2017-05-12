@@ -12,8 +12,15 @@ list($_b, $_g, $_l) = $template->initialize('495d370f04', 'html')
 // block content
 //
 if (!function_exists($_b->blocks['content'][] = '_lbac945679d1_content')) { function _lbac945679d1_content($_b, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
+;call_user_func(reset($_b->blocks['title']), $_b, get_defined_vars()) ; $_l->tmp = $_control->getComponent("addEventForm"); if ($_l->tmp instanceof Nette\Application\UI\IRenderable) $_l->tmp->redrawControl(NULL, FALSE); $_l->tmp->render() ;
+}}
+
+//
+// block title
+//
+if (!function_exists($_b->blocks['title'][] = '_lb9425c915c9_title')) { function _lb9425c915c9_title($_b, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?>    <h1 class="page-header">Upravit akci - <?php echo Latte\Runtime\Filters::escapeHtml($event->title, ENT_NOQUOTES) ?></h1>
-<?php $_l->tmp = $_control->getComponent("addEventForm"); if ($_l->tmp instanceof Nette\Application\UI\IRenderable) $_l->tmp->redrawControl(NULL, FALSE); $_l->tmp->render() ;
+<?php
 }}
 
 //
@@ -22,35 +29,9 @@ if (!function_exists($_b->blocks['content'][] = '_lbac945679d1_content')) { func
 if (!function_exists($_b->blocks['templateScripts'][] = '_lb71cc74d54c_templateScripts')) { function _lb71cc74d54c_templateScripts($_b, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v
 ?>    <script>
         $(document).ready(function () {
-
-            var options = {
-                datetime: {
-                    dateFormat: 'd.m.yy',
-                    timeFormat: 'H:mm',
-                    options: { // options for type=datetime
-                        changeYear: true,
-                        timeInput: true,
-                        hourGrid: 6,
-                        minuteGrid: 15,
-                        hour: 17
-                    }
-                },
-                'datetime-local': {
-                    dateFormat: 'd.m.yy',
-                    timeFormat: 'H:mm'
-                },
-                date: {
-                    dateFormat: 'd.m.yy'
-                },
-                time: {
-                    timeFormat: 'H:mm'
-                },
-                options: { // global options
-                    closeText: "Zavřít",
-                    showSecond: false
-                }
-            };
-            var dateTimeInputs = $('input[data-dateinput-type]').dateinput(options);
+            $('input[data-dateinput-type]').each(function () {
+                initDatePicker($(this));
+            })
         });
     </script>
 

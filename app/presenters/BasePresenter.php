@@ -2,16 +2,16 @@
 namespace App\Presenters;
 
 
+use App\Components\TMailer;
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Mail\Message;
-use Nette\Mail\SendmailMailer;
+
 
 class BasePresenter extends Nette\Application\UI\Presenter
 {
 
     use \WebChemistry\Images\TPresenter;
-
+    use TMailer;
     
     public function beforeRender()
     {
@@ -29,22 +29,5 @@ class BasePresenter extends Nette\Application\UI\Presenter
 
     }
 
-    /**Shorthand for sending emails.
-     * @param $email
-     * @param $subject
-     * @param $template
-     */
-    public function sendMail($email, $subject, $template)
-    {
-        $mail = new Message;
-
-        $mail->setFrom("noreply@klub.ddmtrebic.cz")
-            ->addTo($email)
-            ->setSubject($subject)
-            ->setHtmlBody($template);
-
-        $mailer = new SendmailMailer();
-        $mailer->send($mail);
-    }
 
 }

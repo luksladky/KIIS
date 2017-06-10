@@ -61,10 +61,14 @@ if (usersInput.length > 0) {
     initSelectize('/?presenter=Api&action=getUsers', usersInput, users, 'id', 'nickname', ['name', 'nickname']);
 }
 
-$("#menu-toggle").click(function (e) {
-    e.preventDefault();
-    $("#wrapper").toggleClass("toggled");
-});
+function initMenuToggle() {
+    $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+}
+initMenuToggle();
+
 
 
 var firstFocus = true;
@@ -337,7 +341,7 @@ function refreshMenu() {
     $.nette.ajax('/?presenter=Api&action=refreshMenu').success(function () {
         if (!document.hidden)
             refreshMenuTimeout = setTimeout(refreshMenu, refreshMenuInterval);
-
+        initMenuToggle();
     });
 }
 

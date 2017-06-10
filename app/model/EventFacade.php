@@ -137,6 +137,43 @@ class EventFacade
         return $events;
     }
 
+    public function findNearest($maxDaysLeft = 14)
+    {
+        $dateFrom = (new Nette\Utils\DateTime());
+        $dateTo = (new Nette\Utils\DateTime())->add(new \DateInterval('P' . $maxDaysLeft . 'D'));
+
+        return $this->findInInterval($dateFrom, $dateTo);
+    }
+
+    public function findInInterval($dateFrom, $dateTo)
+    {
+        return $this->getEventRepository()->findBy('date_from > ? AND date_from < ?', [$dateFrom, $dateTo]);
+    }
+
+
+    public function findNearestMaybe()
+    {
+        $users = $this->getProfileRepository()->findAll();
+
+        $userWithEvents = [];
+
+        $nearestEventsId = $this->findNearest()->fetchPairs(null, 'id');
+        foreach ($users as $user) {
+
+            $signIds = $this->getEventSignRepository()
+                ->findBy("user_id = ? AND event_id IN ? AND type IN ?", [$user->id, $nearestEventsId, ['yes', 'no']])
+                ->fetchPairs(null, 'event_id');
+            $signIds[] = -1;
+
+                $events = $this->findNearest()->where('id NOT IN ?', $signIds);
+            if ($events->count() > 0) {
+                $userWithEvents[] = ['user' => $user, 'events' => $events];
+            }
+        }
+
+        return $userWithEvents;
+    }
+
 
     public function findForDay($year, $month, $day)
     {

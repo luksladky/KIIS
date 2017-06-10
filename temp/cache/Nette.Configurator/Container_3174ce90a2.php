@@ -571,6 +571,7 @@ class Container_3174ce90a2 extends Nette\DI\Container
 			$this->getService('http.request'), $this->getService('http.response'), $this->getService('session.session'),
 			$this->getService('security.user'), $this->getService('latte.templateFactory'));
 		$service->imageStorage = $this->getService('images.storage');
+		$service->cronManager = $this->getService('32_App_Model_CronManager');
 		$service->profileRepository = $this->getService('35_App_Model_ProfileRepository');
 		$service->texy = $this->getService('texy');
 		$service->database = $this->getService('database.default.context');
@@ -591,6 +592,7 @@ class Container_3174ce90a2 extends Nette\DI\Container
 			$this->getService('http.request'), $this->getService('http.response'), $this->getService('session.session'),
 			$this->getService('security.user'), $this->getService('latte.templateFactory'));
 		$service->imageStorage = $this->getService('images.storage');
+		$service->cronManager = $this->getService('32_App_Model_CronManager');
 		$service->threadFacade = $this->getService('36_App_Model_ThreadFacade');
 		$service->eventFacade = $this->getService('33_App_Model_EventFacade');
 		$service->profileRepository = $this->getService('35_App_Model_ProfileRepository');
@@ -610,6 +612,7 @@ class Container_3174ce90a2 extends Nette\DI\Container
 			$this->getService('http.request'), $this->getService('http.response'), $this->getService('session.session'),
 			$this->getService('security.user'), $this->getService('latte.templateFactory'));
 		$service->imageStorage = $this->getService('images.storage');
+		$service->cronManager = $this->getService('32_App_Model_CronManager');
 		$service->threadFacade = $this->getService('36_App_Model_ThreadFacade');
 		$service->permissionRepository = $this->getService('34_App_Model_PermissionRepository');
 		$service->userManager = $this->getService('authenticator');
@@ -646,6 +649,7 @@ class Container_3174ce90a2 extends Nette\DI\Container
 			$this->getService('http.request'), $this->getService('http.response'), $this->getService('session.session'),
 			$this->getService('security.user'), $this->getService('latte.templateFactory'));
 		$service->imageStorage = $this->getService('images.storage');
+		$service->cronManager = $this->getService('32_App_Model_CronManager');
 		$service->eventFacade = $this->getService('33_App_Model_EventFacade');
 		$service->profileRepository = $this->getService('35_App_Model_ProfileRepository');
 		$service->texy = $this->getService('texy');

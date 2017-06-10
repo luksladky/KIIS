@@ -118,11 +118,11 @@ if (!function_exists($_b->blocks['content'][] = '_lbc949c33d21_content')) { func
                                             <div class="popover-content">
 <?php if ($person->date_from) { ?>
                                                     <p>
-                                                        <strong>Příjezd:</strong> <?php echo Latte\Runtime\Filters::escapeHtml($template->date($person->date_from, 'j. n. Y, H:m'), ENT_NOQUOTES) ?>
+                                                        <strong>Příjezd:</strong> <?php echo Latte\Runtime\Filters::escapeHtml($template->date($person->date_from, 'j. n. Y, H:i'), ENT_NOQUOTES) ?>
 
                                                     </p>
 <?php } if ($person->date_to) { ?>
-                                                    <p><strong>Odjezd:</strong> <?php echo Latte\Runtime\Filters::escapeHtml($template->date($person->date_to, 'j. n. Y, H:m'), ENT_NOQUOTES) ?>
+                                                    <p><strong>Odjezd:</strong> <?php echo Latte\Runtime\Filters::escapeHtml($template->date($person->date_to, 'j. n. Y, H:i'), ENT_NOQUOTES) ?>
 
                                                     </p>
 <?php } ?>

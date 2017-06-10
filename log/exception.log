@@ -199,3 +199,4 @@
 [2017-04-05 15-29-38] Nette\Security\AuthenticationException:  in C:\LUKAS\web\kiis3\app\presenters\ApiPresenter.php:126  @  http://kiis3/?presenter=Api&action=refreshMenu  @@  exception--2017-04-05--14-58--ce23c47335.html
 [2017-04-05 15-29-45] Nette\Security\AuthenticationException:  in C:\LUKAS\web\kiis3\app\presenters\ApiPresenter.php:126  @  http://kiis3/?presenter=Api&action=refreshMenu  @@  exception--2017-04-05--14-58--ce23c47335.html
 [2017-04-05 15-29-45] Nette\Security\AuthenticationException:  in C:\LUKAS\web\kiis3\app\presenters\ApiPresenter.php:126  @  http://kiis3/?presenter=Api&action=refreshMenu  @@  exception--2017-04-05--14-58--ce23c47335.html
+[2017-05-18 18-22-45] Parse Error: syntax error, unexpected 'break' (T_BREAK) in C:\LUKAS\web\kiis3\app\model\CronManager.php:70  @  http://kiis3/?presenter=Api&action=refreshMenu  @@  exception--2017-05-18--18-22--79458712d8.html

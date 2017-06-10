@@ -21,12 +21,17 @@ abstract class BaseSecurePresenter extends BasePresenter
      */
     public $threadFacade;
 
+    /** @var Model\CronManager
+     * @inject
+     */
+    public $cronManager;
 
     protected function startup()
     {
         parent::startup();
 
         $profile = $this->profileRepository->get($this->user->id);
+        $this->cronManager->check();
         
         if ($profile['logout']) {
             $this->user->logout(true);
@@ -54,8 +59,9 @@ abstract class BaseSecurePresenter extends BasePresenter
         $this->template->readLaterThreadsCount = $this->threadFacade->getReadLaterThreadsCount($this->user->id);
         $this->template->readLaterEventThreadsCount = $this->threadFacade->getReadLaterThreadsCount($this->user->id, true);
         $this->template->newEventsCount = $this->eventFacade->getNewEventsCount($this->user->id);
-        if ($this->user->isInRole(Model\PermissionRepository::MODIFY_USER))
+        if ($this->user->isInRole(Model\PermissionRepository::MODIFY_USER)){
             $this->template->awaitingApprovalCount = $this->profileRepository->findAwaitingApproval()->count();
+        }
 
         $profile->update(['last_activity' => null]);
     }

@@ -37,7 +37,8 @@
 		"voda/date-input": "^1.1",
 		"dg/texy": "~2.0",
 		"blitzik/calendar": "^1.2",
-		"eluceo/ical": "^0.11.0"
+		"eluceo/ical": "^0.11.0",
+		"nittro/nette-bridges": "^2.0.0-rc.3"
 	},
 	"require-dev": {
 		"nette/tester": "~1.3"

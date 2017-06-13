@@ -10,6 +10,7 @@ namespace App\Components;
 
 use Nette\Mail\Message;
 use Nette\Mail\SendmailMailer;
+use Nette\Neon\Exception;
 
 trait TMailer
 {
@@ -28,7 +29,12 @@ trait TMailer
             ->setHtmlBody($template);
 
         $mailer = new SendmailMailer();
-        $mailer->send($mail);
+
+        try{
+            $mailer->send($mail);
+        } catch (Exception $e) {
+            dump($e);
+        }
     }
 
 }

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7c8df4064767623a738703e22c459a07",
-    "content-hash": "ebce349dc98dc5567daf3c411d4aaccc",
+    "hash": "ff05d0090e51ebb7a1d114d29731e1ca",
+    "content-hash": "7b88821df15e623d944cc863098ccabe",
     "packages": [
         {
             "name": "blitzik/calendar",
@@ -51,36 +51,105 @@
             "time": "2016-03-15 21:41:26"
         },
         {
+            "name": "composer/ca-bundle",
+            "version": "1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/ca-bundle.git",
+                "reference": "b17e6153cb7f33c7e44eb59578dc12eee5dc8e12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/b17e6153cb7f33c7e44eb59578dc12eee5dc8e12",
+                "reference": "b17e6153cb7f33c7e44eb59578dc12eee5dc8e12",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "ext-pcre": "*",
+                "php": "^5.3.2 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.5",
+                "psr/log": "^1.0",
+                "symfony/process": "^2.5 || ^3.0"
+            },
+            "suggest": {
+                "symfony/process": "This is necessary to reliably check whether openssl_x509_parse is vulnerable on older php versions, but can be ignored on PHP 5.5.6+"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\CaBundle\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "Lets you find a path to the system CA bundle, and includes a fallback to the Mozilla CA bundle.",
+            "keywords": [
+                "cabundle",
+                "cacert",
+                "certificate",
+                "ssl",
+                "tls"
+            ],
+            "time": "2017-03-06 11:59:08"
+        },
+        {
             "name": "dg/adminer-custom",
-            "version": "v1.7.2",
+            "version": "v1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/adminer-custom.git",
-                "reference": "8a62f9e5d378df564bf5c8a542885ea9aa0a9ee4"
+                "reference": "023279c5803b4d2580f5934d1c178ce4838a1ae9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/adminer-custom/zipball/8a62f9e5d378df564bf5c8a542885ea9aa0a9ee4",
-                "reference": "8a62f9e5d378df564bf5c8a542885ea9aa0a9ee4",
+                "url": "https://api.github.com/repos/dg/adminer-custom/zipball/023279c5803b4d2580f5934d1c178ce4838a1ae9",
+                "reference": "023279c5803b4d2580f5934d1c178ce4838a1ae9",
                 "shasum": ""
             },
-            "type": "project",
+            "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "description": "Customization for the best database management tool written in PHP, Adminer",
-            "time": "2016-06-01 21:20:39"
+            "description": "Customization for Adminer, the best database management tool written in PHP.",
+            "keywords": [
+                "database",
+                "elasticsearch",
+                "mongodb",
+                "mssql",
+                "mysql",
+                "oracle",
+                "postgresql",
+                "sqlite"
+            ],
+            "time": "2017-04-12 16:27:46"
         },
         {
             "name": "dg/texy",
-            "version": "v2.9.0",
+            "version": "v2.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/texy.git",
-                "reference": "8ddd8e3ec6bb943e39a40d2aa353766468e0c0c0"
+                "reference": "2d25b72710e96d33da83f0e3e9f0805adef75e2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/texy/zipball/8ddd8e3ec6bb943e39a40d2aa353766468e0c0c0",
-                "reference": "8ddd8e3ec6bb943e39a40d2aa353766468e0c0c0",
+                "url": "https://api.github.com/repos/dg/texy/zipball/2d25b72710e96d33da83f0e3e9f0805adef75e2f",
+                "reference": "2d25b72710e96d33da83f0e3e9f0805adef75e2f",
                 "shasum": ""
             },
             "require": {
@@ -90,7 +159,8 @@
                 "dg/texy": "*"
             },
             "require-dev": {
-                "nette/tester": "~1.5"
+                "nette/tester": "~1.5",
+                "tracy/tracy": "^2.4"
             },
             "type": "library",
             "autoload": {
@@ -127,20 +197,20 @@
                 "xhtml"
             ],
             "abandoned": "texy/texy",
-            "time": "2016-06-08 16:16:47"
+            "time": "2017-04-08 14:57:24"
         },
         {
             "name": "eluceo/ical",
-            "version": "0.11.0",
+            "version": "0.11.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/markuspoerschke/iCal.git",
-                "reference": "63315a46211630308f068f4d79ef8638e5483346"
+                "reference": "739a4e8622fa75fc77d76718300dae6805d09ff0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/markuspoerschke/iCal/zipball/63315a46211630308f068f4d79ef8638e5483346",
-                "reference": "63315a46211630308f068f4d79ef8638e5483346",
+                "url": "https://api.github.com/repos/markuspoerschke/iCal/zipball/739a4e8622fa75fc77d76718300dae6805d09ff0",
+                "reference": "739a4e8622fa75fc77d76718300dae6805d09ff0",
                 "shasum": ""
             },
             "require": {
@@ -180,78 +250,26 @@
                 "ics",
                 "php calendar"
             ],
-            "time": "2016-09-16 12:19:54"
-        },
-        {
-            "name": "kdyby/curl-ca-bundle",
-            "version": "v1.0.18",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Kdyby/CurlCaBundle.git",
-                "reference": "3212b3f668ff94b7ed4e71c71d25b230a31bbbcc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Kdyby/CurlCaBundle/zipball/3212b3f668ff94b7ed4e71c71d25b230a31bbbcc",
-                "reference": "3212b3f668ff94b7ed4e71c71d25b230a31bbbcc",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*"
-            },
-            "require-dev": {
-                "jakub-onderka/php-parallel-lint": "~0.6"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause",
-                "GPL-2.0",
-                "GPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Filip Procházka",
-                    "email": "filip@prochazka.su",
-                    "homepage": "http://filip-prochazka.com"
-                }
-            ],
-            "description": "This package provides root certificates for usage in api clients on systems that have missing or outdated certificates.",
-            "homepage": "http://kdyby.org",
-            "keywords": [
-                "bundle",
-                "ca",
-                "certificate",
-                "curl",
-                "https",
-                "ssl"
-            ],
-            "abandoned": "composer/ca-bundle",
-            "time": "2017-01-17 00:00:18"
+            "time": "2017-04-25 08:33:00"
         },
         {
             "name": "kdyby/facebook",
-            "version": "v2.0.1",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Kdyby/Facebook.git",
-                "reference": "7530f665a8f036acc7a19b8ec0a92bf4cb497f49"
+                "reference": "77aab28e3e843b3d2ff0274432c0fad588e428fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Kdyby/Facebook/zipball/7530f665a8f036acc7a19b8ec0a92bf4cb497f49",
-                "reference": "7530f665a8f036acc7a19b8ec0a92bf4cb497f49",
+                "url": "https://api.github.com/repos/Kdyby/Facebook/zipball/77aab28e3e843b3d2ff0274432c0fad588e428fa",
+                "reference": "77aab28e3e843b3d2ff0274432c0fad588e428fa",
                 "shasum": ""
             },
             "require": {
+                "composer/ca-bundle": "~1.0",
                 "ext-curl": "*",
                 "ext-json": "*",
-                "kdyby/curl-ca-bundle": "~1.0",
                 "nette/application": "~2.3@dev",
                 "nette/di": "~2.3@dev",
                 "nette/http": "~2.3@dev"
@@ -319,7 +337,7 @@
                 "nette",
                 "sdk"
             ],
-            "time": "2016-01-17 14:00:25"
+            "time": "2017-03-08 13:34:36"
         },
         {
             "name": "latte/latte",
@@ -614,16 +632,16 @@
         },
         {
             "name": "nette/database",
-            "version": "v2.3.10",
+            "version": "v2.3.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/database.git",
-                "reference": "ed0dc48c58ddf9042f736f3c1ac431dfdd825019"
+                "reference": "28737ccbe10d2ada233e823075971a05b9cb11cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/database/zipball/ed0dc48c58ddf9042f736f3c1ac431dfdd825019",
-                "reference": "ed0dc48c58ddf9042f736f3c1ac431dfdd825019",
+                "url": "https://api.github.com/repos/nette/database/zipball/28737ccbe10d2ada233e823075971a05b9cb11cf",
+                "reference": "28737ccbe10d2ada233e823075971a05b9cb11cf",
                 "shasum": ""
             },
             "require": {
@@ -664,20 +682,20 @@
             ],
             "description": "Nette Database Component",
             "homepage": "https://nette.org",
-            "time": "2016-10-18 13:30:07"
+            "time": "2016-12-12 12:46:29"
         },
         {
             "name": "nette/di",
-            "version": "v2.3.13",
+            "version": "v2.3.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/di.git",
-                "reference": "fe4d3264d1b1907a934e8a6627a5b87f35046089"
+                "reference": "06c96ce2d646156d8acae935861d4e96e092b903"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/di/zipball/fe4d3264d1b1907a934e8a6627a5b87f35046089",
-                "reference": "fe4d3264d1b1907a934e8a6627a5b87f35046089",
+                "url": "https://api.github.com/repos/nette/di/zipball/06c96ce2d646156d8acae935861d4e96e092b903",
+                "reference": "06c96ce2d646156d8acae935861d4e96e092b903",
                 "shasum": ""
             },
             "require": {
@@ -716,7 +734,7 @@
             ],
             "description": "Nette Dependency Injection Component",
             "homepage": "https://nette.org",
-            "time": "2016-12-12 12:13:48"
+            "time": "2017-03-17 15:13:49"
         },
         {
             "name": "nette/finder",
@@ -825,16 +843,16 @@
         },
         {
             "name": "nette/http",
-            "version": "v2.3.8",
+            "version": "v2.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/http.git",
-                "reference": "dccceb20f346744927472b88732804cef6a73669"
+                "reference": "374f6327a08c5e8a3d60bc1035aa12267bc1b5a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/http/zipball/dccceb20f346744927472b88732804cef6a73669",
-                "reference": "dccceb20f346744927472b88732804cef6a73669",
+                "url": "https://api.github.com/repos/nette/http/zipball/374f6327a08c5e8a3d60bc1035aa12267bc1b5a7",
+                "reference": "374f6327a08c5e8a3d60bc1035aa12267bc1b5a7",
                 "shasum": ""
             },
             "require": {
@@ -875,7 +893,7 @@
             ],
             "description": "Nette HTTP Component",
             "homepage": "https://nette.org",
-            "time": "2016-12-19 15:15:21"
+            "time": "2017-03-16 15:47:05"
         },
         {
             "name": "nette/mail",
@@ -934,26 +952,33 @@
         },
         {
             "name": "nette/neon",
-            "version": "v2.3.5",
+            "version": "v2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/neon.git",
-                "reference": "75699de201932e6de6b249824dc8c53d0f442cd5"
+                "reference": "1a78ff64b1e161ebccc03bdf9366450a69365f5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/neon/zipball/75699de201932e6de6b249824dc8c53d0f442cd5",
-                "reference": "75699de201932e6de6b249824dc8c53d0f442cd5",
+                "url": "https://api.github.com/repos/nette/neon/zipball/1a78ff64b1e161ebccc03bdf9366450a69365f5b",
+                "reference": "1a78ff64b1e161ebccc03bdf9366450a69365f5b",
                 "shasum": ""
             },
             "require": {
                 "ext-iconv": "*",
-                "php": ">=5.3.1"
+                "ext-json": "*",
+                "php": ">=5.6.0"
             },
             "require-dev": {
-                "nette/tester": "~1.4"
+                "nette/tester": "~2.0",
+                "tracy/tracy": "^2.3"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "src/"
@@ -977,7 +1002,7 @@
             ],
             "description": "Nette NEON: parser & generator for Nette Object Notation",
             "homepage": "http://ne-on.org",
-            "time": "2016-05-17 17:14:44"
+            "time": "2017-01-13 08:00:19"
         },
         {
             "name": "nette/php-generator",
@@ -1299,6 +1324,44 @@
             "time": "2016-12-12 12:20:10"
         },
         {
+            "name": "nittro/nette-bridges",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nittro/nette-bridges.git",
+                "reference": "2801417e9fccec44401c11f2853df9fbd70ad18b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nittro/nette-bridges/zipball/2801417e9fccec44401c11f2853df9fbd70ad18b",
+                "reference": "2801417e9fccec44401c11f2853df9fbd70ad18b",
+                "shasum": ""
+            },
+            "require-dev": {
+                "latte/latte": "^2.4",
+                "nette/application": "^2.4"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dan Kadera",
+                    "email": "me@subsonic.cz"
+                }
+            ],
+            "description": "Nittro PHP bridges",
+            "homepage": "https://www.nittro.org/",
+            "time": "2017-02-18 20:41:47"
+        },
+        {
             "name": "tracy/tracy",
             "version": "v2.3.12",
             "source": {
@@ -1510,7 +1573,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "nittro/nette-bridges": 5
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

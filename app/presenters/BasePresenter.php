@@ -5,7 +5,7 @@ namespace App\Presenters;
 use App\Components\TMailer;
 use Nette;
 use Nette\Application\UI\Form;
-use Nittro\Bridges\NittroUI\Presenter;
+use Nette\Application\UI\Presenter;
 
 class BasePresenter extends Presenter
 {

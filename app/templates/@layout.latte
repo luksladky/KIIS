@@ -97,7 +97,7 @@
                         <span n:snippet="badgeMobileAll">
                         {if $user->isLoggedIn()}
                             <button id="menu-toggle" type="button" class="btn btn-default visible-xs">
-                        {var newCount = $newEventsCount + $unreadThreadsCount + $unreadEventThreadsCount + $awaitingApprovalCount}
+                        {var newCount = $newEventsCount + $unreadThreadsCount + $unreadEventThreadsCount}
                                 {if $newCount > 0}
                                     <span class="badge red">{$newCount}</span>
                             {else}

@@ -116,7 +116,7 @@ if (!function_exists($_b->blocks['_badgeDashboard'][] = '_lbc7d0fa8261__badgeDas
 if (!function_exists($_b->blocks['_badgeMobileAll'][] = '_lb8c2554f58f__badgeMobileAll')) { function _lb8c2554f58f__badgeMobileAll($_b, $_args) { foreach ($_args as $__k => $__v) $$__k = $__v; $_control->redrawControl('badgeMobileAll', FALSE)
 ;if ($user->isLoggedIn()) { ?>
                             <button id="menu-toggle" type="button" class="btn btn-default visible-xs">
-<?php $newCount = $newEventsCount + $unreadThreadsCount + $unreadEventThreadsCount + $awaitingApprovalCount ;if ($newCount > 0) { ?>
+<?php $newCount = $newEventsCount + $unreadThreadsCount + $unreadEventThreadsCount ;if ($newCount > 0) { ?>
                                     <span class="badge red"><?php echo Latte\Runtime\Filters::escapeHtml($newCount, ENT_NOQUOTES) ?></span>
 <?php } else { ?>
                                 <i class="glyphicon glyphicon-menu-hamburger"></i>

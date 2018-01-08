@@ -61,9 +61,15 @@ class CronManager extends Repository
                 case self::EVENT_SIGN:
 
                     $usersWithEvents = $this->eventFacade->findNearestMaybe();
-                    $this->setNextCron(self::EVENT_SIGN,3);
+
+                    $skipIds = $this->profileRepository->findBy('upcoming_notif',false)->fetchPairs(null,'id');
+
+
+
+                    $this->setNextCron(self::EVENT_SIGN,5);
 
                     foreach ($usersWithEvents as $userWithEvents) {
+                        if (in_array($userWithEvents['user']->id,$skipIds)) continue;
 
                         $latte = new \Latte\Engine;
                         $latte->addFilter('timeagoinwords', 'App\Model\Filters::timeAgoInWords');

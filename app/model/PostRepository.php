@@ -32,7 +32,7 @@ class PostRepository extends Repository
         } else {
             $parent = $parent = $this->get($parentId);
             $parentDepth = $parent->depth;
-            while ($parentDepth > 1) {
+            while ($parentDepth > 2) {
                 $parent = $this->get($parent->parent_id);
 
                 $parentId = $parent->id;

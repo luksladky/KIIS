@@ -316,7 +316,8 @@ class ThreadPresenter extends BaseSecurePresenter
 
         $this->threadFacade->deletePost($postId);
         $this->flashMessage('Příspěvek smazán.', 'success');
-        $this->redirect('this');
+        $this->postGet('this');
+        $this->redrawControl('content');
     }
 
 
@@ -352,7 +353,8 @@ class ThreadPresenter extends BaseSecurePresenter
         $this->threadFacade->archive($threadId);
 
         $this->flashMessage('Diskuse archivována.', 'success');
-        $this->redirect('this');
+        $this->postGet('this');
+        $this->redrawControl('content');
     }
 
     public function handleRemoveThreadFromArchive($threadId)
@@ -377,8 +379,10 @@ class ThreadPresenter extends BaseSecurePresenter
     {
         $this->threadFacade->toggleLike($postId, $this->user->id);
 
-        $this->payload->redirect = $this->presenter->link('this');
+//        $this->payload->redirect = $this->presenter->link('this');
         $this->template->posts = [$this->threadFacade->getPost($postId)];
+        $this->flashMessage('Johoho');
+        $this->postGet('this');
         $this->redrawControl('postWrapper');
     }
 

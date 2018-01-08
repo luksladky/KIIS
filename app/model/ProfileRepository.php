@@ -9,9 +9,6 @@
 namespace App\Model;
 
 
-use Nette\Bridges\DatabaseDI\DatabaseExtension;
-use Nette\Utils\DateTime;
-
 class ProfileRepository extends Repository
 {
     protected $table = 'user';
@@ -19,9 +16,5 @@ class ProfileRepository extends Repository
 
     public function findAwaitingApproval() {
         return $this->findBy('approved_by_id',null);
-    }
-    
-    public function findNotActive($howLong = '2 weeks') {
-//        new \DateInterval()
     }
 }

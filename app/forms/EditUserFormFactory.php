@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Forms;
 
 use Nette;
@@ -25,11 +26,13 @@ class EditUserFormFactory extends FormFactory
 
         $form->addText('name', 'Celé jméno')
             ->setRequired();
-        $form->addText('nickname','Přezdívka');
+        $form->addText('nickname', 'Přezdívka');
 
-        $form->addText('phone','Telefon');
+        $form->addText('phone', 'Telefon');
 
-        $form->addText('city','Město');
+        $form->addText('city', 'Město');
+
+        $form->addCheckbox('upcoming_notif', 'Posílát upozornění na nadcházející nepotvrzené/neodmítnuté akce');
 
         $form->addSubmit('send', 'Uložit')
             ->setAttribute('class', 'btn btn-primary');

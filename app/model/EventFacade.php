@@ -128,11 +128,11 @@ class EventFacade
 
     public function findFutureNotRejected($userId, $orderBy = EventRepository::BY_DATE_FROM, $desc = false, $limit = null, $offset = null)
     {
-        $eventIds = $this->getEventSignRepository()->findBy('user_id = ? AND type = ?', [$userId, SignEnum::NO])->fetchPairs(null, 'event_id');
+        $eventIds = $this->getEventSignRepository()->findBy('(user_id = ?) AND (type = ?)', [$userId, SignEnum::NO])->fetchPairs(null, 'event_id');
         $eventIds[] = -1;
 
         $orderFunc = EventRepository::getOrderFunction($orderBy, $desc);
-        $events = $orderFunc($this->getEventRepository()->findBy('id NOT IN ? AND date_to > ?', [$eventIds, new Nette\Utils\DateTime()]))->limit($limit, $offset);
+        $events = $orderFunc($this->getEventRepository()->findBy('(id NOT IN ?) AND (date_to > ?)', [$eventIds, new Nette\Utils\DateTime()]))->limit($limit, $offset);
 
         return $events;
     }
@@ -147,7 +147,7 @@ class EventFacade
 
     public function findInInterval($dateFrom, $dateTo)
     {
-        return $this->getEventRepository()->findBy('date_from > ? AND date_from < ?', [$dateFrom, $dateTo]);
+        return $this->getEventRepository()->findBy('(date_from > ?) AND (date_from < ?)', [$dateFrom, $dateTo]);
     }
 
 
@@ -161,7 +161,7 @@ class EventFacade
         foreach ($users as $user) {
 
             $signIds = $this->getEventSignRepository()
-                ->findBy("user_id = ? AND event_id IN ? AND type IN ?", [$user->id, $nearestEventsId, ['yes', 'no']])
+                ->findBy("(user_id = ?) AND (event_id IN ?) AND (type IN ?)", [$user->id, $nearestEventsId, ['yes', 'no']])
                 ->fetchPairs(null, 'event_id');
             $signIds[] = -1;
 

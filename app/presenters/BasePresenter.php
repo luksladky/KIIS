@@ -5,9 +5,9 @@ namespace App\Presenters;
 use App\Components\TMailer;
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Application\UI\Presenter;
 
-class BasePresenter extends Presenter
+
+class BasePresenter extends Nette\Application\UI\Presenter
 {
 
     use \WebChemistry\Images\TPresenter;

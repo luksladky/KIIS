@@ -45,8 +45,8 @@ class ProfilePresenter extends BaseSecurePresenter
                 $orderBy = 'name ASC';
         }
 
-        $withMemberRole = $this->permissionRepository->findBy("permission_slug LIKE ?","member")->fetchPairs(null,'user_id');
-        $this->template->profiles = $this->profileRepository->findBy('id IN ? ',$withMemberRole)->order($orderBy);
+        $withMemberRole = $this->permissionRepository->findBy("permission_slug LIKE ?", "member")->fetchPairs(null, 'user_id');
+        $this->template->profiles = $this->profileRepository->findBy('id IN ? ', $withMemberRole)->order($orderBy);
         $this->template->order = $order;
     }
 
@@ -78,11 +78,12 @@ class ProfilePresenter extends BaseSecurePresenter
         }
 
         $defaults = array(
-            'id'       => $userId,
-            'name'     => $person['name'],
-            'nickname' => $person['nickname'],
-            'phone'    => $person['phone'],
-            'city'     => $person['city'],
+            'id'             => $userId,
+            'name'           => $person['name'],
+            'nickname'       => $person['nickname'],
+            'phone'          => $person['phone'],
+            'city'           => $person['city'],
+            'upcoming_notif' => $person['upcoming_notif'],
         );
 
         $this['editForm']->setDefaults($defaults);
@@ -146,10 +147,11 @@ class ProfilePresenter extends BaseSecurePresenter
             throw new Nette\Security\AuthenticationException("Ty ty ty, to nemůžeš.");
         }
         $data = array(
-            "name"     => $values["name"],
-            "nickname" => $values["nickname"],
-            "phone"    => $values['phone'],
-            "city"     => $values['city'],
+            "name"           => $values["name"],
+            "nickname"       => $values["nickname"],
+            "phone"          => $values['phone'],
+            "city"           => $values['city'],
+            "upcoming_notif" => $values['upcoming_notif'],
         );
 
 

@@ -5,13 +5,10 @@
 # CakePHP 3
 
 /vendor/*
-/temp/*
-/log/*
-/bin/*
-/0_configs/*
-/0_vyjimky/*
-www/css/main.min.css
-/0_vyjimky/
+temp/*
+log/*
+bin/*
+0_configs/
+0_vyjimky/*
 /www/css/
-/0_configs/
 /backup/

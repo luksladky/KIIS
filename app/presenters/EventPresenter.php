@@ -49,20 +49,31 @@ class EventPresenter extends BaseSecurePresenter
     public function renderDefault($all = false)
     {
         if ($all) {
-            $this->template->events = $this->eventFacade->findAll();
-            $eventSigns = $this->eventFacade->findSignsByUser($this->user->id);
+            $events = $this->eventFacade->findAll();
+
+            $userSigns = $this->eventFacade->findSignsByUser($this->user->id);
 
         } else {
             //only future events
-            $this->template->events = $this->eventFacade->findFuture();
-            $eventSigns = $this->eventFacade->findSignsByUserForFutureEvents($this->user->id);
+            $events = $this->eventFacade->findFuture();
+            $userSigns = $this->eventFacade->findSignsByUserForFutureEvents($this->user->id);
         }
 
-        $signs = [];
-        foreach ($eventSigns as $eventSign) {
-            $signs[$eventSign->event_id] = $eventSign->type;
+
+
+        $signedFor = [];
+        foreach ($userSigns as $sign) {
+            $signedFor[$sign->event_id] = $sign->type;
         }
-        $this->template->eventSigns = $signs;
+
+        $eventSigns = [];
+        foreach ($events as $event) {
+            $eventSigns[$event->id] = $this->eventFacade->getSigned($event->id);
+        }
+
+        $this->template->events = $events;
+        $this->template->signedFor = $signedFor;
+        $this->template->eventSigns = $eventSigns;
         $this->template->showLinkType = !$all;
 
     }

@@ -68,8 +68,6 @@
 
     </div>
     <div class="clearfix"></div>
-    <hr>
-
     <div class="row">
     <div class="col-lg-8 col-lg-push-2 col-md-8">
 
@@ -102,7 +100,6 @@
                 {if $lastLevel >= $post->depth}
                     {for $i = 0; $i <= $lastLevel - $post->depth; $i++}
                         </div>
-                        </div>
                     {/for}
                 {/if}
             {/if}
@@ -124,47 +121,26 @@
 
             {var $isNew = $lastActivity < $post->created_at}
             {var $isReadLater = in_array($post->id,$readLaterIds)}
-        <div n:class="post, media, $isNew ? 'new', $isReadLater ? 'read-later'" id="post-{$post->id}">
+        <div n:class="post, $isNew ? 'new', $isReadLater ? 'read-later'" id="post-{$post->id}">
         {var $author = $post->ref('user','user_id')}
         {var $userCanEdit = ($user->id == $post->user_id || $user->isInRole('manage-threads'))}
-            <div class="media-left">
 
-                <a n:href="Profile:show $author->id">
-                    <img n:img="$author->photo, '50x50', 'exact', 'noimage/profile-badge.jpg'"
-                            class="img-circle">
-                </a>
-            </div>
+            <a class="pull-left photo" n:href="Profile:show $author->id">
+                <img n:img="$author->photo, '50x50', 'exact', 'noimage/profile-badge.jpg'"
+                        class="img-circle profile-photo">
+            </a>
 
-            <div class="media-body">
+            {*<div n:if="$lastActivity < $post->created_at" class="label label-danger">Nový</div>*}
 
             <div class="post-inner">
 
-                <div class="media-heading">
-                    <a n:href="Profile:show $author->id">{$author->nickname}</a>
-
-                    <div n:if="$lastActivity < $post->created_at" class="label label-danger">Nový</div>
-
-                            <span class="ids  controls  small gray">#{$post->id} <a n:if="$post->reply_to_id"
-                                        href="#post-{$post->reply_to_id}" class="reply-to">
-                                    &#8594;{$post->reply_to_id}</a>
-                        </span>
-
-
-                    <div class="pull-right small gray">
-
-
-                        <span class="date lightgray">
-                            {$post->created_at|timeagoinwords}
-                        </span>
-                    </div>
-
-
-                    {*<div class="pull-right">{$post->created_at |timeagoinwords}</div>*}
-
-
-                </div>
-
                 <div class="content">
+                    <a class="pull-left mr10" n:href="Profile:show $author->id"><strong>{$author->nickname}</strong></a>
+
+                    <span class="date lightgray gray visible-xs">
+                            {$post->created_at|timeagoinwords}
+                        <br>
+                    </span>
                     {if $post->deleted}
                         <em>Příspěvek byl smazán.</em>
                     {else}
@@ -174,11 +150,14 @@
                 <div class="reply-form"></div>
 
                 {var $postId = $post->id}
-                <span n:snippet="post-likes-$postId" class="like-count" title="Počkej si..." data-post-id="{$post->id}">
+                <div class="tools"      >
+                <span n:snippet="post-likes-$postId" class="like-count" title="Počkej si..."
+                                                     data-post-id="{$post->id}">
                     {if $post->like_count > 0}<i class="glyphicon glyphicon-thumbs-up"></i> {$post->like_count}{/if}
                 </span>
 
-                <div class="controls">
+                    <div class="controls">
+
                     <span n:snippet="post-control-$postId">
                         <a n:href="toggleLike! $post->id" class="toggle-like-btn ml10">
                             {array_key_exists($post->id,$userLikes) ? 'Už zas nevím' : 'Tak určitě'}
@@ -191,30 +170,34 @@
                             {$isReadLater ? 'Vyřízeno' : 'Nechat na později'}
                         </a>
                     </span>
-                    <div class="btn-group" n:if="$userCanEdit">
-                        <i class="glyphicon glyphicon-option-horizontal btn dropdown-toggle" data-toggle="dropdown"></i>
-                        <ul class="dropdown-menu">
-                            <li n:if="$user->id == $post->user_id">
-                                <a n:href="Thread:editPost $post->id">
-                                    Upravit
-                                </a>
-                            </li>
-                            <li>
-                                <a n:href="deletePost! $post->id"
-                                   onclick="return confirmDelete();">
-                                    Smazat příspěvek
-                                </a>
-                            </li>
-                        </ul>
+                        <div class="btn-group" n:if="$userCanEdit">
+                            <i class="glyphicon glyphicon-option-horizontal btn dropdown-toggle"
+                               data-toggle="dropdown"></i>
+                            <ul class="dropdown-menu">
+                                <li n:if="$user->id == $post->user_id">
+                                    <a n:href="Thread:editPost $post->id">
+                                        Upravit
+                                    </a>
+                                </li>
+                                <li>
+                                    <a n:href="deletePost! $post->id"
+                                            onclick="return confirmDelete();">
+                                        Smazat příspěvek
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
-
+                    <span class="date lightgray gray hidden-xs">
+                            {$post->created_at|timeagoinwords}
+                    </span>
                 </div>
-
             </div>
+
 
             {if $iterator->last}
                 {for $i = 0; $i < $post->depth; $i++}
-                    </div>
                     </div>
                 {/for}
             {/if}

@@ -94,8 +94,6 @@ if (!function_exists($_b->blocks['content'][] = '_lbaaf77034ca_content')) { func
 
     </div>
     <div class="clearfix"></div>
-    <hr>
-
     <div class="row">
     <div class="col-lg-8 col-lg-push-2 col-md-8">
 
@@ -166,7 +164,6 @@ if (!function_exists($_b->blocks['_postWrapper'][] = '_lbd0844d8d29__postWrapper
 
 <?php $endingsDebt = 0 ;$lastLevel = 0 ;$iterations = 0; foreach ($iterator = $_l->its[] = new Latte\Runtime\CachingIterator($posts) as $post) { if (!$iterator->first) { if ($lastLevel >= $post->depth) { for ($i = 0; $i <= $lastLevel - $post->depth; $i++) { ?>
                         </div>
-                        </div>
 <?php } } } ?>
 
 <?php if ($post->id == $lastReadPostId) { ?>
@@ -186,50 +183,26 @@ if (!function_exists($_b->blocks['_postWrapper'][] = '_lbd0844d8d29__postWrapper
 
 <?php $isNew = $lastActivity < $post->created_at ;$isReadLater = in_array($post->id,$readLaterIds) ?>
         <div id="post-<?php echo Latte\Runtime\Filters::escapeHtml($post->id, ENT_COMPAT) ?>
-"<?php if ($_l->tmp = array_filter(array('post', 'media', $isNew ? 'new' : NULL, $isReadLater ? 'read-later' : NULL))) echo ' class="', Latte\Runtime\Filters::escapeHtml(implode(" ", array_unique($_l->tmp)), ENT_COMPAT), '"' ?>>
+"<?php if ($_l->tmp = array_filter(array('post', $isNew ? 'new' : NULL, $isReadLater ? 'read-later' : NULL))) echo ' class="', Latte\Runtime\Filters::escapeHtml(implode(" ", array_unique($_l->tmp)), ENT_COMPAT), '"' ?>>
 <?php $author = $post->ref('user','user_id') ;$userCanEdit = ($user->id == $post->user_id || $user->isInRole('manage-threads')) ?>
-            <div class="media-left">
 
-                <a href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Profile:show", array($author->id)), ENT_COMPAT) ?>
+            <a class="pull-left photo" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Profile:show", array($author->id)), ENT_COMPAT) ?>
 ">
-                    <img
-                            class="img-circle"<?php echo ' src="' . $imageStorage->get($author->photo, '50x50', 'exact', 'noimage/profile-badge.jpg')->getLink() . '"' ?>>
-                </a>
-            </div>
-
-            <div class="media-body">
+                <img
+                        class="img-circle profile-photo"<?php echo ' src="' . $imageStorage->get($author->photo, '50x50', 'exact', 'noimage/profile-badge.jpg')->getLink() . '"' ?>>
+            </a>
 
             <div class="post-inner">
 
-                <div class="media-heading">
-                    <a href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Profile:show", array($author->id)), ENT_COMPAT) ?>
-"><?php echo Latte\Runtime\Filters::escapeHtml($author->nickname, ENT_NOQUOTES) ?></a>
+                <div class="content">
+                    <a class="pull-left mr10" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Profile:show", array($author->id)), ENT_COMPAT) ?>
+"><strong><?php echo Latte\Runtime\Filters::escapeHtml($author->nickname, ENT_NOQUOTES) ?></strong></a>
 
-<?php if ($lastActivity < $post->created_at) { ?>                    <div class="label label-danger">Nový</div>
-<?php } ?>
-
-                            <span class="ids  controls  small gray">#<?php echo Latte\Runtime\Filters::escapeHtml($post->id, ENT_NOQUOTES) ?>
- <?php if ($post->reply_to_id) { ?><a
-                                        href="#post-<?php echo Latte\Runtime\Filters::escapeHtml(Latte\Runtime\Filters::safeUrl($post->reply_to_id), ENT_COMPAT) ?>" class="reply-to">
-                                    &#8594;<?php echo Latte\Runtime\Filters::escapeHtml($post->reply_to_id, ENT_NOQUOTES) ?></a>
-<?php } ?>
-                        </span>
-
-
-                    <div class="pull-right small gray">
-
-
-                        <span class="date lightgray">
+                    <span class="date lightgray gray visible-xs">
                             <?php echo Latte\Runtime\Filters::escapeHtml($template->timeagoinwords($post->created_at), ENT_NOQUOTES) ?>
 
-                        </span>
-                    </div>
-
-
-
-                </div>
-
-                <div class="content">
+                        <br>
+                    </span>
 <?php if ($post->deleted) { ?>
                         <em>Příspěvek byl smazán.</em>
 <?php } else { ?>
@@ -240,13 +213,16 @@ if (!function_exists($_b->blocks['_postWrapper'][] = '_lbd0844d8d29__postWrapper
                 <div class="reply-form"></div>
 
 <?php $postId = $post->id ?>
-                <span class="like-count" title="Počkej si..." data-post-id="<?php echo Latte\Runtime\Filters::escapeHtml($post->id, ENT_COMPAT) ?>
+                <div class="tools"      >
+                <span class="like-count" title="Počkej si..."
+                                                     data-post-id="<?php echo Latte\Runtime\Filters::escapeHtml($post->id, ENT_COMPAT) ?>
 "<?php echo ' id="' . ($_l->dynSnippetId = $_control->getSnippetId("post-likes-$postId")) . '"' ?>>
 <?php ob_start() ?>                    <?php if ($post->like_count > 0) { ?><i class="glyphicon glyphicon-thumbs-up"></i> <?php echo Latte\Runtime\Filters::escapeHtml($post->like_count, ENT_NOQUOTES) ;} ?>
 
 <?php $_l->dynSnippets[$_l->dynSnippetId] = ob_get_flush() ?>                </span>
 
-                <div class="controls">
+                    <div class="controls">
+
                     <span<?php echo ' id="' . ($_l->dynSnippetId = $_control->getSnippetId("post-control-$postId")) . '"' ?>>
 <?php ob_start() ?>                        <a class="toggle-like-btn ml10" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("toggleLike!", array($post->id)), ENT_COMPAT) ?>
 ">
@@ -263,33 +239,38 @@ if (!function_exists($_b->blocks['_postWrapper'][] = '_lbd0844d8d29__postWrapper
 
                         </a>
 <?php $_l->dynSnippets[$_l->dynSnippetId] = ob_get_flush() ?>                    </span>
-<?php if ($userCanEdit) { ?>                    <div class="btn-group">
-                        <i class="glyphicon glyphicon-option-horizontal btn dropdown-toggle" data-toggle="dropdown"></i>
-                        <ul class="dropdown-menu">
-<?php if ($user->id == $post->user_id) { ?>                            <li>
-                                <a href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Thread:editPost", array($post->id)), ENT_COMPAT) ?>
+<?php if ($userCanEdit) { ?>                        <div class="btn-group">
+                            <i class="glyphicon glyphicon-option-horizontal btn dropdown-toggle"
+                               data-toggle="dropdown"></i>
+                            <ul class="dropdown-menu">
+<?php if ($user->id == $post->user_id) { ?>                                <li>
+                                    <a href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Thread:editPost", array($post->id)), ENT_COMPAT) ?>
 ">
-                                    Upravit
-                                </a>
-                            </li>
+                                        Upravit
+                                    </a>
+                                </li>
 <?php } ?>
-                            <li>
-                                <a
-                                   onclick="return confirmDelete();" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("deletePost!", array($post->id)), ENT_COMPAT) ?>
+                                <li>
+                                    <a
+                                            onclick="return confirmDelete();" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("deletePost!", array($post->id)), ENT_COMPAT) ?>
 ">
-                                    Smazat příspěvek
-                                </a>
-                            </li>
-                        </ul>
+                                        Smazat příspěvek
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+<?php } ?>
+
                     </div>
-<?php } ?>
+                    <span class="date lightgray gray hidden-xs">
+                            <?php echo Latte\Runtime\Filters::escapeHtml($template->timeagoinwords($post->created_at), ENT_NOQUOTES) ?>
 
+                    </span>
                 </div>
-
             </div>
 
+
 <?php if ($iterator->last) { for ($i = 0; $i < $post->depth; $i++) { ?>
-                    </div>
                     </div>
 <?php } } $lastLevel = $post->depth ;$iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>
 

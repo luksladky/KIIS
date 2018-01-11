@@ -13,7 +13,33 @@
 
 a.event-link {
   color: inherit;
+
 }
+
+.event-block {
+  position: relative;
+  .event-thumb {
+    opacity: 0;
+    transition: opacity 0.2s;
+    width: 445px;
+    position: absolute;
+    left: 105%;
+    top: 0;
+    display: none;
+    @media screen and (min-width: 1000px) {
+      display: block;
+    }
+  }
+
+
+  &:hover {
+    .event-thumb {
+      opacity: 1;
+    }
+  }
+}
+
+
 
 a.event-link:hover {
   text-decoration: none;

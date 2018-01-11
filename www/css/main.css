@@ -7125,34 +7125,65 @@ a.thread-link {
   opacity: 1; }
 
 .post {
-  padding: 15px 15px 4px;
   border-radius: 2px;
   margin-top: 0;
   margin-bottom: 20px;
-  position: relative;
-  border: 1px solid #ddd; }
+  position: relative; }
+  .post ul {
+    clear: both; }
   .post.new:after, .post.read-later:after {
     content: '';
     position: absolute;
     display: block;
     width: 5px;
     height: 100%;
-    right: 0;
+    left: -15px;
     top: 0;
     background: #f44336; }
   .post.read-later.new:after, .post.read-later:after {
     background: #ff9800; }
+  .post .photo {
+    position: absolute;
+    top: 15px;
+    left: 10px; }
+  .post .post-inner {
+    margin-bottom: 20px;
+    min-height: 70px;
+    padding: 15px 10px 5px 70px; }
+  .post .controls {
+    transition: 0.1s opacity;
+    display: inline-block; }
+    .post .controls .btn {
+      padding-top: 0;
+      padding-bottom: 0; }
+  .post .tools {
+    width: 100%;
+    padding: 5px 0; }
+    .post .tools .date {
+      float: right;
+      opacity: 0; }
   .post .post {
     box-shadow: none;
     margin-bottom: 0;
-    padding: 8px;
+    margin-left: 35px;
     border-color: transparent; }
     .post .post.new:after {
       right: -17px; }
-  .post .controls {
-    opacity: 0;
-    transition: 0.1s opacity;
-    display: inline-block; }
+    .post .post .photo {
+      top: 0; }
+    .post .post .profile-photo {
+      width: 30px; }
+    .post .post .post-inner {
+      padding: 5px 5px 5px 50px;
+      box-shadow: none;
+      margin-bottom: 0;
+      min-height: 0; }
+    .post .post .controls {
+      opacity: 0; }
+    .post .post .tools {
+      padding: 0; }
+  .post .post .post:last-child .post-inner {
+    margin-bottom: 15px; }
   .post .media-left {
     position: relative; }
     .post .media-left:after {
@@ -7175,8 +7206,13 @@ a.thread-link {
   .post .content > p:last-child {
     margin-bottom: 0; }
 
-.post-inner:hover .controls {
-  opacity: 1; }
+.post-inner {
+  box-shadow: 0 3px 11px 0 rgba(0, 0, 0, 0.21176);
+  border-radius: 10px; }
+  .post-inner:hover > .tools > .controls {
+    opacity: 1; }
+  .post-inner:hover > .tools > .date {
+    opacity: 1; }
 
 .gray {
   color: #9b9b9b; }
@@ -7205,6 +7241,22 @@ a.loading {
 
 a.event-link {
   color: inherit; }
+
+.event-block {
+  position: relative; }
+  .event-block .event-thumb {
+    opacity: 0;
+    transition: opacity 0.2s;
+    width: 445px;
+    position: absolute;
+    left: 105%;
+    top: 0;
+    display: none; }
+    @media screen and (min-width: 1000px) {
+      .event-block .event-thumb {
+        display: block; } }
+  .event-block:hover .event-thumb {
+    opacity: 1; }
 
 a.event-link:hover {
   text-decoration: none; }

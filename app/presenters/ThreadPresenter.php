@@ -141,7 +141,7 @@ class ThreadPresenter extends BaseSecurePresenter
         }
         $hiddenReadPostsCount = $iterator - 1;
         //chci to dat na rodice
-        if ($lastReadPost && $lastReadPost->parent_id) $lastReadPost = $lastReadPost->ref('post','parent_id');
+        while ($lastReadPost && $lastReadPost->parent_id) $lastReadPost = $lastReadPost->ref('post','parent_id');
 
         //pokud jsou prectene vsechny, nebo pokud je jich celkove malo, neskryvat
         if ($iterator == $posts->count() || $hiddenReadPostsCount < 5) $lastReadPostId = -1;
@@ -316,8 +316,8 @@ class ThreadPresenter extends BaseSecurePresenter
 
         $this->threadFacade->deletePost($postId);
         $this->flashMessage('Příspěvek smazán.', 'success');
-        $this->postGet('this');
-        $this->redrawControl('content');
+        $this->redirect('this');
+
     }
 
 
@@ -353,8 +353,7 @@ class ThreadPresenter extends BaseSecurePresenter
         $this->threadFacade->archive($threadId);
 
         $this->flashMessage('Diskuse archivována.', 'success');
-        $this->postGet('this');
-        $this->redrawControl('content');
+        $this->redirect('this');
     }
 
     public function handleRemoveThreadFromArchive($threadId)
@@ -379,11 +378,9 @@ class ThreadPresenter extends BaseSecurePresenter
     {
         $this->threadFacade->toggleLike($postId, $this->user->id);
 
-//        $this->payload->redirect = $this->presenter->link('this');
         $this->template->posts = [$this->threadFacade->getPost($postId)];
-        $this->flashMessage('Johoho');
-        $this->postGet('this');
         $this->redrawControl('postWrapper');
+
     }
 
 

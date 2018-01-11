@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="live klub.ddmtrebic.cz">
+  <component name="PublishConfigData" serverName="live klub.ddmtrebic.cz" uploadOnCheckin="ab5c81f7-ad1a-4b61-bf09-aed720d76c38">
     <serverData>
       <paths name="live klub.ddmtrebic.cz">
         <serverdata>
@@ -10,6 +10,6 @@
         </serverdata>
       </paths>
     </serverData>
-    <option name="myAutoUpload" value="ALWAYS" />
+    <option name="myUploadOnCheckinName" value="live klub.ddmtrebic.cz" />
   </component>
 </project>

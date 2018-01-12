@@ -129,7 +129,8 @@ if (!function_exists($_b->blocks['cal-week-day'][] = '_lb34e9593970_cal_week_day
         <?php echo Latte\Runtime\Filters::escapeHtml($day, ENT_NOQUOTES) ?>. <span class="gray"><?php echo Latte\Runtime\Filters::escapeHtml($day->getMonth(), ENT_NOQUOTES) ?>.</span>
         <div class="events">
 <?php $iterations = 0; foreach ($day->events as $event) { ?>
-            <a class="event" href="<?php echo Latte\Runtime\Filters::escapeHtml($_presenter->link("Event:show", array($event->id)), ENT_COMPAT) ?>
+            <a class="event <?php echo Latte\Runtime\Filters::escapeHtml($event->color, ENT_COMPAT) ?>
+" href="<?php echo Latte\Runtime\Filters::escapeHtml($_presenter->link("Event:show", array($event->id)), ENT_COMPAT) ?>
 "><?php echo Latte\Runtime\Filters::escapeHtml($event->title, ENT_NOQUOTES) ?></a>
 <?php $iterations++; } ?>
         </div>

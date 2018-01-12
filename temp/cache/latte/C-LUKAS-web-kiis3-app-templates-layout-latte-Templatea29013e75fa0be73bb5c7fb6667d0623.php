@@ -194,7 +194,7 @@ if (empty($_l->extends) && !empty($_control->snippetMode)) {
     <!--  Bootstrap end  -->
 
     <script type="text/javascript">document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/, 'js');</script>
-    <link rel="stylesheet" href="<?php echo Latte\Runtime\Filters::escapeHtml(Latte\Runtime\Filters::safeUrl($basePath), ENT_COMPAT) ?>/css/main.min.css?version=10">
+    <link rel="stylesheet" href="<?php echo Latte\Runtime\Filters::escapeHtml(Latte\Runtime\Filters::safeUrl($basePath), ENT_COMPAT) ?>/css/main.min.css?version=12">
 
     <link rel="shortcut icon" href="<?php echo Latte\Runtime\Filters::escapeHtml(Latte\Runtime\Filters::safeUrl($basePath), ENT_COMPAT) ?>/icon.png">
     <meta name="viewport" content="width=device-width">

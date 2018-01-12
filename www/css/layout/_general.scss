@@ -52,6 +52,13 @@
       width: 210px;
     }
   }
+
+  a:hover {
+    text-decoration: none;
+    span {
+      text-decoration: underline;
+    }
+  }
 }
 
 a:hover .profile-badge {

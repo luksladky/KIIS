@@ -13,7 +13,6 @@
 
 a.event-link {
   color: inherit;
-
 }
 
 .event-block {
@@ -46,11 +45,13 @@ a.event-link:hover {
 
   .event {
     border-color: $brand-primary;
+    transition: border-color 0.2s;
   }
 }
 
 .panel.event {
   position: relative;
+  border-radius: 10px;
 
   .panel-body {
     &:after {
@@ -81,15 +82,17 @@ a.event-link:hover {
   }
 
   &.sign-type-yes {
-    .panel-body:after {
-      background: #4CAF50;
-    }
+    border-left: 10px solid #4CAF50;
+    //.panel-body:after {
+    //  background: #4CAF50;
+    //}
   }
 
   &.sign-type-maybe {
-    .panel-body:after {
-      background: #ff9800;
-    }
+    border-left: 10px solid #ff9800;
+    //.panel-body:after {
+    //  background: #ff9800;
+    //}
   }
 }
 

@@ -36,9 +36,11 @@ if (!function_exists($_b->blocks['content'][] = '_lbc949c33d21_content')) { func
 <?php } ?>
     <div class="pull-right mr10">
 <?php if ($previous) { ?>        <a class="btn btn-default" title="Dřívější" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Event:show", array($previous->id)), ENT_COMPAT) ?>
-"><i class="glyphicon glyphicon-arrow-left"></i></a>
+"><i
+                    class="glyphicon glyphicon-arrow-left"></i></a>
 <?php } if ($next) { ?>        <a class="btn btn-default" title="Pozdější akce" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Event:show", array($next->id)), ENT_COMPAT) ?>
-"><i class="glyphicon glyphicon-arrow-right"></i></a>
+"><i
+                    class="glyphicon glyphicon-arrow-right"></i></a>
 <?php } ?>
     </div>
     <hr>
@@ -102,15 +104,17 @@ if (!function_exists($_b->blocks['content'][] = '_lbc949c33d21_content')) { func
                         <ul class="list-inline"">
 <?php $iterations = 0; foreach ($sign['persons'] as $person) { ?>                        <li>
                             <div class="relative">
-                                <a href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Profile:show", array($person->user->id)), ENT_COMPAT) ?>
-">
-                                    <div class="profile-badge mb5 sign-type-<?php echo Latte\Runtime\Filters::escapeHtml($person->type, ENT_COMPAT) ?>">
 
+                                <div class="profile-badge mb5 sign-type-<?php echo Latte\Runtime\Filters::escapeHtml($person->type, ENT_COMPAT) ?>">
+                                    <a href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Profile:show", array($person->user->id)), ENT_COMPAT) ?>
+">
                                         <img class="img-circle profile"
                                              alt="Profile photo"<?php echo ' src="' . $imageStorage->get($person->user->photo, '30x30','exact','noimage/profile-badge.jpg')->getLink() . '"' ?>>
-                                        <span class="name"><?php echo Latte\Runtime\Filters::escapeHtml($person->user->nickname, ENT_NOQUOTES) ?></span>
 
-<?php if ($person->date_from || $person->date_to) { ?>                                        <span class="popover-toggle icon">
+                                        <span class="name"><?php echo Latte\Runtime\Filters::escapeHtml($person->user->nickname, ENT_NOQUOTES) ?></span>
+                                    </a>
+
+<?php if ($person->date_from || $person->date_to) { ?>                                    <span class="popover-toggle icon">
                                         <i class="glyphicon glyphicon-calendar"></i>
                                         <div class="popover bottom">
                                             <div class="arrow"></div>
@@ -129,7 +133,7 @@ if (!function_exists($_b->blocks['content'][] = '_lbc949c33d21_content')) { func
                                             </div>
                                         </div>
                                     </span>
-<?php } if ($person->note) { ?>                                        <span class="popover-toggle icon">
+<?php } if ($person->note) { ?>                                    <span class="popover-toggle icon">
                                         <i class="glyphicon glyphicon-comment"></i>
                                         <div class="popover bottom">
                                             <div class="arrow"></div>
@@ -141,8 +145,8 @@ if (!function_exists($_b->blocks['content'][] = '_lbc949c33d21_content')) { func
                                         </div>
                                     </span>
 <?php } ?>
-                                    </div>
-                                </a>
+                                </div>
+
 <?php if ($person->user->id == $user->id) { ?>                                <a
                                         class="profile-badge-remove" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("removeSign!", array($event->id, $user->id)), ENT_COMPAT) ?>
 "><i
@@ -203,7 +207,7 @@ if (!function_exists($_b->blocks['content'][] = '_lbc949c33d21_content')) { func
                             </div>
                             <div class="panel-body">
 <?php if ($unreadCounts[$thread->id] > 0) { ?>                                <span class="badge red pull-left"
-                                      title="<?php echo Latte\Runtime\Filters::escapeHtml($template->timeagoinwords($thread->last_post), ENT_COMPAT) ?>
+                                                                            title="<?php echo Latte\Runtime\Filters::escapeHtml($template->timeagoinwords($thread->last_post), ENT_COMPAT) ?>
 "><?php echo Latte\Runtime\Filters::escapeHtml($unreadCounts[$thread->id], ENT_NOQUOTES) ?></span>
 <?php } ?>
                                 <?php echo $thread->title ?>
@@ -297,9 +301,7 @@ if (empty($_l->extends) && !empty($_control->snippetMode)) {
 //
 // main template
 //
-?>
-
-<?php if ($_l->extends) { ob_end_clean(); return $template->renderChildTemplate($_l->extends, get_defined_vars()); }
+if ($_l->extends) { ob_end_clean(); return $template->renderChildTemplate($_l->extends, get_defined_vars()); }
 call_user_func(reset($_b->blocks['content']), $_b, get_defined_vars())  ?>
 
 <?php call_user_func(reset($_b->blocks['templateScripts']), $_b, get_defined_vars()) ; 

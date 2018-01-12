@@ -53,6 +53,8 @@ if (!function_exists($_b->blocks['content'][] = '_lb8ceaf7378d_content')) { func
                                 <div class="panel-body">
 <?php if ($unreadCounts[$thread->id] > 0) { ?>                                    <span
                                             class="badge red pull-left"><?php echo Latte\Runtime\Filters::escapeHtml($unreadCounts[$thread->id], ENT_NOQUOTES) ?></span>
+<?php } if (isset($readLaterCounts[$thread->id])) { ?>                                    <span
+                                            class="badge orange pull-left"><?php echo Latte\Runtime\Filters::escapeHtml($readLaterCounts[$thread->id], ENT_NOQUOTES) ?></span>
 <?php } ?>
                                     <?php echo $thread->title ?>
 
@@ -64,7 +66,6 @@ if (!function_exists($_b->blocks['content'][] = '_lb8ceaf7378d_content')) { func
                 <div class="col-md-4 form-container hidden"></div>
             </div>
         </div>
-        <hr>
 <?php $iterations++; } ?>
 
 

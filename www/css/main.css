@@ -7019,6 +7019,10 @@ a.ui-button:active,
     top: 20px;
     left: -97px;
     width: 210px; }
+  .profile-badge a:hover {
+    text-decoration: none; }
+    .profile-badge a:hover span {
+      text-decoration: underline; }
 
 a:hover .profile-badge .name {
   text-decoration: underline; }
@@ -7261,10 +7265,12 @@ a.event-link {
 a.event-link:hover {
   text-decoration: none; }
   a.event-link:hover .event {
-    border-color: #337ab7; }
+    border-color: #337ab7;
+    transition: border-color 0.2s; }
 
 .panel.event {
-  position: relative; }
+  position: relative;
+  border-radius: 10px; }
   .panel.event .panel-body:after {
     content: ' ';
     width: 20px;
@@ -7282,10 +7288,10 @@ a.event-link:hover {
       margin: 0; }
     .panel.event.sign-type-no p {
       margin: 0; }
-  .panel.event.sign-type-yes .panel-body:after {
-    background: #4CAF50; }
-  .panel.event.sign-type-maybe .panel-body:after {
-    background: #ff9800; }
+  .panel.event.sign-type-yes {
+    border-left: 10px solid #4CAF50; }
+  .panel.event.sign-type-maybe {
+    border-left: 10px solid #ff9800; }
 
 .btn.add-event-thread {
   position: relative;

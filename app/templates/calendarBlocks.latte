@@ -99,7 +99,7 @@
         {$day}. <span class="gray">{$day->getMonth()}.</span>
         <div class="events">
         {foreach $day->events as $event}
-            <a class="event" href="{plink Event:show $event->id}">{$event->title}</a>
+            <a class="event {$event->color}" href="{plink Event:show $event->id}">{$event->title}</a>
         {/foreach}
         </div>
     </td>

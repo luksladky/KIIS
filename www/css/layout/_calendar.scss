@@ -29,12 +29,25 @@
   .event {
     display: block;
     width: 100%;
-    background: #E91E63;
+    background: #8a8a8a;
     border-radius: 4px;
     padding: 2px 0 2px 10px;
     color: white;
     overflow: hidden;
     margin-bottom: 3px;
+
+    &.no {
+      background: #dedede;
+      color: #b5b5b5;
+    }
+
+    &.yes {
+      background: #4caf50;
+    }
+
+    &.maybe {
+      background: #ff9800;
+    }
   }
 
   .current-day {

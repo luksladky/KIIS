@@ -69,6 +69,7 @@ class EventPresenter extends BaseSecurePresenter
         $eventSigns = [];
         foreach ($events as $event) {
             $eventSigns[$event->id] = $this->eventFacade->getSigned($event->id);
+            unset($eventSigns[$event->id][\App\Model\SignEnum::NO]);
         }
 
         $this->template->events = $events;
@@ -180,7 +181,7 @@ class EventPresenter extends BaseSecurePresenter
 
 
         $factory = new CalendarCellFactory(Calendar::MONDAY);
-        $gen = new CalendarGenerator($factory, $this->eventFacade);
+        $gen = new CalendarGenerator($factory, $this->eventFacade, $this->user->id);
 
         $cal->setCalendarGenerator($gen);
         $cal->enableSelections();

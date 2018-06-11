@@ -33,6 +33,7 @@
                 <th>Email</th>
                 <th>Telefon</th>
                 <th>Město</th>
+                <th>Velikost trička</th>
                 {*<th>Facebook</th>*}
                 <th><a n:tag-if="!($order=='last_activity')" n:href="Profile:default order=>'last_activity'" >
                         <span n:if="$order=='last_activity'" class="caret caret-reversed"></span> Poslední aktivita</a></th>
@@ -53,6 +54,7 @@
                     <td>{$profile->email}</td>
                     <td>{foreach $phones as $phone}{$phone}<br n:if="!$iterator->last">{/foreach}</td>
                     <td>{$profile->city}</td>
+                    <td>{$profile->tshirt_size}</td>
                     {*<td>TODO</td>*}
                     <td>{$profile->last_activity|timeagoinwords}</td>
                     <td n:if="$user->isInRole('modify-user')"><a n:href="Profile:editPermissions $profile->id">Spravovat

@@ -83,6 +83,7 @@ class ProfilePresenter extends BaseSecurePresenter
             'nickname'       => $person['nickname'],
             'phone'          => $person['phone'],
             'city'           => $person['city'],
+            'tshirt_size'    => $person['tshirt_size'],
             'upcoming_notif' => $person['upcoming_notif'],
         );
 
@@ -151,6 +152,7 @@ class ProfilePresenter extends BaseSecurePresenter
             "nickname"       => $values["nickname"],
             "phone"          => $values['phone'],
             "city"           => $values['city'],
+            "tshirt_size"    => $values['tshirt_size'],
             "upcoming_notif" => $values['upcoming_notif'],
         );
 

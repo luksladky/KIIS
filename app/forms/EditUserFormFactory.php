@@ -32,6 +32,8 @@ class EditUserFormFactory extends FormFactory
 
         $form->addText('city', 'Město');
 
+        $form->addText('tshirt_size', 'Velikost trička');
+
         $form->addCheckbox('upcoming_notif', 'Posílát upozornění na nadcházející nepotvrzené/neodmítnuté akce');
 
         $form->addSubmit('send', 'Uložit')

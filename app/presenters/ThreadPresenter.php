@@ -125,7 +125,7 @@ class ThreadPresenter extends BaseSecurePresenter
         $this->template->allActivity = $this->threadFacade->findActivityByThread($id);
         $this->template->readLaterIds = $readLaterIds = $this->threadFacade->findReadLaterIds($this->user->id, $id);
 
-        $lastReadPostId = -1;
+
         $lastReadPost = null;
         $iterator = 0;
         foreach ($posts as $post) {
@@ -135,7 +135,6 @@ class ThreadPresenter extends BaseSecurePresenter
             if (in_array($post->id, $readLaterIds)) {
                 break;
             }
-            $lastReadPostId = $post->id;
             $lastReadPost = $post;
             $iterator++;
         }
@@ -143,10 +142,11 @@ class ThreadPresenter extends BaseSecurePresenter
         //chci to dat na rodice
         while ($lastReadPost && $lastReadPost->parent_id) $lastReadPost = $lastReadPost->ref('post','parent_id');
 
+        $lastReadPostId = $lastReadPost->id;
         //pokud jsou prectene vsechny, nebo pokud je jich celkove malo, neskryvat
         if ($iterator == $posts->count() || $hiddenReadPostsCount < 5) $lastReadPostId = -1;
 
-        $this->template->lastReadPostId = $lastReadPost->id;
+        $this->template->lastReadPostId = $lastReadPostId;
         $this->template->readPostsCount = $hiddenReadPostsCount;
 
         $this['addPostForm']->setDefaults(['thread_id' => $id]);

@@ -5,7 +5,8 @@
             {if !$withEvents}příspěvků z nástěnky{elseif $onlyEvents}příspěvků z akcí{else}všech příspěvků{/if}
         </small>
     </h1>
-    <a n:href="Thread:default" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left mr10"></i>Zpět na nástěnku</a>
+    <a n:href="Thread:default" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left mr10"></i>Zpět na
+        nástěnku</a>
 
     <div class="btn-group">
         <button class="ajax btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -41,10 +42,9 @@
                     <div class="actions">
                         <span class="hiding">
                             {if $user->id == $thread->user_id || $user->isInRole('manage-threads')}
-                                <a n:href="Thread:edit $thread->id" class="btn btn-default" title="Upravit">
-                                    <i class="glyphicon glyphicon-pencil"></i></a>
-
-                                <a n:href="removeThreadFromArchive! $thread->id" class="btn btn-default" title="Vrátit zpět mezi čerstvé a voňavé diskuse"
+                                <a n:href="removeThreadFromArchive! $thread->id"
+                                        class="btn btn-default visible-xs visible-sm visible-md visible-lg"
+                                        title="Vrátit zpět mezi čerstvé a voňavé diskuse">
                                     <i class="glyphicon glyphicon-leaf"></i></a>
                             {/if}
                         </span>

@@ -13,7 +13,6 @@ body {
 $sidebar-width: 250px;
 $duration-sidebar: 0.5s;
 
-
 #sidebar-wrapper {
   z-index: 1000;
   position: fixed;
@@ -23,16 +22,27 @@ $duration-sidebar: 0.5s;
   margin-left: -$sidebar-width;
   overflow-y: auto;
   background: #000;
-  -webkit-transition: all $duration-sidebar ease;
-  -moz-transition: all $duration-sidebar ease;
-  -o-transition: all $duration-sidebar ease;
-  transition: all $duration-sidebar ease;
-  transform: translateX(-$sidebar-width);
+  transform: translateX(0);
 
   img.profile {
     position: relative;
     top: -2px;
     left: -3px;
+  }
+}
+
+@media (max-width: $screen-sm) {
+  #sidebar-wrapper {
+    width: $sidebar-width;
+    transform: translateX(-$sidebar-width);
+    -webkit-transition: all $duration-sidebar ease;
+    -moz-transition: all $duration-sidebar ease;
+    -o-transition: all $duration-sidebar ease;
+    transition: all $duration-sidebar ease;
+  }
+
+  #page-content-wrapper {
+    transition: all $duration-sidebar;
   }
 }
 
@@ -58,7 +68,6 @@ $duration-sidebar: 0.5s;
   max-width: 1200px;
   //position: absolute;
   transform: translateX(0);
-  transition: all $duration-sidebar;
 }
 
 #wrapper.toggled #page-content-wrapper {
@@ -80,7 +89,7 @@ $duration-sidebar: 0.5s;
     line-height: 40px;
 
     &.active {
-      background:  rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.2);
     }
     a {
       display: block;
@@ -92,7 +101,7 @@ $duration-sidebar: 0.5s;
         color: #fff;
         background: rgba(255, 255, 255, 0.2);
       }
-      &:active, &:focus  {
+      &:active, &:focus {
         text-decoration: none;
       }
     }
@@ -101,12 +110,12 @@ $duration-sidebar: 0.5s;
       height: 20px;
 
     }
-    
+
     .badge {
       background: #ad2000;
       color: #000;
     }
-    
+
   }
 
   > .sidebar-brand {
@@ -126,11 +135,9 @@ $duration-sidebar: 0.5s;
         background: none;
       }
 
-
     }
   }
 }
-
 
 @media(min-width: $screen-sm) {
   #wrapper {
@@ -139,11 +146,6 @@ $duration-sidebar: 0.5s;
 
   #wrapper.toggled {
     padding-left: 0;
-  }
-
-  #sidebar-wrapper {
-    width: $sidebar-width;
-    transform: translateX(0);
   }
 
   #wrapper.toggled #sidebar-wrapper {

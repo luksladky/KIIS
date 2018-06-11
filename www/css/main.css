@@ -3533,16 +3533,23 @@ body {
   margin-left: -250px;
   overflow-y: auto;
   background: #000;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-  transform: translateX(-250px); }
+  transform: translateX(0); }
   #sidebar-wrapper img.profile {
     position: relative;
     top: -2px;
     left: -3px; }
 
+@media (max-width: 968px) {
+  #sidebar-wrapper {
+    width: 250px;
+    transform: translateX(-250px);
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease; }
+
+  #page-content-wrapper {
+    transition: all 0.5s; } }
 #wrapper {
   overflow-x: hidden; }
 
@@ -3552,8 +3559,7 @@ body {
 #page-content-wrapper {
   width: 100%;
   max-width: 1200px;
-  transform: translateX(0);
-  transition: all 0.5s; }
+  transform: translateX(0); }
 
 #wrapper.toggled #page-content-wrapper {
   transform: translateX(250px); }
@@ -3607,10 +3613,6 @@ body {
 
   #wrapper.toggled {
     padding-left: 0; }
-
-  #sidebar-wrapper {
-    width: 250px;
-    transform: translateX(0); }
 
   #wrapper.toggled #sidebar-wrapper {
     width: 0; }
@@ -7082,8 +7084,10 @@ a.thread-link {
   a.thread-link:hover .thread {
     border-color: #337ab7; }
 
-.thread .panel-body {
-  font-size: 18px; }
+.thread {
+  border-radius: 10px; }
+  .thread .panel-body {
+    font-size: 18px; }
 
 .thread-compact .panel-heading {
   color: #dcdcdc;

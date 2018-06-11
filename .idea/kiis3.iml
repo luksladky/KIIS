@@ -10,6 +10,35 @@
       <excludeFolder url="file://$MODULE_DIR$/bin" />
       <excludeFolder url="file://$MODULE_DIR$/log" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/blitzik/calendar" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dg/adminer-custom" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dg/texy" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/eluceo/ical" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/kdyby/curl-ca-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/kdyby/facebook" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/latte/latte" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/application" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/bootstrap" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/caching" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/component-model" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/database" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/di" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/finder" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/forms" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/http" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/mail" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/neon" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/php-generator" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/reflection" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/robot-loader" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/safe-stream" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/security" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/tester" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/utils" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/tracy/tracy" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/voda/date-input" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/webchemistry/images" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

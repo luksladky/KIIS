@@ -25,7 +25,7 @@ if (!function_exists($_b->blocks['content'][] = '_lbe22d49545e_content')) { func
     <hr>
 
     <div class="row">
-        <div class="col-md-6`">
+        <div class="col-md-6">
 <?php $iterations = 0; foreach ($events as $event) { $type = array_key_exists($event->id,$signedFor) ? $signedFor[$event->id] : 'none' ?>
                 <div class="event-block">
                 <a class="event-link" href="<?php echo Latte\Runtime\Filters::escapeHtml($_control->link("Event:show", array($event->id)), ENT_COMPAT) ?>

@@ -44,6 +44,8 @@ class AddEventFormFactory extends FormFactory
         $form->addText('roles', 'Role na akci')
             ->setAttribute('class', 'rolesInput');
 
+        $form->addMultiUpload('upload')->setAttribute('class','hidden');
+
         $form->addSubmit('send', 'Vytvořit akci');
 
         $form->addHidden('event_id');

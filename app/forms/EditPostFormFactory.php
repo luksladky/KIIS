@@ -19,7 +19,9 @@ class EditPostFormFactory extends FormFactory
         $form->addTextArea('content')
             ->setAttribute('class','mceEditor')
             ->setAttribute('id','mceEditor');
-        
+
+
+
         $form->addHidden('post_id');
         $form->addHidden('thread_id');
         

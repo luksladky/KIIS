@@ -15,6 +15,7 @@ use Nette;
 use App\Model;
 use App\Forms\AddThreadFormFactory;
 use App\Model\PermissionRepository as Permission;
+use WebChemistry\Images\ImageStorageException;
 
 
 class ThreadPresenter extends BaseSecurePresenter
@@ -115,6 +116,7 @@ class ThreadPresenter extends BaseSecurePresenter
             $this->redirect('Thread:default');
         }
         $this->template->userCanEdit = $this->userCanEdit($thread->user_id);
+        $this->template->files = $this->fileRepository->findFor($id, 'thread');
         $posts = $this->threadFacade->getPosts($id);
         if (!isset($this->template->posts)) {
             $this->template->posts = $posts;
@@ -125,7 +127,8 @@ class ThreadPresenter extends BaseSecurePresenter
         $this->template->allActivity = $this->threadFacade->findActivityByThread($id);
         $this->template->readLaterIds = $readLaterIds = $this->threadFacade->findReadLaterIds($this->user->id, $id);
 
-
+        $withFileIds = [];
+        $attachmentsByPost = [];
         $lastReadPost = null;
         $iterator = 0;
         foreach ($posts as $post) {
@@ -137,17 +140,45 @@ class ThreadPresenter extends BaseSecurePresenter
             }
             $lastReadPost = $post;
             $iterator++;
+
+            if ($post->file_count > 0) {
+                $withFileIds[] = $post->id;
+                $attachmentsByPost[$post->id] = [];
+            }
         }
         $hiddenReadPostsCount = $iterator - 1;
-        //chci to dat na rodice
-        while ($lastReadPost && $lastReadPost->parent_id) $lastReadPost = $lastReadPost->ref('post','parent_id');
 
-        $lastReadPostId = $lastReadPost->id;
+        if ($iterator > 50 && $iterator == $posts->count()) {
+
+            $iterator = $iterator - 15;
+            $hiddenReadPostsCount = $iterator;
+            $i = 0;
+            foreach ($posts as $post) {
+                if ($i == $iterator) {
+                    $lastReadPost = $post;
+                    break;
+                }
+                $i++;
+            }
+        }
+
+        //chci to dat na rodice
+        while ($lastReadPost && $lastReadPost->parent_id) $lastReadPost = $lastReadPost->ref('post', 'parent_id');
+
+        $lastReadPostId = $lastReadPost ? $lastReadPost->id : 0;
         //pokud jsou prectene vsechny, nebo pokud je jich celkove malo, neskryvat
         if ($iterator == $posts->count() || $hiddenReadPostsCount < 5) $lastReadPostId = -1;
 
         $this->template->lastReadPostId = $lastReadPostId;
         $this->template->readPostsCount = $hiddenReadPostsCount;
+
+        $postAttachments = $this->fileRepository->findBy("(object_id IN ?) AND (object_type = ?)", [$withFileIds, "post"]);
+
+        foreach ($postAttachments as $file) {
+            $attachmentsByPost[$file->object_id][] = $file;
+        }
+
+        $this->template->postFiles = $attachmentsByPost;
 
         $this['addPostForm']->setDefaults(['thread_id' => $id]);
         $this->threadFacade->trackActivity($this->user->id, $id, 'seen');
@@ -218,9 +249,16 @@ class ThreadPresenter extends BaseSecurePresenter
 
         $values['title'] = str_replace('<p>&nbsp;</p>', '', $values['title']);
         $values['title'] = str_replace('<p></p>', '', $values['title']);
+        $values['title'] =  $values['content'] = $this->replaceSmileys($values['title']);
         $values['title'] = $this->texy->process($values['title']);
 
-        $this->threadFacade->addThread($this->user->id, $values['title'], $values['restrict_users'], $values['event_id']);
+        $id = $this->threadFacade->addThread($this->user->id, $values['title'], $values['restrict_users'], $values['event_id']);
+
+        /** @var Nette\Http\FileUpload[] $upload */
+        $upload = $values['upload'];
+        foreach ($upload as $file) {
+            $this->fileRepository->insertFile($file, $id, 'thread', $this->user->getId());
+        }
 
         $this->flashMessage('Diskuse je na světě.', 'success');
     }
@@ -236,6 +274,7 @@ class ThreadPresenter extends BaseSecurePresenter
 
     public function editThreadFormSucceeded($form, $values)
     {
+        $values['title'] = $this->replaceSmileys($values['title']);
         $values['title'] = $this->texy->process($values['title']);
 
         $threadId = $values['thread_id'];
@@ -264,6 +303,7 @@ class ThreadPresenter extends BaseSecurePresenter
     {
         $values['content'] = str_replace('<p>&nbsp;</p>', '', $values['content']);
         $values['content'] = str_replace('<p></p>', '', $values['content']);
+        $values['content'] = $this->replaceSmileys($values['content']);
         $values['content'] = $this->texy->process($values['content']);
 
 
@@ -294,10 +334,23 @@ class ThreadPresenter extends BaseSecurePresenter
     {
         $values['content'] = str_replace('<p>&nbsp;</p>', '', $values['content']);
         $values['content'] = str_replace('<p></p>', '', $values['content']);
+        $values['content'] = $this->replaceSmileys($values['content']);
         $values['content'] = $this->texy->process($values['content']);
 
 
         $id = $this->threadFacade->addPost($this->user->id, $values['thread_id'], $values['content'], $values['parent']);
+
+
+
+        /** @var Nette\Http\FileUpload[] $upload */
+        $upload = $values['upload'];
+        if (count($upload) > 0) {
+            $this->threadFacade->updatePost($id,['file_count' => count($upload)]);
+        }
+
+        foreach ($upload as $file) {
+            $this->fileRepository->insertFile($file, $id, 'post', $this->user->getId());
+        }
 
         $this->redirect('this#post-' . $id);
     }
@@ -426,5 +479,20 @@ class ThreadPresenter extends BaseSecurePresenter
     public function userCanEditPost($postAuthorId)
     {
         return ($this->user->isInRole(Permission::MANAGE_THREADS) || $this->user->id == $postAuthorId);
+    }
+
+    private function replaceSmileys($text)
+    {
+        $replacements = array(
+            ':-D' => '😁',
+            ' :D '  => ' 😁 ',
+            ':-)' => '😊',
+            ' :) '  => ' 😊 ',
+            ';-)' => '😉',
+            ' ;) '  => ' 😉 ',
+            ':-(' => '😞',
+            ' :( '  => ' 😞 ',
+        );
+        return str_replace(array_keys($replacements), $replacements , $text);
     }
 }

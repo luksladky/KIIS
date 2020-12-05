@@ -236,15 +236,15 @@ class EventFacade
 
         if ($slug == "") return false;
 
-        $role = $this->getRolesRepository()->findBy('slug', $slug)->fetch();
-
-        if (!$role) {
+        $role = $this->getRolesRepository()->findBy('slug', $slug);
+        
+        if ($role->count() == 0) {
             $roleId = $this->getRolesRepository()->insert(array(
                 'title' => $name,
                 'slug'  => $slug,
             ));
         } else {
-            $roleId = $role->id;
+            $roleId = $role->fetch()->id;
         }
 
         $this->database->table('event_role')->insert(array(
@@ -260,7 +260,12 @@ class EventFacade
         $roles = preg_split("/[;,]/", $serializedRoles);
 
         foreach ($roles as $role) {
-            $this->addRole($role, $eventId);
+            try {
+                $this->addRole($role, $eventId);
+            } catch (Exception $exception) {
+
+            }
+
         }
     }
 

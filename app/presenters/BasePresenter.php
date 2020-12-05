@@ -26,6 +26,8 @@ class BasePresenter extends Nette\Application\UI\Presenter
             return $dateFormatted;
         } );
 
+        $this->template->newCount = 0;
+
 
     }
 

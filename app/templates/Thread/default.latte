@@ -19,11 +19,14 @@
                         <div class="form-group">
                             <div class="col-sm-12"><input n:name=title size=20></div>
                         </div>
+                        <input n:name=upload class="hidden">
                         <div class="form-group">
 
                             <div class="col-sm-4 control-label"><label n:name=restrict_users>Skrýt pro
                                     uživatele:</label></div>
                             <div class="col-sm-8"><input n:name=restrict_users></div>
+
+
                         </div>
                         <div class="form-group">
                             <div class="col-xs-12"><input n:name=send class="btn btn-primary"></div>
@@ -45,8 +48,8 @@
                         <a n:href="Thread:show $thread->id" class="thread-link">
                             <div class="thread thread-compact panel panel-default">
                                 {*<div class="panel-heading">*}
-                                    {*{$thread->user->nickname}*}
-                                    {*{$thread->created_at|timeagoinwords}*}
+                                {*{$thread->user->nickname}*}
+                                {*{$thread->created_at|timeagoinwords}*}
                                 {*</div>*}
                                 <div class="panel-body">
                                     <span n:if="$unreadCounts[$thread->id] > 0"
@@ -59,13 +62,24 @@
                         </a>
                         <div class="actions">
                         <span class="hiding">
-                            {if $user->id == $thread->user_id || $user->isInRole('manage-threads')}
-                                <a n:href="Thread:edit $thread->id" class="btn btn-default" title="Upravit">
-                                    <i class="glyphicon glyphicon-pencil"></i></a>
 
-                                <a n:href="archiveThread! $thread->id" class="btn btn-default" title="Archivovat">
-                                    <i class="glyphicon glyphicon-ok"></i></a>
-                            {/if}
+
+                {if $user->id == $thread->user_id || $user->isInRole('manage-threads')}
+                    <div class="btn-group text-left">
+                        <i class="glyphicon glyphicon-option-horizontal btn dropdown-toggle" data-toggle="dropdown"></i>
+                        <ul class="dropdown-menu">
+                            <li>
+                                        <a n:href="Thread:edit $thread->id">Upravit</a>
+
+                                    </li>
+                                    <li>
+                                        <a n:href="archiveThread! $thread->id" onclick="return confirmArchive();">
+                                            Archivovat</a>
+                                    </li>
+                        </ul>
+                    </div>
+                {/if}
+
                         </span>
                             {if $user->isInRole('manage-threads')}
                                 <a n:href="togglePinned! $thread->id" class="btn btn-default" title="Odepnout">
@@ -86,9 +100,9 @@
                     <a n:href="Thread:show $thread->id" class="thread-link">
                         <div class="thread thread-compact panel panel-default">
                             {*<div class="panel-heading">*}
-                                {*přidal*}
-                                {*{$thread->user->nickname}*}
-                                {*{$thread->created_at|timeagoinwords}*}
+                            {*přidal*}
+                            {*{$thread->user->nickname}*}
+                            {*{$thread->created_at|timeagoinwords}*}
                             {*</div>*}
                             <div class="panel-body">
                                 <span class="badge red pull-left" n:if="$unreadCounts[$thread->id] > 0"
@@ -102,15 +116,25 @@
 
                     <div class="actions">
                         {if $user->id == $thread->user_id || $user->isInRole('manage-threads')}
-                            <a n:href="Thread:edit $thread->id" class="btn btn-default" title="Upravit">
-                                <i class="glyphicon glyphicon-pencil"></i></a>
+                            <div class="btn-group text-left">
+                                <i class="glyphicon glyphicon-option-horizontal btn dropdown-toggle"
+                                   data-toggle="dropdown"></i>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a n:href="Thread:edit $thread->id">Upravit</a>
 
-                            <a n:href="archiveThread! $thread->id" class="btn btn-default" title="Archivovat">
-                                <i class="glyphicon glyphicon-ok"></i></a>
-                        {/if}
-                        {if $user->isInRole('manage-threads')}
-                            <a n:href="togglePinned! $thread->id" class="btn btn-default" title="Připnout">
-                                <i class="glyphicon glyphicon-pushpin"></i></a>
+                                    </li>
+                                    <li>
+                                        <a n:href="archiveThread! $thread->id" onclick="return confirmArchive();">
+                                            Archivovat</a>
+                                    </li>
+                                    {if $user->isInRole('manage-threads')}
+                                        <li>
+                                            <a n:href="togglePinned! $thread->id">Připnout</a>
+                                        </li>
+                                    {/if}
+                                </ul>
+                            </div>
                         {/if}
                     </div>
                 </div>
@@ -125,8 +149,8 @@
                     <a n:href="Thread:show $thread->id" class="thread-link">
                         <div class="thread thread-compact panel panel-default">
                             {*<div class="panel-heading">*}
-                                {*{$thread->user->nickname}*}
-                                {*{$thread->created_at|timeagoinwords}*}
+                            {*{$thread->user->nickname}*}
+                            {*{$thread->created_at|timeagoinwords}*}
                             {*</div>*}
                             <div class="panel-body">
                                 <span n:ifset="$readLaterCounts[$thread->id]"
@@ -137,18 +161,27 @@
                     </a>
                     <div class="actions">
                         <span class="hiding">
-                            {if $user->id == $thread->user_id || $user->isInRole('manage-threads')}
-                                <a n:href="Thread:edit $thread->id" class="btn btn-default" title="Upravit">
-                                    <i class="glyphicon glyphicon-pencil"></i></a>
+                             {if $user->id == $thread->user_id || $user->isInRole('manage-threads')}
+                                 <div class="btn-group text-left">
+                                <i class="glyphicon glyphicon-option-horizontal btn dropdown-toggle"
+                                   data-toggle="dropdown"></i>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a n:href="Thread:edit $thread->id">Upravit</a>
 
-                                <a n:href="archiveThread! $thread->id" class="btn btn-default" title="Archivovat">
-                                    <i class="glyphicon glyphicon-ok"></i></a>
-                            {/if}
-
-                            {if $user->isInRole('manage-threads')}
-                                <a n:href="togglePinned! $thread->id" class="btn btn-default" title="Připnout">
-                                    <i class="glyphicon glyphicon-pushpin"></i></a>
-                            {/if}
+                                    </li>
+                                    <li>
+                                        <a n:href="archiveThread! $thread->id" onclick="return confirmArchive();">
+                                            Archivovat</a>
+                                    </li>
+                                    {if $user->isInRole('manage-threads')}
+                                        <li>
+                                            <a n:href="togglePinned! $thread->id">Připnout</a>
+                                        </li>
+                                    {/if}
+                                </ul>
+                            </div>
+                             {/if}
                         </span>
                     </div>
                 </div>

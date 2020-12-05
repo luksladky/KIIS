@@ -96,3 +96,37 @@ table.center-vertical {
     vertical-align: middle;
   }
 }
+
+.files, .uploadedFiles {
+  a {
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  img {
+    display: inline-block;
+    width: 100px;
+    height: 80px;
+    vertical-align: baseline;
+  }
+
+  img, .general_file {
+    margin: 0 10px 10px 0;
+  }
+}
+
+.general_file {
+  display: inline-block;
+  width: 100px;
+  height: 80px;
+  overflow: hidden;
+  background: #dddddd;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+
+.mce-ico.mce-i-glyphicon {
+  font-family: 'Glyphicons Halflings';
+}

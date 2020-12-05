@@ -19,8 +19,11 @@ class PostRepository extends Repository
     {
         $data = array('user_id'     => $userId,
                       'thread_id'   => $threadId,
-                      'content'     => $content,
-                      'reply_to_id' => $parentId);
+                      'content'     => $content);
+
+        if ($parentId) {
+            $data['reply_to_id'] = $parentId;
+        }
 
         if (!$parentId) {
             $this->database->query('

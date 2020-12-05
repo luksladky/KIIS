@@ -1,0 +1,62 @@
+{block content}
+    <h1 n:block="title" class="page-header">Přehled souborů</h1>
+    {var $filterName = 'Blbost'}
+    {if $filterType == ''}{var $filterName = 'Všechny soubory'}{/if}
+    {if $filterType == 'image'}{var $filterName = 'Fotky'}{/if}
+    {if $filterType == 'file'}{var $filterName = 'Dokumenty'}{/if}
+
+    {var $filterOwnerName = 'Blbost'}
+    {if $filterOwner == ''}{var $filterOwnerName = 'Na všech místech'}{/if}
+    {if $filterOwner == 'event'}{var $filterOwnerName = 'U akce'}{/if}
+    {if $filterOwner == 'thread'}{var $filterOwnerName = 'U vlákna'}{/if}
+    {if $filterOwner == 'post'}{var $filterOwnerName = 'V příspěvcích'}{/if}
+
+
+    <div class="btn-group">
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            {$filterName} <span class="caret"></span>
+        </button>
+
+        <ul class="dropdown-menu">
+            <li><a n:href="this filterType => '' ">Všechny soubory</a></li>
+            <li><a n:href="this filterType => 'image' ">Fotky</a></li>
+            <li><a n:href="this filterType => 'file' ">Dokumenty</a></li>
+        </ul>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            {$filterOwnerName} <span class="caret"></span>
+        </button>
+
+        <ul class="dropdown-menu">
+            <li><a n:href="this filterOwner => '' ">Na všech místech</a></li>
+            <li><a n:href="this filterOwner => 'event' ">U Akce</a></li>
+            <li><a n:href="this filterOwner => 'thread' ">U Vlákna</a></li>
+            <li><a n:href="this filterOwner => 'post' ">V příspěvcích</a></li>
+        </ul>
+    </div>
+
+    <hr>
+
+
+    <div class="files">
+        {foreach $files as $file}
+            {if $file->type == 'image'}
+                <a data-fancybox href="{img $file->filename}">
+                    <img class="img-rounded" n:img="$file->filename, '100x80','exact','noimage/missing_image.png'"
+                         alt="{$file->original_filename}">
+                </a>
+            {else}
+                <a href="{$basePath}/assets/{$file->filename}" target="_blank">
+                    <div class="general_file">
+                        <span class="filename">{$file->original_filename}</span>
+                    </div>
+                </a>
+            {/if}
+        {/foreach}
+    </div>
+    </div>
+
+
+{/block}

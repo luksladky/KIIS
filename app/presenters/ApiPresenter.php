@@ -139,11 +139,16 @@ class ApiPresenter extends BasePresenter
             $this->template->awaitingApprovalCount = $c4 = $this->profileRepository->findAwaitingApproval()->count();
 
 
-//        $refreshMenu = $c1 > 0 || $c2 > 0 || $c3 > 0 || $c4 > 0;
+        $newCount = $c1 + $c2 + $c3 + $c4;
+        $this->template->newCount = $newCount;
         
         $this->redrawControl('badgeEventThreads');
         $this->redrawControl('badgeDashboard');
         $this->redrawControl('badgeMobileAll');
+        if ($newCount > 0) {
+            $this->redrawControl('title');
+        }
+
     }
     
     public function actionCheckCron() {

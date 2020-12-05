@@ -16,16 +16,15 @@ application:
 	mapping:
 		*: App\*Module\Presenters\*Presenter
 
-
 session:
 	expiration: 30 days
 	save_path: %tempDir%/session
-
 
 services:
 	- App\Model\EventFacade
 	- App\Model\ThreadFacade
 	- App\Model\ProfileRepository
+	- App\Model\FileRepository
 	- App\Model\PermissionRepository
 	- App\Model\CronManager
 	router: App\RouterFactory::createRouter

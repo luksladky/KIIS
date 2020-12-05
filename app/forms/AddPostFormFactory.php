@@ -23,6 +23,8 @@ class AddPostFormFactory extends FormFactory
         $form->addHidden('thread_id');
         $form->addHidden('parent');
 
+        $form->addMultiUpload('upload');
+
         $form->addSubmit('send', 'Přídat komentář');
 
         //$form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');

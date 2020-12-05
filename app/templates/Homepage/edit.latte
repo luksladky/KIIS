@@ -1,0 +1,43 @@
+{* This is the welcome page, you can delete it *}
+
+{block content}
+<h1 class="page-header">Úprava hlavní stránky</h1>
+
+    <a n:href="Homepage:default" class="btn btn-default">Odejít bez uložení</a>
+
+    <hr>
+
+    <form n:name="editHomepageForm" class="form-hoizontal">
+        <div class="form-group">
+            {input content}
+        </div>
+        <div class="form-group">
+            {input send}
+        </div>
+    </form>
+
+{/block}
+
+{block templateScripts}
+
+    <script>
+        tinymce.init({
+            mode: 'textareas',
+            height: 500,
+            menubar: true,
+            statusbar: false,
+            plugins: [
+                'autolink lists link hr',
+                'searchreplace wordcount visualblocks ',
+                'nonbreaking save  directionality',
+                'paste textcolor colorpicker table image stylebuttons'
+            ],
+            toolbar1: 'undo redo | bold italic | fontselect fontsizeselect formatselect | forecolor | alignleft aligncenter alignright alignjustify | outdent indent | bullist numlist  | link image table',
+            setup: function (ed) {
+                ed.on('init', function (ed) {
+                    ed.target.editorCommands.execCommand("fontName", false, "Arial");
+                });
+            }
+        });
+    </script>
+{/block}

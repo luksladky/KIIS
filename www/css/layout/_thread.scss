@@ -12,6 +12,7 @@ a.thread-link {
 
 .thread {
   border-radius: 10px;
+  min-height: 45px;
 
   .panel-body{
     font-size: 18px;
@@ -59,8 +60,8 @@ a.thread-link {
       background-color: transparent;
       border-color: transparent;
       &:hover {
-        background-color: darken($btn-default-bg, 10%);
-        border-color: darken($btn-default-border, 12%);
+        background-color: darken($btn-default-bg, 5%);
+        border-color: transparent;
       }
     }
   }

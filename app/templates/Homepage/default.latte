@@ -1,0 +1,12 @@
+{* This is the welcome page, you can delete it *}
+
+{block content}
+<h1 class="page-header"><span title="Klubový internetový (nebo interní, kdo ví) informační systém">KIIS</span><sup class="small">3</sup></h1>
+{if $user->isInRole('modify-homepage')}
+
+    <a n:href="Homepage:edit" class="btn btn-default">Upravit hlavní stránku</a>
+
+    <hr>
+
+{/if}
+{ifset $homepage->content}{$homepage->content|noescape}{/ifset}

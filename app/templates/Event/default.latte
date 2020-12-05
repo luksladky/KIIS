@@ -1,0 +1,89 @@
+{block content}
+    <h1 class="page-header" n:block="title">Seznam akcí</h1>
+    {if $user->isInRole('add-event') }
+        <a class="btn btn-default" n:href="Event:create"><i class="glyphicon glyphicon-plus mr10"></i>Přidat akci</a>
+    {/if}
+
+    <a n:href="Event:default $showLinkType"
+            class="btn btn-default">Zobrazit {$showLinkType ? 'všechny' : 'jen budoucí'}</a>
+    <a class="btn btn-link pull-right" n:href="Event:exportCalendar">Přidat akce do Google Kalendáře</a>
+    <hr>
+
+    <div class="row">
+        <div class="col-md-6">
+            {foreach $events as $event}
+                {var $type = array_key_exists($event->id,$signedFor) ? $signedFor[$event->id] : 'none'}
+                <div class="event-block">
+                <a class="event-link" n:href="Event:show $event->id">
+                    <div class="event panel panel-default sign-type-{$type}">
+                        <div class="panel-body">
+                            <h3>{$event->title|noescape}</h3>
+                            <p>{$event->date_from|czechdate:false} – {$event->date_to|czechdate}</p>
+                        </div>
+                    </div>
+                </a>
+
+                    <aside class="event-thumb" n:if="$eventSigns">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <p><strong class="mr10" n:if="$event->location">{$event->location} </strong>
+                                    <span class="gray">
+                            {$event->date_from|date:'j. n.'} od {$event->date_from|date:'H:i'}
+                                        <span class="ml5 mr5">–</span>
+                                        {$event->date_to|date:'j. n.'} do {$event->date_to|date:'H:i'}
+                                        <span class="ml10">(začíná {$event->date_from|timeagoinwords})</span>
+                        </span>
+                                </p>
+                                {$event->description|noescape}
+
+
+                                {foreach $eventSigns[$event->id] as $sign}
+
+                                    <strong n:ifset="$sign['main']" n:tag-if="$sign['main']">{$sign['name']}</strong>
+                                    {if !count($sign['persons'])}<br><br>{/if}
+                                    <ul class="list-inline"">
+                                    <li n:foreach="$sign['persons'] as $person">
+                                        {****** BADGE*******}
+                                        <div class="relative">
+
+                                                <div class="profile-badge mb5 sign-type-{$person->type}">
+                                                    <a n:href="Profile:show $person->user->id">
+                                                    <img class="img-circle profile" n:img="$person->user->photo, '30x30','exact','noimage/profile-badge.jpg'"
+                                                         alt="Profile photo">
+                                                    <span class="name">{$person->user->nickname}</span>
+                                            </a>
+                                                    {****** DATE FROM TO*******}
+                                                    <span class="popover-toggle icon" n:if="$person->date_from || $person->date_to">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+
+                                    </span>
+                                                    {****** NOTE*******}
+                                                    <span class="popover-toggle icon" n:if="$person->note">
+                                        <i class="glyphicon glyphicon-comment"></i>
+
+                                    </span>
+                                                </div>
+
+                                            {****** BADGE END*******}
+                                        </div>
+                                    </li>
+                                    </ul>
+
+                                {/foreach}
+                            </div>
+                        </div>
+
+                    </aside>
+
+                </div>
+
+
+
+
+            {/foreach}
+        </div>
+    </div>
+
+
+
+{/block}

@@ -4,6 +4,10 @@ function confirmDelete() {
     return confirm('Opravdu to chceš smazat?');
 }
 
+function confirmArchive() {
+    return confirm('Archivovat?');
+}
+
 function initSelectizeData(url, objArr, callback) {
     $.ajax({
         url: url,
@@ -42,6 +46,8 @@ function initSelectize(url, input, objArr, value, label, search) {
 
 }
 
+$('input[name="upload[]"]').after('<div class="uploadedFiles"></div>');
+
 var formTemplate = $('.form-template').clone();
 formTemplate.find('textarea').attr('id', null);
 
@@ -67,8 +73,8 @@ function initMenuToggle() {
         $("#wrapper").toggleClass("toggled");
     });
 }
-initMenuToggle();
 
+initMenuToggle();
 
 
 var firstFocus = true;
@@ -84,14 +90,14 @@ function initTinymce() {
         // force_p_newlines : false,
         autosave_ask_before_unload: false,
         autosave_interval: "5s",
-        theme: 'modern',
+        default_link_target: "_blank",
         plugins: [
             'autosave autolink lists link hr',
             'searchreplace wordcount visualblocks ',
             'nonbreaking save  directionality',
-            'paste textcolor colorpicker  '
+            'paste textcolor colorpicker '
         ],
-        toolbar1: 'undo redo | restoredraft | bold italic underline strikethrough | forecolor | alignleft aligncenter alignright | bullist numlist  | link image',
+        toolbar1: 'undo redo | restoredraft | bold italic underline strikethrough | forecolor | alignleft aligncenter alignright | bullist numlist  | link image uploadFile',
         setup: function (editor) {
             editor.on('init', function (ed) {
                 ed.target.editorCommands.execCommand("fontName", false, "Arial");
@@ -102,6 +108,15 @@ function initTinymce() {
                     $('.add-comment-form').show();
                 }
             });
+
+            editor.ui.registry.addButton('uploadFile', {
+                tooltip: 'Upload file',
+                icon: 'upload',
+                onAction: function () {
+                    console.log($(editor.formElement).children('input[name="upload[]"]'));
+                    $(editor.formElement).find('input[name="upload[]"]').click();
+                }
+            });
         }
     });
     tinyMCE.execCommand("mceAddEditor", false, "mceEditor");
@@ -110,6 +125,7 @@ function initTinymce() {
         $('.add-comment-form').show();
     }, 2000);
 }
+
 $(document).ready(initTinymce);
 
 function resetEditorContent(id) {
@@ -134,6 +150,10 @@ function copyMceEditor(customizeFunc) {
     // }, 0);
 
     tinymce.execCommand('mceFocus', false, 'form-editor');
+
+    var $upload = $('input[name="upload[]"]');
+    $upload.off('change');
+    $upload.on('change', uploadChangeHandle);
 
     return form;
 }
@@ -333,10 +353,12 @@ function handleVisibilityChange() {
         // console.log('tab visible');
     }
 }
+
 document.addEventListener("visibilitychange", handleVisibilityChange, false);
 
 var refreshMenuInterval = 15 * 1000; //ms
 var refreshMenuTimeout;
+
 function refreshMenu() {
     $.nette.ajax('/?presenter=Api&action=refreshMenu').success(function () {
         if (!document.hidden)
@@ -345,7 +367,43 @@ function refreshMenu() {
     });
 }
 
-$(document).ready(function() {setTimeout(refreshMenu,1000)});
+$(document).ready(function () {
+    setTimeout(refreshMenu, 1000)
+});
 
+
+function addFileList(files, fileList) {
+    if (files.length == 0)
+        return;
+    // Process files one by one
+    fileList.empty();
+
+    for (var i = 0; i < files.length; ++i) {
+        if (files[i].type.match(/image.*/)) {
+            (function(file) {
+                var reader = new FileReader();
+                reader.addEventListener("load", function () {
+                    fileList.append('<img class="img-rounded" src="' + reader.result + '">')
+                });
+
+                reader.readAsDataURL(files[i]);
+            })(files[i]);
+        } else {
+            fileList.append('<div class="general_file">\n' +
+                '                  <span class="filename">' + files[i].name + '</span>\n' +
+                '            </div>');
+        }
+    }
+
+}
+
+
+// Handle file input.
+
+function uploadChangeHandle(ev) {
+    addFileList(ev.currentTarget.files, $(ev.currentTarget).siblings('.uploadedFiles'));
+}
+
+$('input[name="upload[]"]').change(uploadChangeHandle);
 
 

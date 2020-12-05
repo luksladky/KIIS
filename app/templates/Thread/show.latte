@@ -70,61 +70,78 @@
     <hr>
     <div class="clearfix"></div>
     <div class="row">
-    <div class="col-lg-8 col-lg-push-2 col-md-8">
+        <div class="col-lg-8 col-lg-push-2 col-md-8">
 
-    <div class="thread panel panel-default">
-        <div class="panel-heading">
-            Přidal
-            <img n:img="$thread->user->photo, '20x20', 'exact', 'noimage/profile-badge.jpg'"
-                    class="img-circle">
-            <a class="thread-author-link" n:href="Profile:show $thread->user->id">{$thread->user->nickname}</a>
-            <div class="pull-right">
-                {$thread->created_at|timeagoinwords}
+            <div class="thread panel panel-default">
+                <div class="panel-heading">
+                    Přidal
+                    <img n:img="$thread->user->photo, '20x20', 'exact', 'noimage/profile-badge.jpg'"
+                            class="img-circle">
+                    <a class="thread-author-link" n:href="Profile:show $thread->user->id">{$thread->user->nickname}</a>
+                    <div class="pull-right">
+                        {$thread->created_at|timeagoinwords}
+                    </div>
+                </div>
+                <div class="panel-body">
+                    {$thread->title|noescape}
+                </div>
             </div>
-        </div>
-        <div class="panel-body">
-            {$thread->title|noescape}
-        </div>
-    </div>
 
+            {if $files}
+                <div class="files mb20">
+                    {foreach $files as $file}
+                        {if $file->type == 'image'}
+                            <a data-fancybox href="{img $file->filename}">
+                                <img class="img-rounded" n:img="$file->filename, '100x80','exact','noimage/missing_image.png'"
+                                     alt="{$file->original_filename}">
+                            </a>
+                        {else}
+                            <a href="{$basePath}/assets/{$file->filename}" target="_blank">
+                                <div class="general_file">
+                                    <span class="filename">{$file->original_filename}</span>
+                                </div>
+                            </a>
+                        {/if}
+                    {/foreach}
+                </div>
+            {/if}
 
-    {snippetArea postWrapper}
-
-        {if $lastReadPostId != -1}
+            {snippetArea postWrapper}
+            {if $lastReadPostId != -1}
             <div class="collapse" id="collapseRead">
-        {/if}
-
-    {var $endingsDebt = 0}
-    {var $lastLevel = 0}
-        {foreach $posts as $post}
-            {if !$iterator->first}
-                {if $lastLevel >= $post->depth}
-                    {for $i = 0; $i <= $lastLevel - $post->depth; $i++}
-                        </div>
-                    {/for}
                 {/if}
+
+                {var $endingsDebt = 0}
+                {var $lastLevel = 0}
+                {foreach $posts as $post}
+                {if !$iterator->first}
+                {if $lastLevel >= $post->depth}
+                {for $i = 0; $i <= $lastLevel - $post->depth; $i++}
+            </div>
+            {/for}
+            {/if}
             {/if}
 
             {if $post->id == $lastReadPostId}
-                </div>
+        </div>
 
-                <div class="text-center">
-                    <button class="btn btn-primary show-all-posts" type="button" data-toggle="collapse"
-                            data-target="#collapseRead"
-                            aria-expanded="false" aria-controls="collapseRead">
-                        Zobrait starší příspěvky <span class="badge">{$readPostsCount}</span>
-                    </button>
+        <div class="text-center">
+            <button class="btn btn-primary show-all-posts" type="button" data-toggle="collapse"
+                    data-target="#collapseRead"
+                    aria-expanded="false" aria-controls="collapseRead">
+                Zobrait starší příspěvky <span class="badge">{$readPostsCount}</span>
+            </button>
 
-                    <hr>
-                </div>
+            <hr>
+        </div>
 
-            {/if}
+        {/if}
 
-            {var $isNew = $lastActivity < $post->created_at}
-            {var $isReadLater = in_array($post->id,$readLaterIds)}
+        {var $isNew = $lastActivity < $post->created_at}
+        {var $isReadLater = in_array($post->id,$readLaterIds)}
         <div n:class="post, $isNew ? 'new', $isReadLater ? 'read-later'" id="post-{$post->id}">
-        {var $author = $post->ref('user','user_id')}
-        {var $userCanEdit = ($user->id == $post->user_id || $user->isInRole('manage-threads'))}
+            {var $author = $post->ref('user','user_id')}
+            {var $userCanEdit = ($user->id == $post->user_id || $user->isInRole('manage-threads'))}
 
             <a class="pull-left photo" n:href="Profile:show $author->id">
                 <img n:img="$author->photo, '50x50', 'exact', 'noimage/profile-badge.jpg'"
@@ -147,11 +164,31 @@
                     {else}
                         {$post->content|noescape}
                     {/if}
+
+                    {if array_key_exists($post->id, $postFiles)}
+                        <div class="files">
+                            {foreach $postFiles[$post->id] as $file}
+                                {if $file->type == 'image'}
+                                    <a data-fancybox href="{img $file->filename}">
+                                        <img class="img-rounded" n:img="$file->filename, '100x80','exact','noimage/missing_image.png'"
+                                             alt="{$file->original_filename}">
+                                    </a>
+                                {else}
+                                    <a href="{$basePath}/assets/{$file->filename}" target="_blank">
+                                        <div class="general_file">
+                                            <span class="filename">{$file->original_filename}</span>
+                                        </div>
+                                    </a>
+                                {/if}
+                            {/foreach}
+                        </div>
+                    {/if}
+
                 </div>
                 <div class="reply-form"></div>
 
                 {var $postId = $post->id}
-                <div class="tools"      >
+                <div class="tools">
                 <span n:snippet="post-likes-$postId" class="like-count" title="Počkej si..."
                                                      data-post-id="{$post->id}">
                     {if $post->like_count > 0}<i class="glyphicon glyphicon-thumbs-up"></i> {$post->like_count}{/if}
@@ -194,44 +231,45 @@
                             {$post->created_at|timeagoinwords}
                     </span>
                 </div>
+
             </div>
 
 
             {if $iterator->last}
-                {for $i = 0; $i < $post->depth; $i++}
-                    </div>
-                {/for}
-            {/if}
-            {var $lastLevel = $post->depth}
+            {for $i = 0; $i < $post->depth; $i++}
+        </div>
+        {/for}
+        {/if}
+        {var $lastLevel = $post->depth}
         {/foreach}
 
-    {/snippetArea}
+        {/snippetArea}
 
-    </div>|
-    <div class="row" id="addPostForm">
-        <div class="col-xs-12">
+        <div id="addPostForm" class="row">
+            <div class="col-xs-12">
 
-            <div class="add-comment-form template form-template">
-                <form n:name="addPostForm" class="form-hoizontal">
-                    <div class="form-group">
-                        {input content}
-                    </div>
-                    <div class="form-group">
-                        {input send}
+                <div class="add-comment-form template form-template">
+                    <form n:name="addPostForm" class="form-horizontal">
+                        <div class="form-group">
+                            {input content}
+                        </div>
 
-                    </div>
+                        <input n:name=upload class="hidden">
 
+                        <div class="form-group">
+                            {input send}
+                        </div>
 
-                    {input thread_id}
-                    {input parent}
-                </form>
+                        {input thread_id}
+                        {input parent}
+                    </form>
+                </div>
+
             </div>
-
         </div>
-    </div>
 
     </div>
-
+    </div>
 
 
 {/block}

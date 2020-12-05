@@ -34,6 +34,9 @@ class ThreadFacade
     /** @var  LikeRepository */
     private $likeRepository;
 
+    /** @var FileRepository */
+    private $fileRepository;
+
     /** @var  EventSignRepository */
     private $eventSignRepository;
 
@@ -55,8 +58,6 @@ class ThreadFacade
     public function __construct(Database $database)
     {
         $this->database = $database;
-
-
     }
 
 
@@ -128,6 +129,15 @@ class ThreadFacade
         return $this->readLaterRepository;
     }
 
+    private function getFileRepository()
+    {
+        return $this->fileRepository;
+    }
+
+    public function setFileRepository(FileRepository $fileRepository) {
+        $this->fileRepository = $fileRepository;
+    }
+
     public function getNotSeenIds($userId, $refresh = false)
     {
         if (!$this->notSeenIds || $refresh) {
@@ -191,10 +201,16 @@ class ThreadFacade
         $this->addRestrictionsSerialized($threadId, $restrictUsers);
 
         $this->trackActivity($userId, $threadId, "created");
+
+        return $threadId;
     }
 
     public function deleteThread($threadId)
     {
+        $postIds = $this->getPosts($threadId)->fetchPairs(null, 'id');
+        $this->getFileRepository()->deleteByObject($threadId, 'thread');
+        $this->getFileRepository()->deleteByObjectMulti($postIds, 'post');
+
         $this->getThreadRepository()->get($threadId)->delete();
     }
 
@@ -254,6 +270,8 @@ class ThreadFacade
 
     public function deletePost($postId)
     {
+        $this->getFileRepository()->deleteByObject($postId,'post');
+
         $post = $this->getPostRepository()->get($postId);
         $thread = $this->getThreadRepository()->get($post->thread_id);
         $threadId = $post->thread_id;
@@ -441,11 +459,13 @@ class ThreadFacade
 //        return $count;
     }
 
-    public function getReadLaterCounts($userId) {
-        return $this->getReadLaterRepository()->findBy('user_id',$userId)->group('thread_id')->select('thread_id, count(*) AS count')->fetchPairs('thread_id','count');
+    public function getReadLaterCounts($userId)
+    {
+        return $this->getReadLaterRepository()->findBy('user_id', $userId)->group('thread_id')->select('thread_id, count(*) AS count')->fetchPairs('thread_id', 'count');
     }
 
-    public function getReadLaterThreadsCount($userId, $events = false) {
+    public function getReadLaterThreadsCount($userId, $events = false)
+    {
         $threadIds = array_keys($this->getReadLaterCounts($userId));
         if ($events) {
             $threads = $this->findForFutureEvents($userId);

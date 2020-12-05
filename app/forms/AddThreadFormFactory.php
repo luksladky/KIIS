@@ -24,6 +24,8 @@ class AddThreadFormFactory extends FormFactory
         $form->addText('restrict_users','Skrýt pro uživatele')
             ->setAttribute('class','usersInput');
 
+        $form->addMultiUpload('upload');
+
         $form->addSubmit('send','Přidat téma');
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');

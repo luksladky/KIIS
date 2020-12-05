@@ -24,6 +24,7 @@ use App\Components\Calendar\CalendarFactory as CalendarCellFactory;
 use App\Components\Calendar\CalendarGenerator;
 use Nette\Security\User;
 use Nette\Utils\DateTime;
+use Nette;
 
 
 class EventPresenter extends BaseSecurePresenter
@@ -95,6 +96,7 @@ class EventPresenter extends BaseSecurePresenter
         $this->template->unreadCounts = $this->threadFacade->getUnreadPostsCountsBySelection($this->user->id,$threads);
         $this->template->previous = $this->eventFacade->getPrevious($id,$event['date_from']);
         $this->template->next = $this->eventFacade->getNext($id,$event['date_from']);
+        $this->template->files = $this->fileRepository->findFor($id, 'event');
 
 
         $roles = array_merge([null => ''], $roles);
@@ -210,6 +212,7 @@ class EventPresenter extends BaseSecurePresenter
         if (!$eventId) {
             $eventId = $this->eventFacade->addEvent($this->user->id, $values['title'],
                 $values['date_from'], $values['date_to'], $values['location'], $values['description']);
+
         } else {
             $event = $this->eventFacade->get($eventId);
 
@@ -225,6 +228,12 @@ class EventPresenter extends BaseSecurePresenter
                 'date_to'     => $values['date_to'],
             ]);
             $this->eventFacade->removeRolesFromEvent($eventId);
+        }
+
+        /** @var Nette\Http\FileUpload[] $upload */
+        $upload = $values['upload'];
+        foreach ($upload as $file) {
+            $this->fileRepository->insertFile($file, $eventId, 'event', $this->user->getId());
         }
 
         $this->eventFacade->addRolesSerialized($values['roles'], $eventId);

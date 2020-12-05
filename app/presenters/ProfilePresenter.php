@@ -170,6 +170,9 @@ class ProfilePresenter extends BaseSecurePresenter
             $data['photo'] = (string)$photo;
             $this->user->identity->photo = (string)$photo;
         }
+        $this->user->identity->nickname = $values['nickname'];
+        $this->user->identity->name = $values['name'];
+
 
         $this->profileRepository->get($id)->update($data);
 

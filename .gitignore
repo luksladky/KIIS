@@ -12,3 +12,7 @@ bin/*
 0_vyjimky/*
 /www/css/
 /backup/
+/www/assets/files/*
+/www/assets/files_images/*
+/www/assets/noimage/*
+/www/assets/profile/*

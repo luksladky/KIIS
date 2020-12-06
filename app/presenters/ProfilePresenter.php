@@ -80,6 +80,7 @@ class ProfilePresenter extends BaseSecurePresenter
         $defaults = array(
             'id'             => $userId,
             'name'           => $person['name'],
+            'email'          => $person['email'],
             'nickname'       => $person['nickname'],
             'phone'          => $person['phone'],
             'city'           => $person['city'],
@@ -150,6 +151,7 @@ class ProfilePresenter extends BaseSecurePresenter
         $data = array(
             "name"           => $values["name"],
             "nickname"       => $values["nickname"],
+            'email'          => $values['email'],
             "phone"          => $values['phone'],
             "city"           => $values['city'],
             "tshirt_size"    => $values['tshirt_size'],

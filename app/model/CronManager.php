@@ -76,7 +76,7 @@ class CronManager extends Repository
                         $template = $latte->renderToString(__DIR__ . '/../templates/Email/nearEventsEmail.latte',
                             ['events' => $userWithEvents['events'], 'baseUrl' => 'http://klub.ddmtrebic.cz']);
 
-                        $this->sendMail($userWithEvents['user']->email, 'KIIS - přípomínka nadchízejících akcí', $template);
+                        $this->sendMail($userWithEvents['user']->email, 'KIIS - přípomínka nadcházejících akcí', $template);
                     }
                     break;
             }

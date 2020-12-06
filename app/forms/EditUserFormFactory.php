@@ -28,6 +28,8 @@ class EditUserFormFactory extends FormFactory
             ->setRequired();
         $form->addText('nickname', 'Přezdívka');
 
+        $form->addText('email', 'Email');
+
         $form->addText('phone', 'Telefon');
 
         $form->addText('city', 'Město');

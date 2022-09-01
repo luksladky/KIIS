@@ -6,6 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Kdyby\\Facebook\\' => array($vendorDir . '/kdyby/facebook/src'),
     'Eluceo\\iCal' => array($vendorDir . '/eluceo/ical/src'),
 );

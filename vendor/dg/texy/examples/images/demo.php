@@ -14,9 +14,9 @@ require_once __DIR__ . '/../../src/texy.php';
 
 /**
  * User handler for images
- * @return Texy\HtmlElement|string|FALSE
+ * @return Texy\HtmlElement|string|false
  */
-function imageHandler(Texy\HandlerInvocation $invocation, Texy\Image $image, Texy\Link $link = NULL)
+function imageHandler(Texy\HandlerInvocation $invocation, Texy\Image $image, Texy\Link $link = null)
 {
 	if ($image->URL == 'user') { // accepts only [* user *]
 		$image->URL = 'image.gif'; // image URL
@@ -53,7 +53,7 @@ echo $html;
 // echo generated HTML code
 echo '<hr />';
 echo '<pre>';
-echo htmlSpecialChars($html);
+echo htmlspecialchars($html);
 echo '</pre>';
 
 

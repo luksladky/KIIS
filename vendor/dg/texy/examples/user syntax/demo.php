@@ -12,10 +12,10 @@ require_once __DIR__ . '/../../src/texy.php';
 $texy = new Texy();
 
 // disable *** and ** and * phrases
-$texy->allowed['phrase/strong+em'] = FALSE;
-$texy->allowed['phrase/strong'] = FALSE;
-$texy->allowed['phrase/em-alt'] = FALSE;
-$texy->allowed['phrase/em-alt2'] = FALSE;
+$texy->allowed['phrase/strong+em'] = false;
+$texy->allowed['phrase/strong'] = false;
+$texy->allowed['phrase/em-alt'] = false;
+$texy->allowed['phrase/em-alt2'] = false;
 
 
 // register my syntaxes:
@@ -24,14 +24,14 @@ $texy->allowed['phrase/em-alt2'] = FALSE;
 // add new syntax: *bold*
 $texy->registerLinePattern(
 	'userInlineHandler',  // callback function or method
-	'#(?<!\*)\*(?!\ |\*)(.+)'.Texy\Patterns::MODIFIER.'?(?<!\ |\*)\*(?!\*)()#U', // regular expression
+	'#(?<!\*)\*(?!\ |\*)(.+)' . Texy\Patterns::MODIFIER . '?(?<!\ |\*)\*(?!\*)()#U', // regular expression
 	'myInlineSyntax1' // any syntax name
 );
 
 // add new syntax: _italic_
 $texy->registerLinePattern(
 	'userInlineHandler',
-	'#(?<!_)_(?!\ |_)(.+)'.Texy\Patterns::MODIFIER.'?(?<!\ |_)_(?!_)()#U',
+	'#(?<!_)_(?!\ |_)(.+)' . Texy\Patterns::MODIFIER . '?(?<!\ |_)_(?!_)()#U',
 	'myInlineSyntax2'
 );
 
@@ -70,7 +70,7 @@ function userInlineHandler(Texy\LineParser $parser, array $matches, $name)
 	$el->setText($mContent);
 
 	// parse inner content of this element
-	$parser->again = TRUE;
+	$parser->again = true;
 
 	return $el;
 }
@@ -82,7 +82,7 @@ function userInlineHandler(Texy\LineParser $parser, array $matches, $name)
  * @param Texy\BlockParser
  * @param array      regexp matches
  * @param string     pattern name (myBlockSyntax1)
- * @return Texy\HtmlElement|string|FALSE
+ * @return Texy\HtmlElement|string|false
  */
 function userBlockHandler(Texy\BlockParser $parser, array $matches, $name)
 {
@@ -117,5 +117,5 @@ echo $html;
 // and echo generated HTML code
 echo '<hr />';
 echo '<pre>';
-echo htmlSpecialChars($html);
+echo htmlspecialchars($html);
 echo '</pre>';

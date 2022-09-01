@@ -22,9 +22,9 @@ final class ListModule extends Texy\Module
 	public $bullets = [
 		// first-rexexp ordered? list-style-type next-regexp
 		'*' => ['\*\ ', 0, ''],
-		'-' => ['[\x{2013}-](?![>-])',0, ''],
+		'-' => ['[\x{2013}-](?![>-])', 0, ''],
 		'+' => ['\+\ ', 0, ''],
-		'1.' => ['1\.\ ',/* not \d !*/ 1, '', '\d{1,3}\.\ '],
+		'1.' => ['1\.\ ', /* not \d !*/ 1, '', '\d{1,3}\.\ '],
 		'1)' => ['\d{1,3}\)\ ', 1, ''],
 		'I.' => ['I\.\ ', 1, 'upper-roman', '[IVX]{1,4}\.\ '],
 		'I)' => ['[IVX]+\)\ ', 1, 'upper-roman'], // before A) !
@@ -38,8 +38,8 @@ final class ListModule extends Texy\Module
 		$this->texy = $texy;
 
 		$texy->addHandler('beforeParse', [$this, 'beforeParse']);
-		$texy->allowed['list'] = TRUE;
-		$texy->allowed['list/definition'] = TRUE;
+		$texy->allowed['list'] = true;
+		$texy->allowed['list/definition'] = true;
 	}
 
 
@@ -55,16 +55,16 @@ final class ListModule extends Texy\Module
 
 		$this->texy->registerBlockPattern(
 			[$this, 'patternList'],
-			'#^(?:'.Patterns::MODIFIER_H.'\n)?' // .{color: red}
-			. '('.implode('|', $RE).')\ *+\S.*$#mUu', // item (unmatched)
+			'#^(?:' . Patterns::MODIFIER_H . '\n)?' // .{color: red}
+			. '(' . implode('|', $RE) . ')\ *+\S.*$#mUu', // item (unmatched)
 			'list'
 		);
 
 		$this->texy->registerBlockPattern(
 			[$this, 'patternDefList'],
-			'#^(?:'.Patterns::MODIFIER_H.'\n)?' // .{color:red}
-			. '(\S.{0,2000})\:\ *'.Patterns::MODIFIER_H.'?\n' // Term:
-			. '(\ ++)('.implode('|', $REul).')\ *+\S.*$#mUu', // - description
+			'#^(?:' . Patterns::MODIFIER_H . '\n)?' // .{color:red}
+			. '(\S.{0,2000})\:\ *' . Patterns::MODIFIER_H . '?\n' // Term:
+			. '(\ ++)(' . implode('|', $REul) . ')\ *+\S.*$#mUu', // - description
 			'list/definition'
 		);
 	}
@@ -79,7 +79,7 @@ final class ListModule extends Texy\Module
 	 *   + ...
 	 * 3) ....
 	 *
-	 * @return HtmlElement|FALSE
+	 * @return HtmlElement|false
 	 */
 	public function patternList(BlockParser $parser, array $matches)
 	{
@@ -89,9 +89,9 @@ final class ListModule extends Texy\Module
 
 		$el = new HtmlElement;
 
-		$bullet = $min = NULL;
+		$bullet = $min = null;
 		foreach ($this->bullets as $type => $desc) {
-			if (preg_match('#'.$desc[0].'#Au', $mBullet)) {
+			if (preg_match('#' . $desc[0] . '#Au', $mBullet)) {
 				$bullet = isset($desc[3]) ? $desc[3] : $desc[0];
 				$min = isset($desc[3]) ? 2 : 1;
 				$el->setName($desc[1] ? 'ol' : 'ul');
@@ -114,12 +114,12 @@ final class ListModule extends Texy\Module
 
 		$parser->moveBackward(1);
 
-		while ($elItem = $this->patternItem($parser, $bullet, FALSE, 'li')) {
+		while ($elItem = $this->patternItem($parser, $bullet, false, 'li')) {
 			$el->add($elItem);
 		}
 
 		if ($el->count() < $min) {
-			return FALSE;
+			return false;
 		}
 
 		// event listener
@@ -150,9 +150,9 @@ final class ListModule extends Texy\Module
 
 		$texy = $this->texy;
 
-		$bullet = NULL;
+		$bullet = null;
 		foreach ($this->bullets as $desc) {
-			if (preg_match('#'.$desc[0].'#Au', $mBullet)) {
+			if (preg_match('#' . $desc[0] . '#Au', $mBullet)) {
 				$bullet = isset($desc[3]) ? $desc[3] : $desc[0];
 				break;
 			}
@@ -163,10 +163,10 @@ final class ListModule extends Texy\Module
 		$mod->decorate($texy, $el);
 		$parser->moveBackward(2);
 
-		$patternTerm = '#^\n?(\S.*)\:\ *'.Patterns::MODIFIER_H.'?()$#mUA';
+		$patternTerm = '#^\n?(\S.*)\:\ *' . Patterns::MODIFIER_H . '?()$#mUA';
 
-		while (TRUE) {
-			if ($elItem = $this->patternItem($parser, $bullet, TRUE, 'dd')) {
+		while (true) {
+			if ($elItem = $this->patternItem($parser, $bullet, true, 'dd')) {
 				$el->add($elItem);
 				continue;
 			}
@@ -197,17 +197,17 @@ final class ListModule extends Texy\Module
 
 	/**
 	 * Callback for single list item.
-	 * @return HtmlElement|FALSE
+	 * @return HtmlElement|false
 	 */
 	public function patternItem(BlockParser $parser, $bullet, $indented, $tag)
 	{
 		$spacesBase = $indented ? ('\ {1,}') : '';
-		$patternItem = "#^\n?($spacesBase)$bullet\\ *(\\S.*)?".Patterns::MODIFIER_H.'?()$#mAUu';
+		$patternItem = "#^\n?($spacesBase)$bullet\\ *(\\S.*)?" . Patterns::MODIFIER_H . '?()$#mAUu';
 
 		// first line with bullet
-		$matches = NULL;
+		$matches = null;
 		if (!$parser->next($patternItem, $matches)) {
-			return FALSE;
+			return false;
 		}
 
 		list(, $mIndent, $mContent, $mMod) = $matches;
@@ -222,7 +222,7 @@ final class ListModule extends Texy\Module
 		// next lines
 		$spaces = '';
 		$content = ' ' . $mContent; // trick
-		while ($parser->next('#^(\n*)'.$mIndent.'(\ {1,'.$spaces.'})(.*)()$#Am', $matches)) {
+		while ($parser->next('#^(\n*)' . $mIndent . '(\ {1,' . $spaces . '})(.*)()$#Am', $matches)) {
 			list(, $mBlank, $mSpaces, $mContent) = $matches;
 			// [1] => blank line?
 			// [2] => spaces
@@ -235,13 +235,12 @@ final class ListModule extends Texy\Module
 		}
 
 		// parse content
-		$elItem->parseBlock($this->texy, $content, TRUE);
+		$elItem->parseBlock($this->texy, $content, true);
 
 		if (isset($elItem[0]) && $elItem[0] instanceof HtmlElement) {
-			$elItem[0]->setName(NULL);
+			$elItem[0]->setName(null);
 		}
 
 		return $elItem;
 	}
-
 }

@@ -49,7 +49,7 @@ final class TypographyModule extends Texy\Module
 	public $locale = 'cs';
 
 	/** @var array */
-	private $pattern;
+	private $pattern = [];
 
 
 	public function __construct($texy)
@@ -64,7 +64,7 @@ final class TypographyModule extends Texy\Module
 	 * Text pre-processing.
 	 * @return void
 	 */
-	public function beforeParse(Texy\Texy $texy, & $text)
+	public function beforeParse(Texy\Texy $texy, &$text)
 	{
 		// CONTENT_MARKUP mark: \x17-\x1F
 		// CONTENT_REPLACED mark: \x16
@@ -106,25 +106,24 @@ final class TypographyModule extends Texy\Module
 			'#(?<=.{50})\s++(?=[\x17-\x1F]*\S{1,6}[\x17-\x1F]*$)#us' => "\xc2\xa0",         // space before last short word
 
 			// nbsp space between number (optionally followed by dot) and word, symbol, punctation, currency symbol
-			'#(?<=^| |\.|,|-|\+|\x16|\(|\d\x{A0})([\x17-\x1F]*\d++\.?[\x17-\x1F]*)\s++(?=[\x17-\x1F]*[%'.Patterns::CHAR.'\x{b0}-\x{be}\x{2020}-\x{214f}])#mu'
+			'#(?<=^| |\.|,|-|\+|\x16|\(|\d\x{A0})([\x17-\x1F]*\d++\.?[\x17-\x1F]*)\s++(?=[\x17-\x1F]*[%' . Patterns::CHAR . '\x{b0}-\x{be}\x{2020}-\x{214f}])#mu'
 													=> "\$1\xc2\xa0",
 
 			// space between preposition and word
-			'#(?<=^|[^0-9'.Patterns::CHAR.'])([\x17-\x1F]*[ksvzouiKSVZOUIA][\x17-\x1F]*)\s++(?=[\x17-\x1F]*[0-9'.Patterns::CHAR.'])#mus'
+			'#(?<=^|[^0-9' . Patterns::CHAR . '])([\x17-\x1F]*[ksvzouiKSVZOUIA][\x17-\x1F]*)\s++(?=[\x17-\x1F]*[0-9' . Patterns::CHAR . '])#mus'
 													=> "\$1\xc2\xa0",
 
-			'#(?<!"|\w)"(?!\ |")((?:[^"]++|")+)(?<!\ |")"(?!["'.Patterns::CHAR.'])()#Uu' => $locale['doubleQuotes'][0].'$1'.$locale['doubleQuotes'][1], // double ""
-			'#(?<!\'|\w)\'(?!\ |\')((?:[^\']++|\')+)(?<!\ |\')\'(?![\''.Patterns::CHAR.'])()#Uu' => $locale['singleQuotes'][0].'$1'.$locale['singleQuotes'][1], // single ''
+			'#(?<!"|\w)"(?!\ |")((?:[^"]++|")+)(?<!\ |")"(?!["' . Patterns::CHAR . '])()#Uu' => $locale['doubleQuotes'][0] . '$1' . $locale['doubleQuotes'][1], // double ""
+			'#(?<!\'|\w)\'(?!\ |\')((?:[^\']++|\')+)(?<!\ |\')\'(?![\'' . Patterns::CHAR . '])()#Uu' => $locale['singleQuotes'][0] . '$1' . $locale['singleQuotes'][1], // single ''
 		];
 	}
 
 
-	public function postLine($text, $preserveSpaces = FALSE)
+	public function postLine($text, $preserveSpaces = false)
 	{
 		if (!$preserveSpaces) {
 			$text = Texy\Regexp::replace($text, '# {2,}#', ' ');
 		}
 		return Texy\Regexp::replace($text, $this->pattern);
 	}
-
 }

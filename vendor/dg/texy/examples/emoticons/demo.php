@@ -13,7 +13,7 @@ $texy = new Texy();
 
 
 // EMOTICONS ARE DISABLED BY DEFAULT!
-$texy->allowed['emoticon'] = TRUE;
+$texy->allowed['emoticon'] = true;
 
 // configure it
 $texy->emoticonModule->class = 'smilie';
@@ -35,5 +35,5 @@ echo $html;
 // and echo generated HTML code
 echo '<hr />';
 echo '<pre>';
-echo htmlSpecialChars($html);
+echo htmlspecialchars($html);
 echo '</pre>';

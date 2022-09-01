@@ -11,13 +11,13 @@ require_once __DIR__ . '/../../src/texy.php';
 
 // MY OWN TEXY! OBJECT
 
-class MyTexy extends Texy
+class mytexy extends Texy
 {
-	var $cachePath = './cache/';
-	var $time;
+	public $cachePath = './cache/';
+	public $time;
 
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 
@@ -27,16 +27,16 @@ class MyTexy extends Texy
 	}
 
 
-	function process($text, $useCache = TRUE)
+	public function cachedProcess($text, $useCache = true)
 	{
-		$this->time = -microtime(TRUE);
+		$this->time = -microtime(true);
 
 		if ($useCache) {
 			$md5 = md5($text); // md5 is key for caching
 
 			// check, if cached file exists
 			$cacheFile = $this->cachePath . $md5 . '.html';
-			$content = is_file($cacheFile) ? unserialize(file_get_contents($cacheFile)) : NULL;
+			$content = is_file($cacheFile) ? unserialize(file_get_contents($cacheFile)) : null;
 			if ($content) {         // read from cache
 				list($html, $this->styleSheet, $this->headingModule->title) = $content;
 
@@ -48,11 +48,10 @@ class MyTexy extends Texy
 			}
 
 		} else { // if caching is disabled
-			$html = parent::process($text);
+			$html = $this->process($text);
 		}
 
-		$this->time += microtime(TRUE);
+		$this->time += microtime(true);
 		return $html;
 	}
-
 }

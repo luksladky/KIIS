@@ -29,20 +29,20 @@ final class EmoticonModule extends Texy\Module
 		':-|' => 'neutral.gif',
 	];
 
-	/** @var string  CSS class for emoticons */
+	/** @var string|null  CSS class for emoticons */
 	public $class;
 
-	/** @var string  root of relative images (default value is $texy->imageModule->root) */
+	/** @var string|null  root of relative images (default value is $texy->imageModule->root) */
 	public $root;
 
-	/** @var string  physical location of images on server (default value is $texy->imageModule->fileRoot) */
+	/** @var string|null  physical location of images on server (default value is $texy->imageModule->fileRoot) */
 	public $fileRoot;
 
 
 	public function __construct($texy)
 	{
 		$this->texy = $texy;
-		$texy->allowed['emoticon'] = FALSE;
+		$texy->allowed['emoticon'] = false;
 		$texy->addHandler('emoticon', [$this, 'solve']);
 		$texy->addHandler('beforeParse', [$this, 'beforeParse']);
 	}
@@ -72,7 +72,7 @@ final class EmoticonModule extends Texy\Module
 
 	/**
 	 * Callback for: :-))).
-	 * @return Texy\HtmlElement|string|FALSE
+	 * @return Texy\HtmlElement|string|false
 	 */
 	public function pattern(Texy\LineParser $parser, array $matches)
 	{
@@ -85,27 +85,27 @@ final class EmoticonModule extends Texy\Module
 			}
 		}
 
-		return FALSE; // tohle se nestane
+		return false; // tohle se nestane
 	}
 
 
 	/**
 	 * Finish invocation.
-	 * @return Texy\HtmlElement|FALSE
+	 * @return Texy\HtmlElement|false
 	 */
 	public function solve(Texy\HandlerInvocation $invocation, $emoticon, $raw)
 	{
 		$texy = $this->texy;
 		$file = $this->icons[$emoticon];
 		$el = new Texy\HtmlElement('img');
-		$el->attrs['src'] = Texy\Helpers::prependRoot($file, $this->root === NULL ? $texy->imageModule->root : $this->root);
+		$el->attrs['src'] = Texy\Helpers::prependRoot($file, $this->root === null ? $texy->imageModule->root : $this->root);
 		$el->attrs['alt'] = $raw;
 		$el->attrs['class'][] = $this->class;
 
 		// file path
-		$file = rtrim($this->fileRoot === NULL ? $texy->imageModule->fileRoot : $this->fileRoot, '/\\') . '/' . $file;
+		$file = rtrim($this->fileRoot === null ? $texy->imageModule->fileRoot : $this->fileRoot, '/\\') . '/' . $file;
 		if (@is_file($file)) { // intentionally @
-			$size = @getImageSize($file); // intentionally @
+			$size = @getimagesize($file); // intentionally @
 			if (is_array($size)) {
 				$el->attrs['width'] = $size[0];
 				$el->attrs['height'] = $size[1];
@@ -114,5 +114,4 @@ final class EmoticonModule extends Texy\Module
 		$texy->summary['images'][] = $el->attrs['src'];
 		return $el;
 	}
-
 }

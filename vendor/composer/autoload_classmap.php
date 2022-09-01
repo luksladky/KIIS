@@ -6,10 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Kdyby\\CurlCaBundle\\CertificateHelper' => $vendorDir . '/kdyby/curl-ca-bundle/src/CertificateHelper.php',
-    'Kdyby\\Facebook\\Exception' => $vendorDir . '/kdyby/facebook/src/Kdyby/Facebook/exceptions.php',
-    'Kdyby\\Facebook\\FacebookApiException' => $vendorDir . '/kdyby/facebook/src/Kdyby/Facebook/exceptions.php',
-    'Kdyby\\Facebook\\InvalidArgumentException' => $vendorDir . '/kdyby/facebook/src/Kdyby/Facebook/exceptions.php',
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Latte\\CompileException' => $vendorDir . '/latte/latte/src/Latte/exceptions.php',
     'Latte\\Compiler' => $vendorDir . '/latte/latte/src/Latte/Compiler.php',
     'Latte\\Engine' => $vendorDir . '/latte/latte/src/Latte/Engine.php',
@@ -313,6 +310,9 @@ return array(
     'Nette\\Utils\\Strings' => $vendorDir . '/nette/utils/src/Utils/Strings.php',
     'Nette\\Utils\\UnknownImageFileException' => $vendorDir . '/nette/utils/src/Utils/exceptions.php',
     'Nette\\Utils\\Validators' => $vendorDir . '/nette/utils/src/Utils/Validators.php',
+    'Nittro\\Bridges\\NittroLatte\\NittroMacros' => $vendorDir . '/nittro/nette-bridges/src/Bridges/NittroLatte/NittroMacros.php',
+    'Nittro\\Bridges\\NittroUI\\Presenter' => $vendorDir . '/nittro/nette-bridges/src/Bridges/NittroUI/Presenter.php',
+    'Nittro\\Bridges\\NittroUI\\PresenterUtils' => $vendorDir . '/nittro/nette-bridges/src/Bridges/NittroUI/PresenterUtils.php',
     'Tester\\Assert' => $vendorDir . '/nette/tester/src/Framework/Assert.php',
     'Tester\\AssertException' => $vendorDir . '/nette/tester/src/Framework/AssertException.php',
     'Tester\\CodeCoverage\\Collector' => $vendorDir . '/nette/tester/src/CodeCoverage/Collector.php',

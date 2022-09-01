@@ -2,7 +2,7 @@ parameters:
 
 
 database:
-	dsn: 'mysql:host=127.0.0.1;dbname=kiis'
+	dsn: 'mysql:host=localhost;dbname=ddmhradek_cz'
 	user: root
 	password:
 	options:

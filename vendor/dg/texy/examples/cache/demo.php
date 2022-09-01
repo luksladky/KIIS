@@ -6,14 +6,14 @@
  */
 
 
-require_once __DIR__.'/mytexy.php';
+require_once __DIR__ . '/mytexy.php';
 
 
 $texy = new MyTexy();
 
 // processing
 $text = file_get_contents('sample.texy');
-$html = $texy->process($text);
+$html = $texy->cachedProcess($text);
 
 
 // echo formated output

@@ -11,7 +11,7 @@
 require_once __DIR__ . '/../../src/texy.php';
 
 
-$geshiPath = __DIR__.'/geshi/';
+$geshiPath = __DIR__ . '/geshi/';
 @include_once $geshiPath . 'geshi.php';
 
 
@@ -38,7 +38,7 @@ function blockHandler(Texy\HandlerInvocation $invocation, $blocktype, $content, 
 		$lang = 'html4strict';
 	}
 	$content = Texy\Helpers::outdent($content);
-	$geshi = new GeSHi($content, $lang, $geshiPath.'geshi/');
+	$geshi = new GeSHi($content, $lang, $geshiPath . 'geshi/');
 
 	// GeSHi could not find the language
 	if ($geshi->error) {
@@ -49,8 +49,8 @@ function blockHandler(Texy\HandlerInvocation $invocation, $blocktype, $content, 
 	$geshi->set_encoding('UTF-8');
 	$geshi->set_header_type(GESHI_HEADER_PRE);
 	$geshi->enable_classes();
-	$geshi->set_overall_style('color: #000066; border: 1px solid #d0d0d0; background-color: #f0f0f0;', TRUE);
-	$geshi->set_line_style('font: normal normal 95% \'Courier New\', Courier, monospace; color: #003030;', 'font-weight: bold; color: #006060;', TRUE);
+	$geshi->set_overall_style('color: #000066; border: 1px solid #d0d0d0; background-color: #f0f0f0;', true);
+	$geshi->set_line_style('font: normal normal 95% \'Courier New\', Courier, monospace; color: #003030;', 'font-weight: bold; color: #006060;', true);
 	$geshi->set_code_style('color: #000020;', 'color: #000020;');
 	$geshi->set_link_styles(GESHI_LINK, 'color: #000060;');
 	$geshi->set_link_styles(GESHI_HOVER, 'background-color: #f0f000;');
@@ -84,7 +84,7 @@ $html = $texy->process($text);  // that's all folks!
 
 // echo Geshi Stylesheet
 header('Content-type: text/html; charset=utf-8');
-echo '<style type="text/css">'. $texy->styleSheet . '</style>';
+echo '<style type="text/css">' . $texy->styleSheet . '</style>';
 echo '<title>' . $texy->headingModule->title . '</title>';
 // echo formated output
 echo $html;
@@ -92,5 +92,5 @@ echo $html;
 // and echo generated HTML code
 echo '<hr />';
 echo '<pre>';
-echo htmlSpecialChars($html);
+echo htmlspecialchars($html);
 echo '</pre>';

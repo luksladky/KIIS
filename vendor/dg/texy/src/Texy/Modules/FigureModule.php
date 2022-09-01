@@ -16,16 +16,16 @@ use Texy\Patterns;
  */
 final class FigureModule extends Texy\Module
 {
-	/** @var string  non-floated box CSS class */
+	/** @var string|null  non-floated box CSS class */
 	public $class = 'figure';
 
-	/** @var string  left-floated box CSS class */
+	/** @var string|null  left-floated box CSS class */
 	public $leftClass;
 
-	/** @var string  right-floated box CSS class */
+	/** @var string|null  right-floated box CSS class */
 	public $rightClass;
 
-	/** @var int  how calculate div's width */
+	/** @var int|false  how calculate div's width */
 	public $widthDelta = 10;
 
 
@@ -37,8 +37,8 @@ final class FigureModule extends Texy\Module
 
 		$texy->registerBlockPattern(
 			[$this, 'pattern'],
-			'#^\[\* *+([^\n'.Patterns::MARK.']{1,1000})'.Patterns::MODIFIER.'? *+(\*|(?<!<)>|<)\]' // [* urls .(title)[class]{style} >]
-			. '(?::('.Patterns::LINK_URL.'|:))?? ++\*\*\* ++(.{0,2000})'.Patterns::MODIFIER_H.'?()$#mUu',
+			'#^\[\* *+([^\n' . Patterns::MARK . ']{1,1000})' . Patterns::MODIFIER . '? *+(\*|(?<!<)>|<)\]' // [* urls .(title)[class]{style} >]
+			. '(?::(' . Patterns::LINK_URL . '|:))?? ++\*\*\* ++(.{0,2000})' . Patterns::MODIFIER_H . '?()$#mUu',
 			'figure'
 		);
 	}
@@ -46,7 +46,7 @@ final class FigureModule extends Texy\Module
 
 	/**
 	 * Callback for [*image*]:link *** .... .(title)[class]{style}>.
-	 * @return Texy\HtmlElement|string|FALSE
+	 * @return Texy\HtmlElement|string|false
 	 */
 	public function pattern(Texy\BlockParser $parser, array $matches)
 	{
@@ -59,20 +59,20 @@ final class FigureModule extends Texy\Module
 		// [6] => .(title)[class]{style}<>
 
 		$texy = $this->texy;
-		$image = $texy->imageModule->factoryImage($mURLs, $mImgMod.$mAlign);
+		$image = $texy->imageModule->factoryImage($mURLs, $mImgMod . $mAlign);
 		$mod = new Texy\Modifier($mMod);
 		$mContent = ltrim($mContent);
 
 		if ($mLink) {
 			if ($mLink === ':') {
-				$link = new Texy\Link($image->linkedURL === NULL ? $image->URL : $image->linkedURL);
+				$link = new Texy\Link($image->linkedURL === null ? $image->URL : $image->linkedURL);
 				$link->raw = ':';
 				$link->type = $link::IMAGE;
 			} else {
-				$link = $texy->linkModule->factoryLink($mLink, NULL, NULL);
+				$link = $texy->linkModule->factoryLink($mLink, null, null);
 			}
 		} else {
-			$link = NULL;
+			$link = null;
 		}
 
 		return $texy->invokeAroundHandlers('figure', $parser, [$image, $link, $mContent, $mod]);
@@ -81,22 +81,22 @@ final class FigureModule extends Texy\Module
 
 	/**
 	 * Finish invocation.
-	 * @return Texy\HtmlElement|FALSE
+	 * @return Texy\HtmlElement|false
 	 */
-	public function solve(Texy\HandlerInvocation $invocation, Texy\Image $image, Texy\Link $link = NULL, $content, Texy\Modifier $mod)
+	public function solve(Texy\HandlerInvocation $invocation, Texy\Image $image, Texy\Link $link = null, $content, Texy\Modifier $mod)
 	{
 		$texy = $this->texy;
 
 		$hAlign = $image->modifier->hAlign;
-		$image->modifier->hAlign = NULL;
+		$image->modifier->hAlign = null;
 
-		$elImg = $texy->imageModule->solve(NULL, $image, $link); // returns Texy\HtmlElement or false!
+		$elImg = $texy->imageModule->solve(null, $image, $link); // returns Texy\HtmlElement or false!
 		if (!$elImg) {
-			return FALSE;
+			return false;
 		}
 
 		$el = new Texy\HtmlElement('div');
-		if (!empty($image->width) && $this->widthDelta !== FALSE) {
+		if (!empty($image->width) && $this->widthDelta !== false) {
 			$el->attrs['style']['width'] = ($image->width + $this->widthDelta) . 'px';
 		}
 		$mod->decorate($texy, $el);
@@ -122,5 +122,4 @@ final class FigureModule extends Texy\Module
 
 		return $el;
 	}
-
 }

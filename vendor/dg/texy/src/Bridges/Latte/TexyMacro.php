@@ -60,7 +60,7 @@ class TexyMacro extends Latte\Macros\MacroSet
 			if ($tokens->isNext()) {
 				$tokens->expectNextValue(',');
 			}
-			$restore[] = [& $this->texy->$module->$prop, $this->texy->$module->$prop];
+			$restore[] = [&$this->texy->$module->$prop, $this->texy->$module->$prop];
 			$this->texy->$module->$prop = $value;
 		}
 
@@ -70,5 +70,4 @@ class TexyMacro extends Latte\Macros\MacroSet
 			$info[0] = $info[1];
 		}
 	}
-
 }

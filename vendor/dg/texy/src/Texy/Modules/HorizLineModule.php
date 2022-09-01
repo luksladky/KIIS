@@ -17,8 +17,8 @@ final class HorizLineModule extends Texy\Module
 {
 	/** @var array  default CSS class */
 	public $classes = [
-		'-' => NULL,
-		'*' => NULL,
+		'-' => null,
+		'*' => null,
 	];
 
 
@@ -30,7 +30,7 @@ final class HorizLineModule extends Texy\Module
 
 		$texy->registerBlockPattern(
 			[$this, 'pattern'],
-			'#^(\*{3,}+|-{3,}+)\ *'.Texy\Patterns::MODIFIER.'?()$#mU',
+			'#^(\*{3,}+|-{3,}+)\ *' . Texy\Patterns::MODIFIER . '?()$#mU',
 			'horizline'
 		);
 	}
@@ -60,12 +60,11 @@ final class HorizLineModule extends Texy\Module
 		$el = new Texy\HtmlElement('hr');
 		$modifier->decorate($invocation->getTexy(), $el);
 
-		$class = $this->classes[ $type[0] ];
+		$class = $this->classes[$type[0]];
 		if ($class && !isset($modifier->classes[$class])) {
 			$el->attrs['class'][] = $class;
 		}
 
 		return $el;
 	}
-
 }

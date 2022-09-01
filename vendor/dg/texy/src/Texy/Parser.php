@@ -15,14 +15,14 @@ class Parser
 {
 	use Strict;
 
+	/** @var array */
+	public $patterns;
+
 	/** @var Texy */
 	protected $texy;
 
 	/** @var HtmlElement */
 	protected $element;
-
-	/** @var array */
-	public $patterns;
 
 
 	/**
@@ -32,5 +32,4 @@ class Parser
 	{
 		return $this->texy;
 	}
-
 }

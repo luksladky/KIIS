@@ -18,7 +18,7 @@ use Texy\Regexp;
 final class HtmlOutputModule extends Texy\Module
 {
 	/** @var bool  indent HTML code? */
-	public $indent = TRUE;
+	public $indent = true;
 
 	/** @var array */
 	public $preserveSpaces = ['textarea', 'pre', 'script', 'code', 'samp', 'kbd'];
@@ -30,22 +30,22 @@ final class HtmlOutputModule extends Texy\Module
 	public $lineWrap = 80;
 
 	/** @var bool  remove optional HTML end tags? */
-	public $removeOptional = FALSE;
+	public $removeOptional = false;
 
 	/** @var int  indent space counter */
-	private $space;
+	private $space = 0;
 
 	/** @var array */
-	private $tagUsed;
+	private $tagUsed = [];
 
 	/** @var array */
-	private $tagStack;
+	private $tagStack = [];
 
 	/** @var array  content DTD used, when context is not defined */
-	private $baseDTD;
+	private $baseDTD = [];
 
 	/** @var bool */
-	private $xml;
+	private $xml = false;
 
 
 	public function __construct($texy)
@@ -59,7 +59,7 @@ final class HtmlOutputModule extends Texy\Module
 	 * Converts <strong><em> ... </strong> ... </em>.
 	 * into <strong><em> ... </em></strong><em> ... </em>
 	 */
-	public function postProcess($texy, & $s)
+	public function postProcess($texy, &$s)
 	{
 		$this->space = $this->baseIndent;
 		$this->tagStack = [];
@@ -132,7 +132,7 @@ final class HtmlOutputModule extends Texy\Module
 			$item = reset($this->tagStack);
 			if ($item && !isset($item['dtdContent']['%DATA'])) {  // text not allowed?
 
-			} elseif (array_intersect(array_keys($this->tagUsed, TRUE), $this->preserveSpaces)) { // inside pre & textarea preserve spaces
+			} elseif (array_intersect(array_keys($this->tagUsed, true), $this->preserveSpaces)) { // inside pre & textarea preserve spaces
 				$s = Texy\Helpers::freezeSpaces($mText);
 
 			} else {
@@ -163,7 +163,7 @@ final class HtmlOutputModule extends Texy\Module
 
 			// autoclose tags
 			$tmp = [];
-			$back = TRUE;
+			$back = true;
 			foreach ($this->tagStack as $i => $item) {
 				$tag = $item['tag'];
 				$s .= $item['close'];
@@ -202,7 +202,7 @@ final class HtmlOutputModule extends Texy\Module
 
 			if (!isset($this->texy->dtd[$mTag])) {
 				// unknown (non-html) tag
-				$allowed = TRUE;
+				$allowed = true;
 				$item = reset($this->tagStack);
 				if ($item) {
 					$dtdContent = $item['dtdContent'];
@@ -239,7 +239,7 @@ final class HtmlOutputModule extends Texy\Module
 				if ($allowed && isset(HtmlElement::$prohibits[$mTag])) {
 					foreach (HtmlElement::$prohibits[$mTag] as $pTag) {
 						if (!empty($this->tagUsed[$pTag])) {
-							$allowed = FALSE;
+							$allowed = false;
 							break;
 						}
 					}
@@ -256,7 +256,7 @@ final class HtmlOutputModule extends Texy\Module
 					$mAttr .= ' /';
 				}
 
-				$indent = $this->indent && !array_intersect(array_keys($this->tagUsed, TRUE), $this->preserveSpaces);
+				$indent = $this->indent && !array_intersect(array_keys($this->tagUsed, true), $this->preserveSpaces);
 
 				if ($indent && $mTag === 'br') { // formatting exception
 					return rtrim($s) . '<' . $mTag . $mAttr . ">\n" . str_repeat("\t", max(0, $this->space - 1)) . "\x07";
@@ -270,8 +270,8 @@ final class HtmlOutputModule extends Texy\Module
 				}
 			}
 
-			$open = NULL;
-			$close = NULL;
+			$open = null;
+			$close = null;
 			$indent = 0;
 
 			/*
@@ -292,11 +292,11 @@ final class HtmlOutputModule extends Texy\Module
 
 				// format output
 				if ($this->indent && !isset(HtmlElement::$inlineElements[$mTag])) {
-					$close = "\x08" . '</'.$mTag.'>' . "\n" . str_repeat("\t", $this->space);
+					$close = "\x08" . '</' . $mTag . '>' . "\n" . str_repeat("\t", $this->space);
 					$s .= "\n" . str_repeat("\t", $this->space++) . $open . "\x07";
 					$indent = 1;
 				} else {
-					$close = '</'.$mTag.'>';
+					$close = '</' . $mTag . '>';
 					$s .= $open;
 				}
 
@@ -313,7 +313,7 @@ final class HtmlOutputModule extends Texy\Module
 				'indent' => $indent,
 			];
 			array_unshift($this->tagStack, $item);
-			$tmp = & $this->tagUsed[$mTag];
+			$tmp = &$this->tagUsed[$mTag];
 			$tmp++;
 		}
 
@@ -331,5 +331,4 @@ final class HtmlOutputModule extends Texy\Module
 		list(, $space, $s) = $m;
 		return $space . wordwrap($s, $this->lineWrap, "\n" . $space);
 	}
-
 }

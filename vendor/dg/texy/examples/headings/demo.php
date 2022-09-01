@@ -19,7 +19,7 @@ $texy->headingModule->top = 2;   // set headings top limit
 $texy->headingModule->balancing = Texy\Modules\HeadingModule::DYNAMIC;
 
 // generate ID
-$texy->headingModule->generateID = TRUE;
+$texy->headingModule->generateID = true;
 
 
 $html = $texy->process($text);  // that's all folks!
@@ -31,7 +31,7 @@ echo '<title>' . $texy->headingModule->title . '</title>';
 // and echo generated HTML code
 echo '<strong>Dynamic method:</strong>';
 echo '<pre>';
-echo htmlSpecialChars($html);
+echo htmlspecialchars($html);
 echo '</pre>';
 echo '<hr />';
 
@@ -46,7 +46,7 @@ $html = $texy->process($text);  // that's all folks!
 // and echo generated HTML code
 echo '<strong>Fixed method:</strong>';
 echo '<pre>';
-echo htmlSpecialChars($html);
+echo htmlspecialchars($html);
 echo '</pre>';
 echo '<hr />';
 
@@ -64,7 +64,7 @@ $html = $texy->process($text);  // that's all folks!
 // and echo generated HTML code
 echo '<strong>User-defined fixed method:</strong>';
 echo '<pre>';
-echo htmlSpecialChars($html);
+echo htmlspecialchars($html);
 echo '</pre>';
 echo '<hr />';
 

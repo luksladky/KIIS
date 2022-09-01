@@ -23,41 +23,32 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 {
 	use Strict;
 
-	/** @var string  element's name */
-	private $name;
-
-	/** @var bool  is element empty? */
-	private $isEmpty;
-
 	/** @var array  element's attributes */
 	public $attrs = [];
 
-	/** @var array  of HtmlElement | string nodes */
-	protected $children = [];
-
 	/** @var bool  use XHTML syntax? */
-	public static $xhtml = TRUE;
+	public static $xhtml = true;
 
 	/** @var array  empty elements */
-	public static $emptyElements = ['img'=>1,'hr'=>1,'br'=>1,'input'=>1,'meta'=>1,'area'=>1,
-		'base'=>1,'col'=>1,'link'=>1,'param'=>1,'basefont'=>1,'frame'=>1,'isindex'=>1,'wbr'=>1,'embed'=>1];
+	public static $emptyElements = ['img' => 1, 'hr' => 1, 'br' => 1, 'input' => 1, 'meta' => 1, 'area' => 1,
+		'base' => 1, 'col' => 1, 'link' => 1, 'param' => 1, 'basefont' => 1, 'frame' => 1, 'isindex' => 1, 'wbr' => 1, 'embed' => 1, ];
 
 	/** @var array  %inline; elements; replaced elements + br have value '1' */
-	public static $inlineElements = ['ins'=>0,'del'=>0,'tt'=>0,'i'=>0,'b'=>0,'big'=>0,'small'=>0,'em'=>0,
-		'strong'=>0,'dfn'=>0,'code'=>0,'samp'=>0,'kbd'=>0,'var'=>0,'cite'=>0,'abbr'=>0,'acronym'=>0,
-		'sub'=>0,'sup'=>0,'q'=>0,'span'=>0,'bdo'=>0,'a'=>0,'object'=>1,'img'=>1,'br'=>1,'script'=>1,
-		'map'=>0,'input'=>1,'select'=>1,'textarea'=>1,'label'=>0,'button'=>1,
-		'u'=>0,'s'=>0,'strike'=>0,'font'=>0,'applet'=>1,'basefont'=>0, // transitional
-		'embed'=>1,'wbr'=>0,'nobr'=>0,'canvas'=>1, // proprietary
+	public static $inlineElements = ['ins' => 0, 'del' => 0, 'tt' => 0, 'i' => 0, 'b' => 0, 'big' => 0, 'small' => 0, 'em' => 0,
+		'strong' => 0, 'dfn' => 0, 'code' => 0, 'samp' => 0, 'kbd' => 0, 'var' => 0, 'cite' => 0, 'abbr' => 0, 'acronym' => 0,
+		'sub' => 0, 'sup' => 0, 'q' => 0, 'span' => 0, 'bdo' => 0, 'a' => 0, 'object' => 1, 'img' => 1, 'br' => 1, 'script' => 1,
+		'map' => 0, 'input' => 1, 'select' => 1, 'textarea' => 1, 'label' => 0, 'button' => 1,
+		'u' => 0, 's' => 0, 'strike' => 0, 'font' => 0, 'applet' => 1, 'basefont' => 0, // transitional
+		'embed' => 1, 'wbr' => 0, 'nobr' => 0, 'canvas' => 1, // proprietary
 	];
 
 	/** @var array  elements with optional end tag in HTML */
-	public static $optionalEnds = ['body'=>1,'head'=>1,'html'=>1,'colgroup'=>1,'dd'=>1,
-		'dt'=>1,'li'=>1,'option'=>1,'p'=>1,'tbody'=>1,'td'=>1,'tfoot'=>1,'th'=>1,'thead'=>1,'tr'=>1];
+	public static $optionalEnds = ['body' => 1, 'head' => 1, 'html' => 1, 'colgroup' => 1, 'dd' => 1,
+		'dt' => 1, 'li' => 1, 'option' => 1, 'p' => 1, 'tbody' => 1, 'td' => 1, 'tfoot' => 1, 'th' => 1, 'thead' => 1, 'tr' => 1, ];
 
 	/** @see http://www.w3.org/TR/xhtml1/prohibitions.html */
 	public static $prohibits = [
-		'a' => ['a','button'],
+		'a' => ['a', 'button'],
 		'img' => ['pre'],
 		'object' => ['pre'],
 		'big' => ['pre'],
@@ -75,23 +66,32 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 		'isindex' => ['button'],
 	];
 
+	/** @var array  of HtmlElement | string nodes */
+	protected $children = [];
+
+	/** @var string|null  element's name */
+	private $name;
+
+	/** @var bool  is element empty? */
+	private $isEmpty;
+
 
 	/**
-	 * @param  string element name (or NULL)
+	 * @param  string element name (or null)
 	 * @param  array|string element's attributes (or textual content)
 	 */
-	public function __construct($name = NULL, $attrs = NULL)
+	public function __construct($name = null, $attrs = null)
 	{
 		$this->setName($name);
 		if (is_array($attrs)) {
 			$this->attrs = $attrs;
-		} elseif ($attrs !== NULL) {
+		} elseif ($attrs !== null) {
 			$this->setText($attrs);
 		}
 	}
 
 
-	public static function el($name = NULL, $attrs = NULL)
+	public static function el($name = null, $attrs = null)
 	{
 		return new self($name, $attrs);
 	}
@@ -104,14 +104,14 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	 * @return self
 	 * @throws InvalidArgumentException
 	 */
-	final public function setName($name, $empty = NULL)
+	final public function setName($name, $empty = null)
 	{
-		if ($name !== NULL && !is_string($name)) {
-			throw new \InvalidArgumentException('Name must be string or NULL.');
+		if ($name !== null && !is_string($name)) {
+			throw new \InvalidArgumentException('Name must be string or null.');
 		}
 
 		$this->name = $name;
-		$this->isEmpty = $empty === NULL ? isset(self::$emptyElements[$name]) : (bool) $empty;
+		$this->isEmpty = $empty === null ? isset(self::$emptyElements[$name]) : (bool) $empty;
 		return $this;
 	}
 
@@ -153,7 +153,7 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	 * @param  string    property name
 	 * @return mixed    property value
 	 */
-	final public function & __get($name)
+	final public function &__get($name)
 	{
 		return $this->attrs[$name];
 	}
@@ -183,10 +183,10 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	 * @param  array query
 	 * @return self
 	 */
-	final public function href($path, $query = NULL)
+	final public function href($path, $query = null)
 	{
 		if ($query) {
-			$query = http_build_query($query, NULL, '&');
+			$query = http_build_query($query, null, '&');
 			if ($query !== '') {
 				$path .= '?' . $query;
 			}
@@ -206,7 +206,7 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 		if (is_scalar($text)) {
 			$this->removeChildren();
 			$this->children = [$text];
-		} elseif ($text !== NULL) {
+		} elseif ($text !== null) {
 			throw new \InvalidArgumentException('Content must be scalar.');
 		}
 		return $this;
@@ -222,7 +222,7 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 		$s = '';
 		foreach ($this->children as $child) {
 			if (is_object($child)) {
-				return FALSE;
+				return false;
 			}
 			$s .= $child;
 		}
@@ -237,7 +237,7 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	 */
 	final public function add($child)
 	{
-		return $this->insert(NULL, $child);
+		return $this->insert(null, $child);
 	}
 
 
@@ -247,9 +247,9 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	 * @param  array|string element's attributes (or textual content)
 	 * @return HtmlElement  created element
 	 */
-	final public function create($name, $attrs = NULL)
+	final public function create($name, $attrs = null)
 	{
-		$this->insert(NULL, $child = new self($name, $attrs));
+		$this->insert(null, $child = new self($name, $attrs));
 		return $child;
 	}
 
@@ -262,10 +262,10 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	 * @return self
 	 * @throws Exception
 	 */
-	public function insert($index, $child, $replace = FALSE)
+	public function insert($index, $child, $replace = false)
 	{
 		if ($child instanceof self || is_string($child)) {
-			if ($index === NULL) { // append
+			if ($index === null) { // append
 				$this->children[] = $child;
 
 			} else { // insert or replace
@@ -288,7 +288,7 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	 */
 	final public function offsetSet($index, $child)
 	{
-		$this->insert($index, $child, TRUE);
+		$this->insert($index, $child, true);
 	}
 
 
@@ -429,13 +429,13 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 
 		if (is_array($this->attrs)) {
 			foreach ($this->attrs as $key => $value) {
-				// skip NULLs and false boolean attributes
-				if ($value === NULL || $value === FALSE) {
+				// skip nulls and false boolean attributes
+				if ($value === null || $value === false) {
 					continue;
 				}
 
 				// true boolean attribute
-				if ($value === TRUE) {
+				if ($value === true) {
 					// in XHTML must use unminimized form
 					if (self::$xhtml) {
 						$s .= ' ' . $key . '="' . $key . '"';
@@ -447,10 +447,10 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 				} elseif (is_array($value)) {
 
 					// prepare into temporary array
-					$tmp = NULL;
+					$tmp = null;
 					foreach ($value as $k => $v) {
-						// skip NULLs & empty string; composite 'style' vs. 'others'
-						if ($v == NULL) {
+						// skip nulls & empty string; composite 'style' vs. 'others'
+						if ($v == null) {
 							continue;
 						} elseif (is_string($k)) {
 							$tmp[] = $k . ':' . $v;
@@ -547,7 +547,7 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 			}
 			return isset($dtd[$this->name][1][$child]);
 		} else {
-			return TRUE; // unknown element
+			return true; // unknown element
 		}
 	}
 
@@ -573,10 +573,9 @@ class HtmlElement implements \ArrayAccess, /* Countable, */ \IteratorAggregate
 	 * @param  bool
 	 * @return void
 	 */
-	final public function parseBlock(Texy $texy, $s, $indented = FALSE)
+	final public function parseBlock(Texy $texy, $s, $indented = false)
 	{
 		$parser = new BlockParser($texy, $this, $indented);
 		$parser->parse($s);
 	}
-
 }

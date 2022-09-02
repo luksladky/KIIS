@@ -1,19 +1,13 @@
-<p>Ahoj hvězdo! </p>
+<p>Ahoj,</p>
 
-<p>Blíží se nám tu nějaké akce a ty jsi se zatím nerozhodl, jestli na ně pojedeš. Buď potvrď účast a my budeme skákat do stropu
-    radostí, nebo je normálně odmítni. Aspoň tě pak nebudeme otravovat.</p>
+<p>Následující akce jsou už za rohem a zatím nemáme tvé vyjádření, jestli pojedeš. </p>
 <br>
-<p>Zde je máš vypsané:</p>
 {foreach $events as $event}
-    <p><strong>{$event->title}</strong> ({$event->date_from|timeagoinwords})</p>
+    <p><strong><a n:href="Event:show $event->id">{$event->title}</a></strong> ({$event->date_from|timeagoinwords})</p>
 {/foreach}
 <br>
-<p>A tady je odkaz na web klubu: <a href="{$baseUrl}">{$baseUrl}</a></p>
 
-
-
-<br>
-
-<p>Dikec!</p>
+<p>Díky!</p>
 
 <p>Klub Hrádek</p>
+<p><a href="{$baseUrl}">{$baseUrl}</a></p>

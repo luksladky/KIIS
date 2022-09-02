@@ -98,11 +98,11 @@ class SignPresenter extends BasePresenter
             $token = $this->userManager->add($email, $password, $nickname, $name);
 
             $this->sendConfirmationEmail($name, $email, $token);
-            $this->flashMessage('Super! Počkej, až tvoji registraci někdo schválí. Čekuj mail!','success');
+            $this->flashMessage('Super! Počkej, až tvoji registraci někdo schválí. Na mail ti přijde upozornění.','success');
             $this->flashMessage('Na email jsme ti poslali odkaz na ověření mailové adresy. zatím na něj prosím klikni.');
             $this->redirect('Homepage:default');
         } catch (\App\Model\DuplicateNameException $e) {
-            $this->flashMessage('User already exists');
+            $this->flashMessage('Tohle jméno už někdo používá.');
 
         }
     }

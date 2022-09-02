@@ -1,0 +1,37 @@
+ # ./docker-compose.yml
+
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: Testing4U!
+      MYSQL_DATABASE: ddmhradek_cz
+      MYSQL_USER: ddmhradek_cz
+      MYSQL_PASSWORD: ddmh789
+    ports:
+      - "9905:3306"
+  web:
+    build: ./php
+    depends_on:
+      - db
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+    ports:
+      - "8100:80"
+    stdin_open: true
+    tty: true
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+        - '8080:80'
+    environment:
+        PMA_HOST: db
+        PMA_USER: root
+        PMA_PASSWORD: Testing4U!
+        UPLOAD_LIMIT: 300M
+    depends_on:
+        - db

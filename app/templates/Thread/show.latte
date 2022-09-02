@@ -1,5 +1,5 @@
 {block title}
-    {strip_tags($thread->title)}
+    {html_entity_decode(strip_tags($thread->title))}
 {/block}
 {block content}
     {*<h1 class="page-header">Detail diskuse</h1>*}

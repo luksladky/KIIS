@@ -8,7 +8,7 @@ RewriteBase /
 # front controller
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule !\.(pdf|js|ico|gif|jpg|png|css|rar|zip|tar\.gz)$ index.php [L]
+RewriteRule !\.(pdf|js|ico|gif|jpg|png|css|rar|zip|tar\.gz|txt|woff|ttf|woff2)$ index.php [L]
 RewriteRule (.*) ./www/$1 
 </IfModule>
 

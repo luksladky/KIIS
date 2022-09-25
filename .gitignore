@@ -5,7 +5,7 @@
 # CakePHP 3
 
 /vendor/*
-temp/*
+# temp/*
 log/*
 bin/*
 0_configs/

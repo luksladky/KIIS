@@ -99,7 +99,7 @@ class SignPresenter extends BasePresenter
 
             $this->sendConfirmationEmail($name, $email, $token);
             $this->flashMessage('Super! Počkej, až tvoji registraci někdo schválí. Na mail ti přijde upozornění.','success');
-            $this->flashMessage('Na email jsme ti poslali odkaz na ověření mailové adresy. zatím na něj prosím klikni.');
+            $this->flashMessage('Na email jsme ti poslali odkaz na ověření mailové adresy. Zatím na něj prosím klikni.');
             $this->redirect('Homepage:default');
         } catch (\App\Model\DuplicateNameException $e) {
             $this->flashMessage('Tohle jméno už někdo používá.');

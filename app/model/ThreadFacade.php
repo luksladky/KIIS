@@ -497,7 +497,6 @@ class ThreadFacade
 
         if (empty($lastVisited)) {
             $lastVisited = [(new Nette\Utils\DateTime())->setDate(1970, 1, 1)];
-            $count += 1;
         }
         $lastVisited = $lastVisited[0];
 

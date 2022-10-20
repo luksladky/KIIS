@@ -18,6 +18,8 @@ class EventRepository extends Repository
     const BY_DATE_CREATED = 'created_at',
         BY_DATE_FROM = 'upcoming';
 
+    const EVENT_PUBLIC = 'public';
+    const EVENT_EDUCATION = 'education';
 
     public static function getOrderFunction($orderBy = 'last_post',$desc = true) {
         $ascDesc = $desc ? 'DESC' : 'ASC';

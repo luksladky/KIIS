@@ -90,10 +90,11 @@ class EventFacade
         return $this->getEventRepository()->get($eventId);
     }
 
-    public function addEvent($userId, $title, $date_from, $date_to, $location, $description = null)
+    public function addEvent($userId, $eventType, $title, $date_from, $date_to, $location, $description = null)
     {
 
         $data = array('user_id'     => $userId,
+                      'event_type'  => $eventType,
                       'title'       => $title,
                       'date_from'   => $date_from,
                       'date_to'     => $date_to,
@@ -220,10 +221,13 @@ class EventFacade
         $this->getThreadRepository()->findBy('event_id', $eventId)->delete();
     }
 
-    public function getNewEventsCount($userId)
+    public function getNewEventsCount($userId, $eventType)
     {
         $user = $this->getProfileRepository()->get($userId);
-        return $this->getEventRepository()->findBy('created_at > ?', $user->last_activity)->count();
+        return $this->getEventRepository()
+                    ->findBy('created_at > ?', $user->last_activity)
+                    ->where('event_type = ?', $eventType)
+                    ->count();
     }
 
     /**********************

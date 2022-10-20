@@ -14,8 +14,6 @@ use \Vodacek\Forms\Controls\DateInput;
 
 class AddEventFormFactory extends FormFactory
 {
-
-
     public function create()
     {
 
@@ -49,6 +47,8 @@ class AddEventFormFactory extends FormFactory
         $form->addSubmit('send', 'Vytvořit akci');
 
         $form->addHidden('event_id');
+
+        $form->addHidden('event_type');
 
         $form->getElementPrototype()->onsubmit('tinyMCE.triggerSave()');
         

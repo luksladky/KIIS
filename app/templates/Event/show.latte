@@ -1,7 +1,7 @@
 {block content}
     <h1 class="page-header" n:block="title">{$event->title}</h1>
 
-    <a n:href="Event:default" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left mr10"></i>Seznam
+    <a n:href="Event:list $event->event_type" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left mr10"></i>Seznam
         akcí</a>
 
     <a class="btn btn-default" n:href="Event:calendar calendar-month=>$event->date_from->format('m'), calendar-year=>$event->date_from->format('Y'),do=>calendar-selection">

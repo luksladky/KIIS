@@ -4,6 +4,7 @@ namespace App\Presenters;
 use App\Model\ProfileRepository;
 use Nette;
 use App\Model;
+use App\Model\EventRepository;
 
 abstract class BaseSecurePresenter extends BasePresenter
 {
@@ -58,8 +59,13 @@ abstract class BaseSecurePresenter extends BasePresenter
             $this->flashMessage('Nestihli jsme tě ještě schválit, vydrž!', 'warning');
         }
 
-        $this->template->readLaterEventThreadsCount = $this->threadFacade->getReadLaterThreadsCount($this->user->id, true);
-        $this->template->newEventsCount = $c3 = $this->eventFacade->getNewEventsCount($this->user->id);
+        $this->template->readLaterEventThreadsCount = 
+            $this->threadFacade->getReadLaterThreadsCount($this->user->id, true);
+        $this->template->newPublicEventsCount = $cEvPub = 
+            $this->eventFacade->getNewEventsCount($this->user->id, EventRepository::EVENT_PUBLIC);
+        $this->template->newEduEventsCount = $cEvEdu = 
+            $this->eventFacade->getNewEventsCount($this->user->id, EventRepository::EVENT_EDUCATION);
+        $c3 = $cEvPub + $cEvEdu;
 
         $this->template->unreadThreadsCount = $c1 = $this->threadFacade->getUnreadThreadsCount($this->user->id);
         $this->template->unreadEventThreadsCount = $c2 = $this->threadFacade->getUnreadThreadsCount($this->user->id, true);

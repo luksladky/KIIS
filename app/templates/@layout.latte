@@ -34,9 +34,13 @@
                     <img src="/images/logo.jpg" alt="DDM Trebic logo">
                 </a></li>
             {if $user->isInRole('member')}
-                <li n:class="$presenter->isLinkCurrent('Event:default') ? active"><a n:href="Event:default">
-                        <i class="glyphicon glyphicon-tower mr10"></i>Akce
-                        <span n:if="$newEventsCount > 0" class="badge">{$newEventsCount}</span>
+                <li n:class="$presenter->isLinkCurrent('Event:listPublic') ? active"><a n:href="Event:listPublic">
+                        <i class="glyphicon glyphicon-tower mr10"></i>Naše Akce
+                        <span n:if="$newPublicEventsCount > 0" class="badge">{$newPublicEventsCount}</span>
+                    </a></li>
+                <li n:class="$presenter->isLinkCurrent('Event:listEducation') ? active"><a n:href="Event:listEducation">
+                        <i class="glyphicon glyphicon-education mr10"></i>Vzdělávací Akce
+                        <span n:if="$newEduEventsCount > 0" class="badge">{$newEduEventsCount}</span>
                     </a></li>
                 <li n:class="$presenter->isLinkCurrent('Event:calendar') ? active"><a n:href="Event:calendar">
                         <i class="glyphicon glyphicon-calendar mr10"></i>Kalendář</a></li>
@@ -97,7 +101,8 @@
                         <span n:snippet="badgeMobileAll">
                         {if $user->isLoggedIn()}
                             <button id="menu-toggle" type="button" class="btn btn-default visible-xs">
-                        {var newCount = $newEventsCount + $unreadThreadsCount + $unreadEventThreadsCount}
+                        {var newCount = $newPublicEventsCount + $newEduEventsCount + 
+                                        $unreadThreadsCount + $unreadEventThreadsCount}
                                 {if $newCount > 0}
                                     <span class="badge red">{$newCount}</span>
                             {else}

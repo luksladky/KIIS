@@ -1,10 +1,19 @@
 {block content}
-    <h1 class="page-header" n:block="title">Seznam akcí</h1>
+    <h1 class="page-header" n:block="title">
+        {switch $eventType}
+            {case public}
+                Akce Klubu
+            {case education}
+                Vzdělávací akce
+            {default}
+                Seznam akcí
+        {/switch}
+    </h1>
     {if $user->isInRole('add-event') }
-        <a class="btn btn-default" n:href="Event:create"><i class="glyphicon glyphicon-plus mr10"></i>Přidat akci</a>
+        <a class="btn btn-default" n:href="Event:create $eventType"><i class="glyphicon glyphicon-plus mr10"></i>Přidat akci</a>
     {/if}
 
-    <a n:href="Event:default $showLinkType"
+    <a n:href="Event:default $eventType, $showLinkType"
             class="btn btn-default">Zobrazit {$showLinkType ? 'všechny' : 'jen budoucí'}</a>
     <a class="btn btn-link pull-right" n:href="Event:exportCalendar">Přidat akce do Google Kalendáře</a>
     <hr>

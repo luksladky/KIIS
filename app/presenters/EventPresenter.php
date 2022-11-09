@@ -22,10 +22,12 @@ use  \blitzik\Calendar\Calendar as Calendar;
 
 use App\Components\Calendar\CalendarFactory as CalendarCellFactory;
 use App\Components\Calendar\CalendarGenerator;
+use App\Model\EventFacade;
+use App\Model\EventRepository;
 use Nette\Security\User;
 use Nette\Utils\DateTime;
 use Nette;
-
+use Texy\Module;
 
 class EventPresenter extends BaseSecurePresenter
 {
@@ -46,21 +48,39 @@ class EventPresenter extends BaseSecurePresenter
     /** @var \Texy\Texy @inject */
     public $texy;
 
+    public function renderListPublic($all = false) {
+        $this->template->setFile(realpath(__DIR__ . "\\..\\templates")."\\Event\\default.latte");
+        $this->renderDefault(Model\EventRepository::EVENT_PUBLIC, $all);
+    }
 
-    public function renderDefault($all = false)
+    public function renderListEducation($all = false) {
+        $this->template->setFile(realpath(__DIR__ . "\\..\\templates")."\\Event\\default.latte");
+        $this->renderDefault(Model\EventRepository::EVENT_EDUCATION, $all);
+    }
+
+    public function renderList($eventType, $all = false) {
+        switch ($eventType) {
+            case EventRepository::EVENT_PUBLIC:
+                $this->forward("Event:listPublic", $all);
+                break;
+            case EventRepository::EVENT_EDUCATION:
+                $this->forward("Event:listEducation", $all);
+                break;
+        }
+    }
+
+    public function renderDefault($type = Model\EventRepository::EVENT_PUBLIC, $all = false)
     {
         if ($all) {
-            $events = $this->eventFacade->findAll();
+            $events = $this->eventFacade->findAll()->where('event_type = ?', $type);
 
             $userSigns = $this->eventFacade->findSignsByUser($this->user->id);
 
         } else {
             //only future events
-            $events = $this->eventFacade->findFuture();
+            $events = $this->eventFacade->findFuture()->where('event_type = ?', $type);
             $userSigns = $this->eventFacade->findSignsByUserForFutureEvents($this->user->id);
         }
-
-
 
         $signedFor = [];
         foreach ($userSigns as $sign) {
@@ -74,6 +94,7 @@ class EventPresenter extends BaseSecurePresenter
         }
 
         $this->template->events = $events;
+        $this->template->eventType = $type;
         $this->template->signedFor = $signedFor;
         $this->template->eventSigns = $eventSigns;
         $this->template->showLinkType = !$all;
@@ -131,6 +152,11 @@ class EventPresenter extends BaseSecurePresenter
             $this['signForEventForm']->setDefaults(['role' => $userSign->role->slug]);
         }
 
+    }
+
+    public function actionCreate($type) {
+        $this['addEventForm']->setDefaults([
+            'event_type'    => $type]);
     }
 
     public function actionEdit($id)
@@ -210,7 +236,7 @@ class EventPresenter extends BaseSecurePresenter
 
         $eventId = $values['event_id'];
         if (!$eventId) {
-            $eventId = $this->eventFacade->addEvent($this->user->id, $values['title'],
+            $eventId = $this->eventFacade->addEvent($this->user->id, $values['event_type'], $values['title'],
                 $values['date_from'], $values['date_to'], $values['location'], $values['description']);
 
         } else {

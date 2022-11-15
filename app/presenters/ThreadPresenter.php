@@ -25,6 +25,11 @@ class ThreadPresenter extends BaseSecurePresenter
      */
     public $threadFacade;
 
+    /** @var Model\EventFacade
+    * @inject
+    */
+    public $eventFacade;
+
     /** @var \Texy\Texy @inject */
     public $texy;
 

@@ -2,7 +2,8 @@ This is a communication platform for a non-profit organization organizing events
 
 Installation
 ------------
-Follow a (Czech) tutorial in under [docs/setup.md](docs/setup.md)
+Follow a tutorial in [docs/setup.md](docs/setup.md) (Czech)
+Structure of the project is described in [docs/project_structure.md](docs/project_structure.md) (Czech)
 
 
 Requirements

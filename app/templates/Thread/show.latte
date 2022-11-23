@@ -4,15 +4,19 @@
 {block content}
     {*<h1 class="page-header">Detail diskuse</h1>*}
 
-    {if !$thread->event_id}<a n:href="Thread:default" class="btn btn-default">
-            <i class="glyphicon glyphicon-chevron-left mr10"></i> Nástěnka</a>
-    {else}<a n:href="Thread:eventThreads#event-$thread->event_id" class="btn btn-default">
-            <i class="glyphicon glyphicon-chevron-left mr10"></i> Diskuse k akcím</a>
+    {if !$thread->event_id}
+        <a n:href="Thread:default" class="btn btn-default">
+            <i class="glyphicon glyphicon-chevron-left mr10"></i> Nástěnka
+        </a>
+    {else}
+        <h1>{$eventTitle}</h1>
+        <hr>
+        <a n:href="Thread:eventThreads#event-$thread->event_id" class="btn btn-default">
+        <i class="glyphicon glyphicon-chevron-left mr10"></i> Diskuse k akcím</a>
         <a n:href="Event:show $thread->event_id" class="btn btn-default">Přejít na akci</a>
     {/if}
-    <a href="#addPostForm" class="btn btn-default" title="Přidat komentář">
+        <a href="#addPostForm" class="btn btn-default" title="Přidat komentář">
         <i class="glyphicon glyphicon-comment"></i></a>
-
     <a n:if="$userCanEdit" n:href="deleteThread! $thread->id" class="btn btn-danger"
                                                               onclick="return confirmDelete();">
         <i class="glyphicon glyphicon-trash"></i> Smazat diskusi
@@ -68,6 +72,21 @@
 
     </div>
     <hr>
+    <div class="text-center">
+        {if $thread->event_id}
+            {foreach $otherEventThreads as $otherThread}
+                {var $title = html_entity_decode(strip_tags($otherThread->title))}
+                <span class="ml10 mr10">
+                    {if $otherThread->id == $thread->id}
+                        <strong>{$title}</strong>
+                    {else}
+                        <a n:href="Thread:show $otherThread->id">{$title}</a>
+                    {/if}
+                </span>
+            {/foreach}
+        {/if}
+    </div>
+    <br>
     <div class="clearfix"></div>
     <div class="row">
         <div class="col-lg-8 col-lg-push-2 col-md-8">

@@ -25,6 +25,11 @@ class ThreadPresenter extends BaseSecurePresenter
      */
     public $threadFacade;
 
+    /** @var Model\EventFacade
+    * @inject
+    */
+    public $eventFacade;
+
     /** @var \Texy\Texy @inject */
     public $texy;
 
@@ -160,6 +165,14 @@ class ThreadPresenter extends BaseSecurePresenter
                 }
                 $i++;
             }
+        }
+        //vypln nazev akce a ostatni vlakna u akce
+        if ($thread->event_id) {
+            //nazev akce
+            $this->template->eventTitle = $this->eventFacade->get($thread->event_id)->title;
+            //ostatni vlakna
+            $otherEventThreads = $this->threadFacade->findByEventId($this->user->id, $thread->event_id);
+            $this->template->otherEventThreads = $otherEventThreads;
         }
 
         //chci to dat na rodice

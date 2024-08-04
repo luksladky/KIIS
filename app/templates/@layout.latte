@@ -57,6 +57,13 @@
                         <span n:if="$readLaterThreadsCount > 0" class="badge orange">{$readLaterThreadsCount}</span>
                         </span>
                     </a></li>
+                    <li n:class="$presenter->isLinkCurrent('Thread:urgent') ? active"><a n:href="Thread:urgent">
+                        <i class="glyphicon glyphicon-exclamation-sign mr10"></i>Kamilův kanál nejvyšší potřeby
+                        <span n:snippet="badgeUrgentDashboard">
+                        <span n:if="$unreadUrgentThreadsCount > 0" class="badge">{$unreadUrgentThreadsCount}</span>
+                        <span n:if="$readLaterUrgentThreadsCount > 0" class="badge orange">{$readLaterUrgentThreadsCount}</span>
+                        </span>
+                    </a></li>
                 <li class="separator"></li>
                 <li class="separator"></li>
                 <li n:class="$presenter->isLinkCurrent('Profile:default') ? active"><a n:href="Profile:default">

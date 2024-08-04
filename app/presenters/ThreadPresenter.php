@@ -8,6 +8,8 @@
 
 namespace App\Presenters;
 
+use App\Components\TMailer;
+use App\Forms\AddUrgentPostFormFactory;
 use App\Forms\AddPostFormFactory;
 use App\Forms\EditThreadFormFactory;
 use App\Forms\EditPostFormFactory;
@@ -106,6 +108,87 @@ class ThreadPresenter extends BaseSecurePresenter
         $this->template->readLaterCounts = $this->threadFacade->getReadLaterCounts($this->user->id);
         $this->template->all = $all;
         $this->template->unreadFirst = $unreadFirst;
+    }
+
+    public function renderUrgent() 
+    {
+        $id = 524;
+        $this->template->thread = $thread = $this->threadFacade->get($id);
+        $this->template->userCanEdit = $this->userCanEdit($thread->user_id);
+        $this->template->files = $this->fileRepository->findFor($id, 'thread');
+        $posts = $this->threadFacade->getPosts($id);
+        if (!isset($this->template->posts)) {
+            $this->template->posts = $posts;
+        }
+        $this->template->userLikes = $this->threadFacade->getUserLikes($this->user->id, $id);
+        $this->template->lastActivity = $lastActivity = $this->threadFacade->findActivityDateByThread($this->user->id, $id);
+        $this->template->restrictions = $this->threadFacade->findRestrictionsForThread($id);
+        $this->template->allActivity = $this->threadFacade->findActivityByThread($id);
+        $this->template->readLaterIds = $readLaterIds = $this->threadFacade->findReadLaterIds($this->user->id, $id);
+
+        $withFileIds = [];
+        $attachmentsByPost = [];
+        $lastReadPost = null;
+        $iterator = 0;
+        foreach ($posts as $post) {
+            if ($post->created_at > $lastActivity) {
+                break;
+            }
+            if (in_array($post->id, $readLaterIds)) {
+                break;
+            }
+            $lastReadPost = $post;
+            $iterator++;
+
+            if ($post->file_count > 0) {
+                $withFileIds[] = $post->id;
+                $attachmentsByPost[$post->id] = [];
+            }
+        }
+        $hiddenReadPostsCount = $iterator - 1;
+
+        if ($iterator > 50 && $iterator == $posts->count()) {
+
+            $iterator = $iterator - 15;
+            $hiddenReadPostsCount = $iterator;
+            $i = 0;
+            foreach ($posts as $post) {
+                if ($i == $iterator) {
+                    $lastReadPost = $post;
+                    break;
+                }
+                $i++;
+            }
+        }
+        //vypln nazev akce a ostatni vlakna u akce
+        if ($thread->event_id) {
+            //nazev akce
+            $this->template->eventTitle = $this->eventFacade->get($thread->event_id)->title;
+            //ostatni vlakna
+            $otherEventThreads = $this->threadFacade->findByEventId($this->user->id, $thread->event_id);
+            $this->template->otherEventThreads = $otherEventThreads;
+        }
+
+        //chci to dat na rodice
+        while ($lastReadPost && $lastReadPost->parent_id) $lastReadPost = $lastReadPost->ref('post', 'parent_id');
+
+        $lastReadPostId = $lastReadPost ? $lastReadPost->id : 0;
+        //pokud jsou prectene vsechny, nebo pokud je jich celkove malo, neskryvat
+        if ($iterator == $posts->count() || $hiddenReadPostsCount < 5) $lastReadPostId = -1;
+
+        $this->template->lastReadPostId = $lastReadPostId;
+        $this->template->readPostsCount = $hiddenReadPostsCount;
+
+        $postAttachments = $this->fileRepository->findBy("(object_id IN ?) AND (object_type = ?)", [$withFileIds, "post"]);
+
+        foreach ($postAttachments as $file) {
+            $attachmentsByPost[$file->object_id][] = $file;
+        }
+
+        $this->template->postFiles = $attachmentsByPost;
+
+        $this['addPostForm']->setDefaults(['thread_id' => $id]);
+        $this->threadFacade->trackActivity($this->user->id, $id, 'seen');
     }
 
     public function renderShow($id)

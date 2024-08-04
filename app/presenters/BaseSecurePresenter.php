@@ -61,6 +61,9 @@ abstract class BaseSecurePresenter extends BasePresenter
         $this->template->readLaterEventThreadsCount = $this->threadFacade->getReadLaterThreadsCount($this->user->id, true);
         $this->template->newEventsCount = $c3 = $this->eventFacade->getNewEventsCount($this->user->id);
 
+        $this->template->unreadUrgentThreadsCount = 0;
+        $this->template->readLaterUrgentThreadsCount = 0;
+
         $this->template->unreadThreadsCount = $c1 = $this->threadFacade->getUnreadThreadsCount($this->user->id);
         $this->template->unreadEventThreadsCount = $c2 = $this->threadFacade->getUnreadThreadsCount($this->user->id, true);
         $this->template->readLaterThreadsCount = $this->threadFacade->getReadLaterThreadsCount($this->user->id);

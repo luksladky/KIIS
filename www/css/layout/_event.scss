@@ -100,3 +100,143 @@ a.event-link:hover {
   position: relative;
   top: -2px;
 }
+// ---- year navigation on the list of all events ----
+.year-nav {
+  border: 1px solid #e3e3e3;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.year-nav-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+}
+
+.year-nav-current {
+  text-align: center;
+  line-height: 1.1;
+}
+
+.year-nav-year {
+  display: block;
+  font-size: 38px;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+.year-nav-count {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: #888;
+}
+
+.year-nav-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  color: $brand-primary;
+  transition: background .15s, border-color .15s, color .15s;
+
+  &:hover, &:focus {
+    background: $brand-primary;
+    border-color: $brand-primary;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  &.disabled {
+    color: #ccc;
+    border-color: #eee;
+    background: transparent;
+  }
+}
+
+.year-nav-strip {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 10px 12px 12px;
+  border-top: 1px solid #eee;
+  background: #fafafa;
+  scrollbar-width: none; // scrolls by swipe/drag/wheel; the faded edges hint there is more
+  -webkit-overflow-scrolling: touch;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.year-chip {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 56px;
+  padding: 6px 10px 5px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  color: #555;
+  font-weight: 600;
+  line-height: 1.2;
+  transition: background .15s, border-color .15s;
+
+  small {
+    font-weight: 400;
+    font-size: 11px;
+    color: #999;
+  }
+
+  &:hover, &:focus {
+    background: #fff;
+    border-color: #ddd;
+    color: $brand-primary;
+    text-decoration: none;
+  }
+
+  &.active {
+    background: $brand-primary;
+    border-color: $brand-primary;
+    color: #fff;
+
+    small {
+      color: rgba(255, 255, 255, .8);
+    }
+  }
+}
+
+.event-month {
+  margin: 26px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #999;
+
+  .year-nav + & {
+    margin-top: 0;
+  }
+}
+
+.year-nav-footer {
+  display: flex;
+  justify-content: space-between;
+  margin: 24px 0 40px;
+
+  .year-nav-next {
+    margin-left: auto;
+  }
+}

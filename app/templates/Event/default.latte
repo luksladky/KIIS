@@ -18,25 +18,48 @@
     <a class="btn btn-link pull-right" n:href="Event:exportCalendar">Přidat akce do Google Kalendáře</a>
     <hr>
 
-    {define yearPager}
-        <nav n:if="count($years) > 1" aria-label="Stránkování podle let">
-            <ul class="pagination">
-                <li n:foreach="$years as $y" n:class="$y === $year ? active">
-                    <a n:href="this, year => $y">{$y}</a>
-                </li>
-            </ul>
-        </nav>
-    {/define}
-
-    {if $years}
-        {include yearPager}
-        <p n:if="!count($events)" class="text-muted">V roce {$year} žádné akce nejsou.</p>
-    {/if}
-
     <div class="row">
         <div class="col-md-6">
+            {if $yearCounts}
+                {var $count = $yearCounts[$year]}
+                <nav class="year-nav" aria-label="Akce podle let">
+                    <div class="year-nav-head">
+                        <a n:if="$prevYear" n:href="this, year => $prevYear" class="year-nav-arrow" title="Akce v roce {$prevYear}"
+                           aria-label="Předchozí rok"><i class="glyphicon glyphicon-chevron-left"></i></a>
+                        <span n:if="!$prevYear" class="year-nav-arrow disabled" aria-hidden="true"><i class="glyphicon glyphicon-chevron-left"></i></span>
+
+                        <div class="year-nav-current">
+                            <span class="year-nav-year">{$year}</span>
+                            <span class="year-nav-count">{$count} {$count == 1 ? 'akce' : ($count >= 2 && $count <= 4 ? 'akce' : 'akcí')}</span>
+                        </div>
+
+                        <a n:if="$nextYear" n:href="this, year => $nextYear" class="year-nav-arrow" title="Akce v roce {$nextYear}"
+                           aria-label="Další rok"><i class="glyphicon glyphicon-chevron-right"></i></a>
+                        <span n:if="!$nextYear" class="year-nav-arrow disabled" aria-hidden="true"><i class="glyphicon glyphicon-chevron-right"></i></span>
+                    </div>
+
+                    <div class="year-nav-strip" n:if="count($yearCounts) > 1">
+                        {foreach $yearCounts as $y => $n}
+                            <a n:href="this, year => $y" n:class="year-chip, $y === $year ? active"
+                               title="{$n} {$n == 1 ? 'akce' : ($n >= 2 && $n <= 4 ? 'akce' : 'akcí')}">
+                                {$y}<small>{$n}</small>
+                            </a>
+                        {/foreach}
+                    </div>
+                </nav>
+
+                <p n:if="!count($events)" class="text-muted">V roce {$year} žádné akce nejsou.</p>
+            {/if}
+
             {foreach $events as $event}
                 {var $type = array_key_exists($event->id,$signedFor) ? $signedFor[$event->id] : 'none'}
+                {if $yearCounts}
+                    {var $month = (int) $event->date_from->format('n')}
+                    {if !isset($lastMonth) || $month !== $lastMonth}
+                        <h4 class="event-month">{$monthNames[$month]}</h4>
+                        {var $lastMonth = $month}
+                    {/if}
+                {/if}
                 <div class="event-block">
                 <a class="event-link" n:href="Event:show $event->id">
                     <div class="event panel panel-default sign-type-{$type}">
@@ -105,11 +128,27 @@
 
 
             {/foreach}
+
+            <nav n:if="$yearCounts && ($prevYear || $nextYear)" class="year-nav-footer" aria-label="Předchozí a další rok">
+                <a n:if="$prevYear" n:href="this, year => $prevYear" class="btn btn-default">
+                    <i class="glyphicon glyphicon-chevron-left mr10"></i>Akce {$prevYear}</a>
+                <a n:if="$nextYear" n:href="this, year => $nextYear" class="btn btn-default year-nav-next">
+                    Akce {$nextYear}<i class="glyphicon glyphicon-chevron-right ml10"></i></a>
+            </nav>
         </div>
     </div>
 
-    {if $years}
-        {include yearPager}
-    {/if}
+{/block}
 
+{block templateScripts}
+    <script>
+        // keep the selected year visible in the horizontally scrollable strip
+        $(function () {
+            var strip = document.querySelector('.year-nav-strip');
+            var active = strip && strip.querySelector('.year-chip.active');
+            if (active) {
+                strip.scrollLeft = active.offsetLeft - strip.clientWidth / 2 + active.clientWidth / 2;
+            }
+        });
+    </script>
 {/block}

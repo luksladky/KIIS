@@ -71,15 +71,24 @@ class EventPresenter extends BaseSecurePresenter
 
     public function renderDefault($type = Model\EventRepository::EVENT_PUBLIC, $all = false, $year = null)
     {
-        $years = [];
+        $yearCounts = []; // year => number of events, oldest first
+        $prevYear = $nextYear = null;
         if ($all) {
-            // the list of all events is paginated by year (newest year first in the pager)
-            $years = array_map('intval', $this->database->query(
-                'SELECT DISTINCT YEAR(date_from) AS y FROM event WHERE event_type = ? ORDER BY y DESC', $type
-            )->fetchPairs(null, 'y'));
+            // the list of all events is paginated by year
+            foreach ($this->database->query(
+                'SELECT YEAR(date_from) AS y, COUNT(*) AS n FROM event WHERE event_type = ? GROUP BY y ORDER BY y ASC', $type
+            ) as $row) {
+                $yearCounts[(int) $row->y] = (int) $row->n;
+            }
+            $years = array_keys($yearCounts);
             $year = (int) $year;
-            if (!in_array($year, $years, true)) {
-                $year = in_array((int) date('Y'), $years, true) ? (int) date('Y') : (int) reset($years);
+            if (!isset($yearCounts[$year])) {
+                $year = isset($yearCounts[(int) date('Y')]) ? (int) date('Y') : (int) end($years);
+            }
+            $pos = array_search($year, $years, true);
+            if ($pos !== false) {
+                $prevYear = $pos > 0 ? $years[$pos - 1] : null;
+                $nextYear = $pos < count($years) - 1 ? $years[$pos + 1] : null;
             }
             $events = $this->eventFacade->findAll()->where('event_type = ?', $type)
                 ->where('date_from >= ? AND date_from < ?', $year . '-01-01', ($year + 1) . '-01-01');
@@ -108,8 +117,12 @@ class EventPresenter extends BaseSecurePresenter
         $this->template->signedFor = $signedFor;
         $this->template->eventSigns = $eventSigns;
         $this->template->showLinkType = !$all;
-        $this->template->years = $years;
+        $this->template->yearCounts = $yearCounts;
         $this->template->year = $year;
+        $this->template->prevYear = $prevYear;
+        $this->template->nextYear = $nextYear;
+        $this->template->monthNames = [1 => 'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen',
+            'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'];
 
     }
 

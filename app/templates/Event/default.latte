@@ -28,24 +28,8 @@
 
             {* ---- year navigation (list of all events) ---- *}
             {if $isYearView && $yearCounts}
-                {var $count = $yearCounts[$year]}
-                <nav class="year-nav" aria-label="Akce podle let">
-                    <div class="year-nav-head">
-                        <a n:if="$prevYear" n:href="this, year => $prevYear" class="year-nav-arrow" title="Akce v roce {$prevYear}"
-                           aria-label="Předchozí rok"><i class="glyphicon glyphicon-chevron-left"></i></a>
-                        <span n:if="!$prevYear" class="year-nav-arrow disabled" aria-hidden="true"><i class="glyphicon glyphicon-chevron-left"></i></span>
-
-                        <div class="year-nav-current">
-                            <span class="year-nav-year">{$year}</span>
-                            <span class="year-nav-count">{$count} {$count == 1 ? 'akce' : ($count >= 2 && $count <= 4 ? 'akce' : 'akcí')}</span>
-                        </div>
-
-                        <a n:if="$nextYear" n:href="this, year => $nextYear" class="year-nav-arrow" title="Akce v roce {$nextYear}"
-                           aria-label="Další rok"><i class="glyphicon glyphicon-chevron-right"></i></a>
-                        <span n:if="!$nextYear" class="year-nav-arrow disabled" aria-hidden="true"><i class="glyphicon glyphicon-chevron-right"></i></span>
-                    </div>
-
-                    <div class="year-nav-strip" n:if="count($yearCounts) > 1">
+                <nav class="year-nav" aria-label="Akce podle let" n:if="count($yearCounts) > 1">
+                    <div class="year-nav-strip">
                         {foreach $yearCounts as $y => $n}
                             <a n:href="this, year => $y" n:class="year-chip, $y === $year ? active"
                                title="{$n} {$n == 1 ? 'akce' : ($n >= 2 && $n <= 4 ? 'akce' : 'akcí')}">

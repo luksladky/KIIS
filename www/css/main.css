@@ -7900,55 +7900,11 @@ a.event-link:hover {
   margin-bottom: 24px;
   overflow: hidden; }
 
-.year-nav-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px; }
-
-.year-nav-current {
-  text-align: center;
-  line-height: 1.1; }
-
-.year-nav-year {
-  display: block;
-  font-size: 38px;
-  font-weight: 300;
-  letter-spacing: 1px; }
-
-.year-nav-count {
-  display: block;
-  margin-top: 4px;
-  font-size: 13px;
-  color: #888; }
-
-.year-nav-arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid #ddd;
-  color: #337ab7;
-  transition: background 0.15s, border-color 0.15s, color 0.15s; }
-  .year-nav-arrow:hover, .year-nav-arrow:focus {
-    background: #337ab7;
-    border-color: #337ab7;
-    color: #fff;
-    text-decoration: none; }
-  .year-nav-arrow.disabled {
-    color: #ccc;
-    border-color: #eee;
-    background: transparent; }
-
 .year-nav-strip {
   display: flex;
   gap: 6px;
   overflow-x: auto;
-  padding: 10px 12px 12px;
-  border-top: 1px solid #eee;
-  background: #fafafa;
+  padding: 10px 12px;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   -webkit-mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
@@ -8111,10 +8067,11 @@ a.event-link:hover {
   max-height: calc(100vh - 40px);
   overflow-y: auto;
   padding: 20px 22px;
-  border: 1px solid #e3e3e3;
+  border: 1px solid #d5dbe2;
+  border-top: 4px solid #337ab7;
   border-radius: 10px;
   background: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); }
 
 .event-detail[hidden] {
   display: none; }

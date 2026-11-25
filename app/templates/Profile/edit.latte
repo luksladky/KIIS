@@ -4,39 +4,160 @@
     <a class="btn btn-default" n:href="Profile:show $profile->id"><i class="glyphicon glyphicon-chevron-left mr10"></i>Zpět na profil bez uložení</a>
     <hr>
 
+    <div class="row">
+        <div class="col-md-6">
+
             {snippet profilePhoto}
+                <div class="photo-card">
+                    <div class="photo-card-avatar">
+                        <img id="photo-preview" n:img="$profile->photo, '160x160', 'exact', 'noimage/profile-badge.jpg'"
+                             alt="Profilová fotka">
+                        <span id="photo-new-badge" class="photo-card-badge" hidden>Nová</span>
+                    </div>
 
-                <a n:ifset="$profile->photo" n:href="deleteProfilePicture! $profile->id"
-                        onclick="return deletePhoto();"><span
-                            class="btn btn-danger">smazat profilovku</span></a>
+                    <div class="photo-card-body">
+                        <h4>Profilová fotka</h4>
 
-                <img class="img-rounded profile-photo mr10" n:img="$profile->photo, 'x100','fill','noimage/profile-badge.jpg'"
-                     alt="Profile photo"/>
+                        {* the hidden form input below does the actual upload; this label opens its file picker *}
+                        <label for="frm-editForm-photo" class="btn btn-primary photo-card-pick">
+                            <i class="glyphicon glyphicon-camera mr10"></i>{$profile->photo ? 'Vybrat novou fotku' : 'Nahrát fotku'}
+                        </label>
+                        <button type="button" id="photo-cancel" class="btn btn-link" hidden>Zrušit výběr</button>
 
+                        <a n:if="$profile->photo" n:href="deleteProfilePicture! $profile->id" class="btn btn-link photo-card-delete"
+                           onclick="return confirm('Opravdu smazat profilovou fotku?');">
+                            <i class="glyphicon glyphicon-trash mr5"></i>Smazat fotku</a>
 
-                <div class="clearfix"></div>
-
-
-
+                        <p id="photo-status" class="photo-card-note">
+                            Fotku z mobilu klidně nahraj celou, před odesláním ji automaticky zmenšíme.
+                        </p>
+                    </div>
+                </div>
             {/snippet}
 
-    <hr>
-    <div class="row">
-
-        <div class="col-md-6">
             <div id="editForm">
                 {control editForm}
-
             </div>
         </div>
     </div>
 
-
 {/block}
+
 {block templateScripts}
-    <script type="text/javascript">
-        function deletePhoto() {
-            return confirm("Are you sure you want to deleteByObject your profile photo?");
+    <script>
+    (function () {
+        var input = document.getElementById('frm-editForm-photo');
+        var preview = document.getElementById('photo-preview');
+        if (!input || !preview) return;
+
+        var MAX_SIDE = 1600;              // px, longer side after resizing
+        var QUALITY = 0.85;               // JPEG quality
+        var LIMIT = 2 * 1024 * 1024;      // server-side limit (EditUserFormFactory)
+
+        var statusEl = document.getElementById('photo-status');
+        var badge = document.getElementById('photo-new-badge');
+        var cancelBtn = document.getElementById('photo-cancel');
+        var defaultNote = statusEl.innerHTML;
+        var originalSrc = preview.src;
+        var previewUrl = null;
+        var ownEvent = false;
+
+        // the card's button replaces the plain file row of the form
+        $(input).closest('.form-group').hide();
+
+        function setStatus(text, isError) {
+            statusEl.textContent = text;
+            statusEl.className = 'photo-card-note' + (isError ? ' text-danger' : '');
         }
+
+        function showPreview(blob) {
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+            previewUrl = URL.createObjectURL(blob);
+            preview.src = previewUrl;
+            badge.hidden = false;
+            cancelBtn.hidden = false;
+        }
+
+        function reset() {
+            input.value = '';
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+            previewUrl = null;
+            preview.src = originalSrc;
+            badge.hidden = true;
+            cancelBtn.hidden = true;
+            statusEl.innerHTML = defaultNote;
+            statusEl.className = 'photo-card-note';
+        }
+
+        function resize(file, done) {
+            var img = new Image();
+            var url = URL.createObjectURL(file);
+            img.onload = function () {
+                URL.revokeObjectURL(url);
+                var scale = Math.min(1, MAX_SIDE / Math.max(img.naturalWidth, img.naturalHeight));
+                var canvas = document.createElement('canvas');
+                canvas.width = Math.round(img.naturalWidth * scale);
+                canvas.height = Math.round(img.naturalHeight * scale);
+                var ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#fff'; // transparent PNGs get a white background in JPEG
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                canvas.toBlob(done, 'image/jpeg', QUALITY);
+            };
+            img.onerror = function () { URL.revokeObjectURL(url); done(null); };
+            img.src = url;
+        }
+
+        function replaceFile(blob, name) {
+            try {
+                var file = new File([blob], name.replace(/\.[^.]*$/, '') + '.jpg', { type: 'image/jpeg' });
+                var dt = new DataTransfer();
+                dt.items.add(file);
+                input.files = dt.files;
+                return true;
+            } catch (e) {
+                return false; // very old browser: keep the original file
+            }
+        }
+
+        // capture phase on document: runs before Nette's own validation of the input
+        document.addEventListener('change', function (e) {
+            if (e.target !== input) return;
+            if (ownEvent) { ownEvent = false; return; }
+
+            var file = input.files && input.files[0];
+            if (!file) { reset(); return; }
+            if (!/^image\//.test(file.type)) return; // let the form validation report it
+
+            e.stopImmediatePropagation();
+            setStatus('Zmenšuji fotku…');
+
+            resize(file, function (blob) {
+                if (!blob) {
+                    // e.g. HEIC on a browser that cannot decode it
+                    if (file.size > LIMIT) {
+                        reset();
+                        setStatus('Tuhle fotku neumím zmenšit. Zkus ji uložit jako JPG, nebo vyber jinou.', true);
+                        return;
+                    }
+                    showPreview(file);
+                } else if (blob.size < file.size) {
+                    if (!replaceFile(blob, file.name) && file.size > LIMIT) {
+                        reset();
+                        setStatus('Fotka je moc velká a tvůj prohlížeč ji neumí zmenšit. Vyber menší (do 2 MB).', true);
+                        return;
+                    }
+                    showPreview(blob);
+                } else {
+                    showPreview(file); // already small, upload as is
+                }
+                setStatus('Fotka je připravená. Ulož ji tlačítkem „Uložit“ dole.');
+                ownEvent = true;
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        }, true);
+
+        cancelBtn.addEventListener('click', reset);
+    })();
     </script>
 {/block}

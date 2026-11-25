@@ -20,6 +20,30 @@ class PermissionRepository extends Repository
         MODIFY_USER = 'modify-user';
 
 
+    /** Permission groups shown in the admin UI; toggling a group adds/removes all its permissions. */
+    public static $groups = [
+        'member' => [
+            'label'       => 'Člen',
+            'description' => 'Může se přihlásit, číst a psát do diskuzí a hlásit se na akce.',
+            'permissions' => [self::MEMBER],
+        ],
+        'thread' => [
+            'label'       => 'Zakládat diskuze',
+            'description' => 'Může zakládat nové diskuze na nástěnce.',
+            'permissions' => [self::ADD_THREAD],
+        ],
+        'event'  => [
+            'label'       => 'Přidávat akce',
+            'description' => 'Může přidávat nové akce do kalendáře.',
+            'permissions' => [self::ADD_EVENT],
+        ],
+        'admin'  => [
+            'label'       => 'Admin',
+            'description' => 'Spravuje diskuze, akce, úvodní stránku a uživatele včetně jejich práv.',
+            'permissions' => [self::MANAGE_THREADS, self::MANAGE_EVENTS, self::MODIFY_HOMEPAGE, self::MODIFY_USER],
+        ],
+    ];
+
     protected $table = 'user_permission';
 
     protected $tablePermissions = 'permission';
@@ -46,6 +70,33 @@ class PermissionRepository extends Repository
         }
     }
 
+
+    /** Adds all permissions of a group (plus membership, without which nobody can log in). */
+    public function addGroup($userId, $groupKey)
+    {
+        $wanted = array_unique(array_merge([self::MEMBER], self::$groups[$groupKey]['permissions']));
+        foreach (array_diff($wanted, $this->findByUser($userId)) as $slug) {
+            $this->addPermission($userId, $slug);
+        }
+    }
+
+    public function removeGroup($userId, $groupKey)
+    {
+        foreach (self::$groups[$groupKey]['permissions'] as $slug) {
+            $this->removePermission($userId, $slug);
+        }
+    }
+
+    /** @return array groupKey => 'full' | 'partial' | 'none' */
+    public static function groupStates(array $assignedSlugs)
+    {
+        $states = [];
+        foreach (self::$groups as $key => $group) {
+            $has = count(array_intersect($group['permissions'], $assignedSlugs));
+            $states[$key] = $has === count($group['permissions']) ? 'full' : ($has > 0 ? 'partial' : 'none');
+        }
+        return $states;
+    }
 
     public function findPermissions()
     {

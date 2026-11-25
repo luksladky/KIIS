@@ -17,4 +17,10 @@ class ProfileRepository extends Repository
     public function findAwaitingApproval() {
         return $this->findBy('approved_by_id',null);
     }
+
+    /** Users who never clicked the email confirmation link. */
+    public function findUnconfirmed() {
+        // findBy() always passes a parameter array, which Nette 2.3 rejects for a bare IS NOT NULL condition
+        return $this->findAll()->where('registration_token IS NOT NULL');
+    }
 }

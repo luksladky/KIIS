@@ -115,9 +115,11 @@ class ProfilePresenter extends BaseSecurePresenter
         $this->onlyWithPermission(Model\PermissionRepository::MODIFY_USER);
 
         $this->template->profiles = $profiles = $this->profileRepository->findAll()->order('nickname ASC');
-        $this->template->allRoles = $this->permissionRepository->findPermissions();
+        $this->template->groups = Model\PermissionRepository::$groups;
         $this->template->assignedRoles = $this->getAssignedRoles($profiles);
         $this->template->awaitingApproval = $this->profileRepository->findAwaitingApproval();
+        $this->template->unconfirmedApproved = $this->profileRepository->findUnconfirmed()
+            ->where('approved_by_id IS NOT NULL')->order('nickname ASC');
 
     }
 
@@ -126,7 +128,7 @@ class ProfilePresenter extends BaseSecurePresenter
         $this->onlyWithPermission(Model\PermissionRepository::MODIFY_USER);
 
         $this->template->profile = $this->profileRepository->get($userId);
-        $this->template->allRoles = $this->permissionRepository->findPermissions();
+        $this->template->groups = Model\PermissionRepository::$groups;
         $this->template->assignedRoles = $this->permissionRepository->findByUser($userId);
     }
 
@@ -288,6 +290,49 @@ class ProfilePresenter extends BaseSecurePresenter
         $this->updateViewPermissionChange();
     }
 
+    public function handleAddGroup($userId, $group, $multiview = false)
+    {
+        $this->changeGroup($userId, $group, true, $multiview);
+    }
+
+    public function handleRemoveGroup($userId, $group, $multiview = false)
+    {
+        $this->changeGroup($userId, $group, false, $multiview);
+    }
+
+    private function changeGroup($userId, $group, $add, $multiview)
+    {
+        $this->onlyWithPermission(Model\PermissionRepository::MODIFY_USER);
+
+        if (!isset(Model\PermissionRepository::$groups[$group]) || !$this->profileRepository->get($userId)) {
+            throw new Nette\Application\BadRequestException();
+        }
+        if (!$add && $group === 'admin' && $userId == $this->user->id) {
+            $this->flashMessage('Sám sobě admina odebrat nemůžeš, požádej jiného admina.', 'warning');
+            $this->updateViewPermissionChange();
+            return;
+        }
+
+        if ($add) {
+            $this->permissionRepository->addGroup($userId, $group);
+        } else {
+            $this->permissionRepository->removeGroup($userId, $group);
+        }
+
+        if ($userId == $this->user->id) {
+            $this->flashMessage('Práva upravena, odhlaš se, aby se to projevilo.', 'success');
+        } else {
+            $this->profileRepository->get($userId)->update(['logout' => true]);
+        }
+
+        if ($multiview) {
+            $this->template->assignedRoles = $this->getAssignedRoles($this->template->profiles);
+        } else {
+            $this->template->assignedRoles = $this->permissionRepository->findByUser($userId);
+        }
+        $this->updateViewPermissionChange();
+    }
+
     public function handleAddPermissionsUpToLevel($userId, $level)
     {
         $this->onlyWithPermission(Model\PermissionRepository::MODIFY_USER);
@@ -333,6 +378,22 @@ class ProfilePresenter extends BaseSecurePresenter
         $this->permissionRepository->addPermission($userId, Model\PermissionRepository::MEMBER);
 
         $this->flashMessage('Uživatel byl schválen, hurá.', 'success');
+
+        $this->redirect('this');
+    }
+
+    /** Manually confirm a user's email (for when the confirmation email never arrived). */
+    public function handleConfirmEmail($userId)
+    {
+        $this->onlyWithPermission(Model\PermissionRepository::MODIFY_USER);
+
+        $profile = $this->profileRepository->get($userId);
+
+        if (!$profile) throw new Nette\Application\BadRequestException();
+
+        $profile->update(['registration_token' => null]);
+
+        $this->flashMessage('Email uživatele ' . $profile->nickname . ' byl ručně potvrzen.', 'success');
 
         $this->redirect('this');
     }

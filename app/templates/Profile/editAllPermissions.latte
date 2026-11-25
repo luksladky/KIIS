@@ -19,9 +19,11 @@
         {foreach $awaitingApproval as $profile}
             <tr>
                 <td>{$profile->name} ({$profile->nickname})</td>
-                <td>{$profile->email}</td>
+                <td>{$profile->email}
+                    <span n:if="$profile->registration_token" class="label label-warning">neověřený email</span></td>
                 <td>
                     <a n:href="approveUser! $profile->id" class="btn btn-success">Schválit</a>
+                    <a n:if="$profile->registration_token" n:href="confirmEmail! $profile->id" class="btn btn-info">Potvrdit email</a>
                     <a n:href="deleteUser! $profile->id" class="btn btn-default" onclick="return confirmDelete();">Smazat nadobro</a>
                 </td>
             </tr>
@@ -34,52 +36,61 @@
         <h2>Práva všech uživatelů</h2>
     {/if}
 
+    {if $unconfirmedApproved->count() > 0}
+        <h2>Schválení uživatelé s neověřeným emailem</h2>
+        <p class="text-muted">Nemůžou se přihlásit, dokud neklikli na odkaz v potvrzovacím emailu. Pokud jim email nedorazil, potvrď ho tady ručně.</p>
+
+        <table class="table table-hover table-condensed center-vertical">
+            <tbody>
+            {foreach $unconfirmedApproved as $profile}
+                <tr>
+                    <td>{$profile->name} ({$profile->nickname})</td>
+                    <td>{$profile->email}</td>
+                    <td><a n:href="confirmEmail! $profile->id" class="btn btn-info">Potvrdit email</a></td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        <hr>
+    {/if}
+
     {snippetArea permissions}
+        <p class="text-muted">Kliknutím na políčko oprávnění přidáš nebo odebereš. Přidáním jakéhokoli oprávnění se uživatel stane i členem. Změny se projeví po jeho dalším přihlášení.</p>
         <table class="table table-hover table-responsive text-center center-vertical">
 
             <thead>
             <tr>
                 <th>Jméno</th>
-                {foreach $allRoles as $role}
+                {foreach $groups as $group}
                     <th class="text-center"><span data-toggle="tooltip" data-placement="top"
-                                                  title="{$role->description}">{$role->slug}</span></th>
+                                                  title="{$group['description']}">{$group['label']}</span></th>
                 {/foreach}
-                <th></th>
+                <th class="text-center">Zablokovat</th>
             </tr>
             </thead>
             <tbody>
 
             {foreach $profiles as $profile}
                 <tr n:snippet="permissions-$profile->id">
+                    {var $states = App\Model\PermissionRepository::groupStates($assignedRoles[$profile->id])}
                     <td><span data-toggle="tooltip" data-placement="top"
                               title="{$profile->name}">{$profile->nickname}</span></td>
-                    <td n:foreach="$allRoles as $role">
-                        <div class="btn-group" role="group">
-                            {if in_array($role->slug,$assignedRoles[$profile->id])}
-                                <span class="btn btn-primary btn-sm active disabled">
-                            <i class="glyphicon glyphicon-ok"></i>
-                        </span>
-                                <a n:href="removePermission! $profile->id, $role->slug, multiview=>true"
-                                        class="ajax btn btn-default btn-sm btn-square">
-                                    &nbsp;
-                                </a>
-                            {else}
-                                <a n:href="addPermission! $profile->id, $role->slug, multiview=>true"
-                                        class="ajax btn btn-default btn-sm btn-square">
-                                    &nbsp;
-                                </a>
-                                <span class="btn btn-danger btn-sm active disabled">
-                            <i class="glyphicon glyphicon-remove"></i>
-                        </span>
-                            {/if}
-                        </div>
-
+                    <td n:foreach="$groups as $key => $group">
+                        {if $states[$key] === 'full'}
+                            <a n:href="removeGroup! $profile->id, $key, multiview=>true" class="ajax btn btn-success btn-sm"
+                               title="Má oprávnění „{$group['label']}“. Kliknutím odebereš."><i class="glyphicon glyphicon-ok"></i></a>
+                        {elseif $states[$key] === 'partial'}
+                            <a n:href="addGroup! $profile->id, $key, multiview=>true" class="ajax btn btn-warning btn-sm"
+                               title="Má jen část oprávnění „{$group['label']}“. Kliknutím doplníš zbytek."><i class="glyphicon glyphicon-adjust"></i></a>
+                        {else}
+                            <a n:href="addGroup! $profile->id, $key, multiview=>true" class="ajax btn btn-default btn-sm"
+                               title="Nemá oprávnění „{$group['label']}“. Kliknutím přidáš."><i class="glyphicon glyphicon-minus"></i></a>
+                        {/if}
                     </td>
                     <td>
                         <a n:href="deleteAllPermissions! $profile->id, multiview=>true" class="btn btn-default"
-                                                                                        data-toggle="tooltip"
-                                                                                        data-placement="top"
-                                                                                        title="Zablokovat uživatele. Nedostane se sem, ale jeho příspěvky zůstanou."><i
+                           data-toggle="tooltip" data-placement="top"
+                           title="Zablokovat uživatele. Nedostane se sem, ale jeho příspěvky zůstanou."><i
                                     class="glyphicon glyphicon-ban-circle"></i></a></td>
                 </tr>
             {/foreach}

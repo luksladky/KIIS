@@ -217,3 +217,16 @@ img.profile {
   font-size: 13px;
   color: #888;
 }
+
+// overflow-x: hidden on #wrapper would make it a scroll container and break position: sticky
+@supports (overflow-x: clip) {
+  #wrapper {
+    overflow-x: clip;
+  }
+}
+
+// Bootstrap's fixed .container width (1170px) is wider than the space next to the sidebar
+// on common laptop screens, so content was cut off on the right
+.container.main-content {
+  max-width: 100%;
+}

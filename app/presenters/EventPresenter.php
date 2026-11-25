@@ -71,15 +71,16 @@ class EventPresenter extends BaseSecurePresenter
 
     public function renderDefault($type = Model\EventRepository::EVENT_PUBLIC, $all = false, $year = null)
     {
-        $yearCounts = []; // year => number of events, oldest first
+        // year => number of events, oldest first (year navigation; compact links at the bottom of the upcoming view)
+        $yearCounts = [];
+        foreach ($this->database->query(
+            'SELECT YEAR(date_from) AS y, COUNT(*) AS n FROM event WHERE event_type = ? GROUP BY y ORDER BY y ASC', $type
+        ) as $row) {
+            $yearCounts[(int) $row->y] = (int) $row->n;
+        }
         $prevYear = $nextYear = null;
         if ($all) {
             // the list of all events is paginated by year
-            foreach ($this->database->query(
-                'SELECT YEAR(date_from) AS y, COUNT(*) AS n FROM event WHERE event_type = ? GROUP BY y ORDER BY y ASC', $type
-            ) as $row) {
-                $yearCounts[(int) $row->y] = (int) $row->n;
-            }
             $years = array_keys($yearCounts);
             $year = (int) $year;
             if (!isset($yearCounts[$year])) {
@@ -101,16 +102,29 @@ class EventPresenter extends BaseSecurePresenter
             $userSigns = $this->eventFacade->findSignsByUserForFutureEvents($this->user->id);
         }
 
+        $roleSlugs = $this->database->table('role')->fetchPairs('id', 'slug');
         $signedFor = [];
+        $mySigns = []; // eventId => ['type' => ..., 'role' => slug|null], for the quick sign-up in the list
         foreach ($userSigns as $sign) {
             $signedFor[$sign->event_id] = $sign->type;
+            $mySigns[$sign->event_id] = [
+                'type' => $sign->type,
+                'role' => $sign->role_id && isset($roleSlugs[$sign->role_id]) ? $roleSlugs[$sign->role_id] : null,
+            ];
         }
 
+        $now = new DateTime();
         $eventSigns = [];
+        $eventRoles = []; // only upcoming events can be signed up for from the list
         foreach ($events as $event) {
             $eventSigns[$event->id] = $this->eventFacade->getSigned($event->id);
             unset($eventSigns[$event->id][\App\Model\SignEnum::NO]);
+            if ($event->date_to > $now) {
+                $eventRoles[$event->id] = $this->eventFacade->fetchRolesByEvent($event->id);
+            }
         }
+        $this->template->mySigns = $mySigns;
+        $this->template->eventRoles = $eventRoles;
 
         $this->template->events = $events;
         $this->template->eventType = $type;
@@ -118,6 +132,8 @@ class EventPresenter extends BaseSecurePresenter
         $this->template->eventSigns = $eventSigns;
         $this->template->showLinkType = !$all;
         $this->template->yearCounts = $yearCounts;
+        $this->template->isYearView = (bool) $all;
+        $this->template->currentYear = (int) date('Y');
         $this->template->year = $year;
         $this->template->prevYear = $prevYear;
         $this->template->nextYear = $nextYear;
@@ -332,6 +348,52 @@ class EventPresenter extends BaseSecurePresenter
     public function addThreadFormSucceeded($form, $values)
     {
         $this->threadFacade->addThread($this->user->id, $values['title'], $values['restrict_users'], $values['event_id']);
+    }
+
+    /** Sign up (yes / maybe / no, with a role) straight from the event list. */
+    public function handleQuickSign()
+    {
+        $post = $this->getRequest()->getPost();
+        $eventId = isset($post['event_id']) ? (int) $post['event_id'] : 0;
+        $type = isset($post['type']) ? $post['type'] : null;
+        $event = $eventId ? $this->eventFacade->get($eventId) : null;
+        $types = [Model\SignEnum::YES, Model\SignEnum::MAYBE, Model\SignEnum::NO];
+
+        if (!$event || !in_array($type, $types, true)) {
+            throw new BadRequestException;
+        }
+        $back = $this->link('this') . '#event-' . $eventId;
+
+        if ($event->date_to < new DateTime()) {
+            $this->flashMessage('Tahle akce už proběhla.', 'warning');
+            $this->redirectUrl($back);
+        }
+
+        $role = null;
+        if ($type !== Model\SignEnum::NO) {
+            $roles = $this->eventFacade->fetchRolesByEvent($eventId);
+            $role = isset($post['role']) ? $post['role'] : null;
+            if ($roles && !isset($roles[$role])) {
+                $this->flashMessage('Co budeš dělat na akci? Vyber si funkci.', 'warning');
+                $this->redirectUrl($back);
+            }
+        }
+
+        // keep arrival, departure and note that were set on the detail page
+        $existing = $this->database->table('user_event')
+            ->where('event_id = ? AND user_id = ?', $eventId, $this->user->id)->fetch();
+        $this->eventFacade->addSign($eventId, $this->user->id, $type, $role,
+            $existing ? $existing->date_from : null,
+            $existing ? $existing->date_to : null,
+            $existing ? $existing->note : null);
+
+        $messages = [
+            Model\SignEnum::YES   => ['Jsme rádi, že jedeš. Bude prča!', 'success'],
+            Model\SignEnum::MAYBE => ['Snad tě uvidíme na akci!', 'success'],
+            Model\SignEnum::NO    => ['Škoda, tak příště!', 'info'],
+        ];
+        $this->flashMessage($messages[$type][0], $messages[$type][1]);
+        $this->redirectUrl($back);
     }
 
     public function handleSign($eventId, $signType)

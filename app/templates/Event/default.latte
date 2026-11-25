@@ -18,9 +18,16 @@
     <a class="btn btn-link pull-right" n:href="Event:exportCalendar">Přidat akce do Google Kalendáře</a>
     <hr>
 
-    <div class="row">
+    {var $typeYes = \App\Model\SignEnum::YES}
+    {var $typeMaybe = \App\Model\SignEnum::MAYBE}
+    {var $typeNo = \App\Model\SignEnum::NO}
+    {var $signLabels = [$typeYes => 'jedeš', $typeMaybe => 'možná jedeš', $typeNo => 'nejedeš']}
+
+    <div class="row events-layout">
         <div class="col-md-6">
-            {if $yearCounts}
+
+            {* ---- year navigation (list of all events) ---- *}
+            {if $isYearView && $yearCounts}
                 {var $count = $yearCounts[$year]}
                 <nav class="year-nav" aria-label="Akce podle let">
                     <div class="year-nav-head">
@@ -49,92 +56,127 @@
                 </nav>
 
                 <p n:if="!count($events)" class="text-muted">V roce {$year} žádné akce nejsou.</p>
+            {else}
+                <p n:if="!count($events)" class="text-muted">Žádné nadcházející akce zatím nejsou.</p>
             {/if}
 
+            {* ---- event cards, grouped by month (with the year once it differs) ---- *}
             {foreach $events as $event}
                 {var $type = array_key_exists($event->id,$signedFor) ? $signedFor[$event->id] : 'none'}
-                {if $yearCounts}
-                    {var $month = (int) $event->date_from->format('n')}
-                    {if !isset($lastMonth) || $month !== $lastMonth}
-                        <h4 class="event-month">{$monthNames[$month]}</h4>
-                        {var $lastMonth = $month}
-                    {/if}
+                {var $month = (int) $event->date_from->format('n')}
+                {var $eventYear = (int) $event->date_from->format('Y')}
+                {if !isset($lastMonth) || $month !== $lastMonth || $eventYear !== $lastYear}
+                    <h4 class="event-month">
+                        {$monthNames[$month]}
+                        <span n:if="!$isYearView && $eventYear !== $currentYear" class="event-month-year">{$eventYear}</span>
+                    </h4>
+                    {var $lastMonth = $month}
+                    {var $lastYear = $eventYear}
                 {/if}
-                <div class="event-block">
-                <a class="event-link" n:href="Event:show $event->id">
-                    <div class="event panel panel-default sign-type-{$type}">
-                        <div class="panel-body">
-                            <h3>{$event->title|noescape}</h3>
-                            <p>{$event->date_from|czechdate:false} – {$event->date_to|czechdate}</p>
-                        </div>
-                    </div>
-                </a>
 
-                    <aside class="event-thumb" n:if="$eventSigns">
-                        <div class="panel panel-default">
+                <div class="event-block" id="event-{$event->id}" data-event="{$event->id}">
+                    <a class="event-link" n:href="Event:show $event->id">
+                        <div class="event panel panel-default sign-type-{$type}">
                             <div class="panel-body">
-                                <p><strong class="mr10" n:if="$event->location">{$event->location} </strong>
-                                    <span class="gray">
-                            {$event->date_from|date:'j. n.'} od {$event->date_from|date:'H:i'}
-                                        <span class="ml5 mr5">–</span>
-                                        {$event->date_to|date:'j. n.'} do {$event->date_to|date:'H:i'}
-                                        <span class="ml10">(začíná {$event->date_from|timeagoinwords})</span>
-                        </span>
-                                </p>
-                                {$event->description|noescape}
-
-
-                                {foreach $eventSigns[$event->id] as $sign}
-
-                                    <strong n:ifset="$sign['main']" n:tag-if="$sign['main']">{$sign['name']}</strong>
-                                    {if !count($sign['persons'])}<br><br>{/if}
-                                    <ul class="list-inline"">
-                                    <li n:foreach="$sign['persons'] as $person">
-                                        {****** BADGE*******}
-                                        <div class="relative">
-
-                                                <div class="profile-badge mb5 sign-type-{$person->type}">
-                                                    <a n:href="Profile:show $person->user->id">
-                                                    <img class="img-circle profile" n:img="$person->user->photo, '30x30','exact','noimage/profile-badge.jpg'"
-                                                         alt="Profile photo">
-                                                    <span class="name">{$person->user->nickname}</span>
-                                            </a>
-                                                    {****** DATE FROM TO*******}
-                                                    <span class="popover-toggle icon" n:if="$person->date_from || $person->date_to">
-                                        <i class="glyphicon glyphicon-calendar"></i>
-
-                                    </span>
-                                                    {****** NOTE*******}
-                                                    <span class="popover-toggle icon" n:if="$person->note">
-                                        <i class="glyphicon glyphicon-comment"></i>
-
-                                    </span>
-                                                </div>
-
-                                            {****** BADGE END*******}
-                                        </div>
-                                    </li>
-                                    </ul>
-
-                                {/foreach}
+                                <h3>{$event->title|noescape}</h3>
+                                <p>{$event->date_from|czechdate:false} – {$event->date_to|czechdate}</p>
                             </div>
                         </div>
-
-                    </aside>
-
+                    </a>
                 </div>
-
-
-
-
             {/foreach}
 
-            <nav n:if="$yearCounts && ($prevYear || $nextYear)" class="year-nav-footer" aria-label="Předchozí a další rok">
+            {* ---- bottom navigation ---- *}
+            <nav n:if="$isYearView && ($prevYear || $nextYear)" class="year-nav-footer" aria-label="Předchozí a další rok">
                 <a n:if="$prevYear" n:href="this, year => $prevYear" class="btn btn-default">
                     <i class="glyphicon glyphicon-chevron-left mr10"></i>Akce {$prevYear}</a>
                 <a n:if="$nextYear" n:href="this, year => $nextYear" class="btn btn-default year-nav-next">
                     Akce {$nextYear}<i class="glyphicon glyphicon-chevron-right ml10"></i></a>
             </nav>
+
+            <nav n:if="!$isYearView && count($yearCounts) > 0" class="year-links" aria-label="Akce podle let">
+                <span class="year-links-label">Akce podle let</span>
+                {foreach array_reverse($yearCounts, true) as $y => $n}
+                    <a n:href="this, all => true, year => $y" class="year-link"
+                       title="{$n} {$n == 1 ? 'akce' : ($n >= 2 && $n <= 4 ? 'akce' : 'akcí')}">{$y}</a>
+                {/foreach}
+            </nav>
+        </div>
+
+        {* ---- pinned detail of the hovered event (desktop) ---- *}
+        <div class="col-md-6 event-detail-col" n:if="count($events)">
+            <div class="event-detail-pane">
+                {foreach $events as $event}
+                    {var $mySign = isset($mySigns[$event->id]) ? $mySigns[$event->id] : null}
+                    <aside class="event-detail" id="event-detail-{$event->id}" data-event="{$event->id}" n:attr="hidden => !$iterator->isFirst()">
+                        <h3 class="event-detail-title"><a n:href="Event:show $event->id">{$event->title|noescape}</a></h3>
+                        <p class="event-detail-meta">
+                            <strong n:if="$event->location">{$event->location}</strong>
+                            <span>
+                                {$event->date_from|date:'j. n.'} od {$event->date_from|date:'H:i'}
+                                – {$event->date_to|date:'j. n.'} do {$event->date_to|date:'H:i'}
+                            </span>
+                            <span class="event-detail-when">({$event->date_to < new \DateTime() ? 'proběhla' : 'začíná ' . \App\Model\Filters::timeAgoInWords($event->date_from)})</span>
+                        </p>
+
+                        {* quick sign-up for upcoming events *}
+                        {if isset($eventRoles[$event->id])}
+                            {var $roles = $eventRoles[$event->id]}
+                            <form class="quick-sign" method="post" action="{link quickSign!}">
+                                <input type="hidden" name="event_id" value="{$event->id}">
+                                <div class="quick-sign-row">
+                                    <select n:if="$roles" name="role" class="form-control input-sm quick-sign-role" required
+                                            aria-label="Funkce na akci">
+                                        <option value="" n:attr="selected => !$mySign || !$mySign['role']" disabled>Vyber funkci…</option>
+                                        <option n:foreach="$roles as $slug => $title" value="{$slug}"
+                                                n:attr="selected => $mySign && $mySign['role'] === $slug">{$title}</option>
+                                    </select>
+                                    <button type="submit" name="type" value="{$typeYes}"
+                                            n:class="btn, btn-sm, btn-success, $mySign && $mySign['type'] === $typeYes ? active">Hlásím se!</button>
+                                    <button type="submit" name="type" value="{$typeMaybe}"
+                                            n:class="btn, btn-sm, btn-default, $mySign && $mySign['type'] === $typeMaybe ? active">Nevím jistě</button>
+                                    <button type="submit" name="type" value="{$typeNo}" formnovalidate
+                                            n:class="btn, btn-sm, btn-link, quick-sign-no, $mySign && $mySign['type'] === $typeNo ? active">Nevychází mi to</button>
+                                </div>
+                                <p class="quick-sign-state">
+                                    {if $mySign}
+                                        Teď: <strong>{$signLabels[$mySign['type']]}</strong>{if $mySign['type'] !== $typeNo && $mySign['role'] && isset($roles[$mySign['role']])} jako {$roles[$mySign['role']]}{/if}.
+                                    {else}
+                                        Zatím ses nepřihlásil.
+                                    {/if}
+                                    <a n:href="Event:show $event->id">Příjezd, odjezd a poznámka v detailu akce</a>
+                                </p>
+                            </form>
+                        {/if}
+
+                        <div class="event-detail-desc">{$event->description|noescape}</div>
+
+                        {foreach $eventSigns[$event->id] as $sign}
+                            <strong n:ifset="$sign['main']" n:tag-if="$sign['main']">{$sign['name']}</strong>
+                            {if !count($sign['persons'])}<br><br>{/if}
+                            <ul class="list-inline">
+                                <li n:foreach="$sign['persons'] as $person">
+                                    <div class="relative">
+                                        <div class="profile-badge mb5 sign-type-{$person->type}">
+                                            <a n:href="Profile:show $person->user->id">
+                                                <img class="img-circle profile" n:img="$person->user->photo, '30x30','exact','noimage/profile-badge.jpg'"
+                                                     alt="Profile photo">
+                                                <span class="name">{$person->user->nickname}</span>
+                                            </a>
+                                            <span class="popover-toggle icon" n:if="$person->date_from || $person->date_to">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </span>
+                                            <span class="popover-toggle icon" n:if="$person->note">
+                                                <i class="glyphicon glyphicon-comment"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        {/foreach}
+                    </aside>
+                {/foreach}
+            </div>
         </div>
     </div>
 
@@ -142,13 +184,34 @@
 
 {block templateScripts}
     <script>
-        // keep the selected year visible in the horizontally scrollable strip
         $(function () {
+            // keep the selected year visible in the horizontally scrollable strip
             var strip = document.querySelector('.year-nav-strip');
             var active = strip && strip.querySelector('.year-chip.active');
             if (active) {
                 strip.scrollLeft = active.offsetLeft - strip.clientWidth / 2 + active.clientWidth / 2;
             }
+
+            // pinned detail: show the hovered (or focused) event in the right column
+            var blocks = $('.event-block[data-event]');
+            var details = $('.event-detail');
+            if (!details.length) return;
+
+            function select(id) {
+                var detail = $('#event-detail-' + id);
+                if (!detail.length) return;
+                details.prop('hidden', true);
+                detail.prop('hidden', false);
+                blocks.removeClass('is-active').filter('[data-event="' + id + '"]').addClass('is-active');
+            }
+
+            blocks.on('mouseenter focusin', function () {
+                select($(this).data('event'));
+            });
+
+            // after signing up we come back with #event-<id>
+            var m = location.hash.match(/^#event-(\d+)$/);
+            select(m ? m[1] : blocks.first().data('event'));
         });
     </script>
 {/block}

@@ -1,17 +1,33 @@
-
-## Directory-based project format:
+# IDE
 .idea/
+.vscode/
 
-# CakePHP 3
-
+# Composer dependencies
 /vendor/*
+
+# Runtime: Nette cache and sessions, logs
 temp/*
 log/*
 bin/*
+
+# Local-only folders (server configs, exception dumps)
 0_configs/
 0_vyjimky/*
-/www/css/
+
+# User uploads
 /www/assets/files/*
 /www/assets/files_images/*
 /www/assets/noimage/*
 /www/assets/profile/*
+
+# npm (TinyMCE is installed here and copied to www/js/vendor/tinymce, which is tracked)
+node_modules/
+
+# Local tooling (Claude Code launch config, rendered page previews)
+/.claude/
+/.preview/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini

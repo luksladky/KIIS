@@ -16,6 +16,8 @@
     <!--  Bootstrap end  -->
 
     <script type="text/javascript">document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/, 'js');</script>
+    {* start downloading the icon font right away instead of after main.css is parsed (icons were blank on slow networks) *}
+    <link rel="preload" href="{$basePath}/fonts/bootstrap/glyphicons-halflings-regular.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="{$basePath}/css/main.css?version=17">
 
     <link rel="shortcut icon" href="{$basePath}/icon.png">

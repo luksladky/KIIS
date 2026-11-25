@@ -56,7 +56,8 @@
                     <td>{$profile->city}</td>
                     <td>{$profile->tshirt_size}</td>
                     {*<td>TODO</td>*}
-                    <td>{$profile->last_activity|timeagoinwords}</td>
+                    {* never-logged-in users have MySQL zero date 0000-00-00 (PHP year -1) *}
+                    <td>{if $profile->last_activity && $profile->last_activity->format('Y') >= 2000}{$profile->last_activity|timeagoinwords}{else}<span class="text-muted">nikdy</span>{/if}</td>
                     <td n:if="$user->isInRole('modify-user')"><a n:href="Profile:editPermissions $profile->id">Spravovat
                             oprávnění</a></td>
                 </tr>

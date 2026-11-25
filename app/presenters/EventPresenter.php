@@ -212,6 +212,8 @@ class EventPresenter extends BaseSecurePresenter
         $this->template->calendarLink = $this->link('Api:calendar',[$this->user->id,$token]);
         $this->template->calendarAllLink = $this->link('Api:calendar',[$this->user->id,$token,true]);
         $this->template->calendarAllNotRejectedLink = $this->link('Api:calendar',[$this->user->id,$token,true,false]);
+        $this->template->calendarFutureLink = $this->link('Api:calendar',[$this->user->id,$token,true,true,true]);
+        $this->template->calendarFutureNotRejectedLink = $this->link('Api:calendar',[$this->user->id,$token,true,false,true]);
     }   
 
 

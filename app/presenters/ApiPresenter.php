@@ -157,7 +157,7 @@ class ApiPresenter extends BasePresenter
     }
 
 
-    public function actionCalendar($userId, $key, $all = false, $includeRejected = true)
+    public function actionCalendar($userId, $key, $all = false, $includeRejected = true, $future = false)
     {
         if ($userId) {
             $userToken = $this->profileRepository->get($userId)->calendar_token;
@@ -172,6 +172,10 @@ class ApiPresenter extends BasePresenter
                 } else {
                     $events = $this->eventFacade->findNotRejected($userId);
                 }
+                if ($future) {
+                    // upcoming events, plus last month's so they don't vanish from the calendar right after they end
+                    $events->where('date_to > ?', (new DateTime())->modify('-1 month'));
+                }
             } else {
                 $events = $this->eventFacade->findSignedNotRejected($userId);
             }
@@ -185,8 +189,13 @@ class ApiPresenter extends BasePresenter
         foreach ($events as $event) {
             $vEvent = new \Eluceo\iCal\Component\Event();
 
-            $vEvent->setDtStart($event->date_from);
-            $vEvent->setDtEnd($event->date_to);
+            // The bundled eluceo/ical appends "Z" (UTC) without converting, so local Prague
+            // times showed up 1–2 hours later in Google Calendar. Convert to UTC ourselves.
+            $utc = new \DateTimeZone('UTC');
+            $dtStart = clone $event->date_from;
+            $dtEnd = clone $event->date_to;
+            $vEvent->setDtStart($dtStart->setTimezone($utc));
+            $vEvent->setDtEnd($dtEnd->setTimezone($utc));
             $vEvent->setNoTime(false);
 
             $vEvent->setSummary($event->title);

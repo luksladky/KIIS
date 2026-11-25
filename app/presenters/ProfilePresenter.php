@@ -164,11 +164,15 @@ class ProfilePresenter extends BaseSecurePresenter
         /** @var Nette\Http\FileUpload $uploadedPhoto */
         $uploadedPhoto = $values['photo'];
         if ($uploadedPhoto->isImage()) {
-            //delete old photo
-            $this->imageStorage->delete(Model\ProfileRepository::IMAGE_NAMESPACE . "/" . $id . '_profile.jpg');
+            //delete old photo (by its stored name; older ones are "<id>_profile.jpg")
+            $oldPhoto = $this->profileRepository->get($id)->photo;
+            if ($oldPhoto) {
+                $this->imageStorage->delete($oldPhoto);
+            }
 
+            // unique name per upload, otherwise browsers keep showing the cached old photo under the same URL
             $photo = $this->imageStorage->createImage();
-            $photo->setName($id . '_profile.jpg')
+            $photo->setName($id . '_profile_' . time() . '.jpg')
                 ->setNamespace(Model\ProfileRepository::IMAGE_NAMESPACE)
                 ->saveUpload($uploadedPhoto);
             $data['photo'] = (string)$photo;

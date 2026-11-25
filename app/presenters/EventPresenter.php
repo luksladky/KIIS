@@ -48,14 +48,14 @@ class EventPresenter extends BaseSecurePresenter
     /** @var \Texy\Texy @inject */
     public $texy;
 
-    public function renderListPublic($all = false) {
-        $this->template->setFile(realpath(__DIR__ . "\\..\\templates")."\\Event\\default.latte");
-        $this->renderDefault(Model\EventRepository::EVENT_PUBLIC, $all);
+    public function renderListPublic($all = false, $year = null) {
+        $this->template->setFile(__DIR__ . "/../templates/Event/default.latte");
+        $this->renderDefault(Model\EventRepository::EVENT_PUBLIC, $all, $year);
     }
 
-    public function renderListEducation($all = false) {
-        $this->template->setFile(realpath(__DIR__ . "\\..\\templates")."\\Event\\default.latte");
-        $this->renderDefault(Model\EventRepository::EVENT_EDUCATION, $all);
+    public function renderListEducation($all = false, $year = null) {
+        $this->template->setFile(__DIR__ . "/../templates/Event/default.latte");
+        $this->renderDefault(Model\EventRepository::EVENT_EDUCATION, $all, $year);
     }
 
     public function renderList($eventType, $all = false) {
@@ -69,10 +69,20 @@ class EventPresenter extends BaseSecurePresenter
         }
     }
 
-    public function renderDefault($type = Model\EventRepository::EVENT_PUBLIC, $all = false)
+    public function renderDefault($type = Model\EventRepository::EVENT_PUBLIC, $all = false, $year = null)
     {
+        $years = [];
         if ($all) {
-            $events = $this->eventFacade->findAll()->where('event_type = ?', $type);
+            // the list of all events is paginated by year (newest year first in the pager)
+            $years = array_map('intval', $this->database->query(
+                'SELECT DISTINCT YEAR(date_from) AS y FROM event WHERE event_type = ? ORDER BY y DESC', $type
+            )->fetchPairs(null, 'y'));
+            $year = (int) $year;
+            if (!in_array($year, $years, true)) {
+                $year = in_array((int) date('Y'), $years, true) ? (int) date('Y') : (int) reset($years);
+            }
+            $events = $this->eventFacade->findAll()->where('event_type = ?', $type)
+                ->where('date_from >= ? AND date_from < ?', $year . '-01-01', ($year + 1) . '-01-01');
 
             $userSigns = $this->eventFacade->findSignsByUser($this->user->id);
 
@@ -98,6 +108,8 @@ class EventPresenter extends BaseSecurePresenter
         $this->template->signedFor = $signedFor;
         $this->template->eventSigns = $eventSigns;
         $this->template->showLinkType = !$all;
+        $this->template->years = $years;
+        $this->template->year = $year;
 
     }
 

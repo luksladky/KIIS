@@ -18,6 +18,21 @@
     <a class="btn btn-link pull-right" n:href="Event:exportCalendar">Přidat akce do Google Kalendáře</a>
     <hr>
 
+    {define yearPager}
+        <nav n:if="count($years) > 1" aria-label="Stránkování podle let">
+            <ul class="pagination">
+                <li n:foreach="$years as $y" n:class="$y === $year ? active">
+                    <a n:href="this, year => $y">{$y}</a>
+                </li>
+            </ul>
+        </nav>
+    {/define}
+
+    {if $years}
+        {include yearPager}
+        <p n:if="!count($events)" class="text-muted">V roce {$year} žádné akce nejsou.</p>
+    {/if}
+
     <div class="row">
         <div class="col-md-6">
             {foreach $events as $event}
@@ -93,6 +108,8 @@
         </div>
     </div>
 
-
+    {if $years}
+        {include yearPager}
+    {/if}
 
 {/block}

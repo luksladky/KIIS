@@ -2,6 +2,9 @@
 # https://nette.org/security-warning
 
 parameters:
+	mailFrom:
+		email: noreply@klub.ddmtrebic.cz
+		name: KIIS
 
 extensions:
     images: WebChemistry\Images\DI\Extension
@@ -26,6 +29,7 @@ services:
 	- App\Model\FileRepository
 	- App\Model\PermissionRepository
 	- App\Model\CronManager
+	- App\Components\MailSender(%mailFrom.email%, %mailFrom.name%)
 	router: App\RouterFactory::createRouter
 	authenticator: App\Model\UserManager
 	authorizator: App\Model\Authorizator

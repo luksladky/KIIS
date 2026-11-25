@@ -8,12 +8,11 @@
 
 namespace App\Components;
 
-use Nette\Mail\Message;
-use Nette\Mail\SendmailMailer;
-use Nette\Neon\Exception;
-
 trait TMailer
 {
+    /** @var \App\Components\MailSender @inject */
+    public $mailSender;
+
     /**Shorthand for sending emails.
      * @param $email
      * @param $subject
@@ -21,20 +20,7 @@ trait TMailer
      */
     public function sendMail($email, $subject, $template)
     {
-        $mail = new Message;
-
-        $mail->setFrom("noreply@klub.ddmtrebic.cz")
-            ->addTo($email)
-            ->setSubject($subject)
-            ->setHtmlBody($template);
-
-        $mailer = new SendmailMailer();
-
-        try{
-            $mailer->send($mail);
-        } catch (Exception $e) {
-            dump($e);
-        }
+        $this->mailSender->send($email, $subject, $template);
     }
 
 }

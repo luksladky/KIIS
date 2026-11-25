@@ -40,8 +40,9 @@ class CronManager extends Repository
      * @param EventFacade $eventFacade
      * @param Database $database
      */
-    public function __construct(ProfileRepository $profileRepository, EventFacade $eventFacade, Database $database)
+    public function __construct(ProfileRepository $profileRepository, EventFacade $eventFacade, Database $database, \App\Components\MailSender $mailSender)
     {
+        $this->mailSender = $mailSender;
         $this->profileRepository = $profileRepository;
         $this->eventFacade = $eventFacade;
         $this->database = $database;
